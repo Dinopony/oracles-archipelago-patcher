@@ -140,8 +140,8 @@ func (h *hinter) generate(src *rand.Rand, g graph, checks map[*node]*node,
 	return hints
 }
 
-// formats a string for a text box. text box. this doesn't include control
-// characters, except for newlines.
+// formats a string for a text box. this doesn't include control characters.
+// except for newlines.
 func (h *hinter) format(s string) string {
 	// split message into words to be wrapped
 	words := strings.Split(s, " ")
