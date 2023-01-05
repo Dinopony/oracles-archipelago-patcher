@@ -23,6 +23,10 @@ There are three ways to use the randomizer:
 
 There is also a web interface available at [https://cemulate.github.io/oracles-randomizer-web](https://cemulate.github.io/oracles-randomizer-web), created and maintained by [cemulate](https://github.com/cemulate).
 
+You may also be interested in
+[Oracles Randomizer Extras](https://jangler.github.io/oracles-randomizer-extras/).
+
+
 ## Download
 
 You can download executables for Windows, macOS, and Linux from the
@@ -118,6 +122,7 @@ by the seed, not by the linked file. Multiworld linked games are not supported.
 A: If you want to play multiworld, you must use Bizhawk. BGB and mGBA are good
 choices otherwise. Avoid VisualBoyAdvance and its variants; they have serious
 emulation bugs that can cause crashes and other problems.
+
 
 ## Thanks to:
 

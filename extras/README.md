@@ -3,6 +3,8 @@
 **This is an experimental feature, and is not "supported" in the same sense
 that the rest of the randomizer is. Use at your own risk!**
 
+Not to be confused with <https://github.com/jangler/oracles-randomizer-extras>.
+
 These files contain additional self-contained assembly code that can be
 included using the `-include` command-line option when randomizing a ROM. The
 file format is exactly the same as for the files in the `asm/` folder. Included
