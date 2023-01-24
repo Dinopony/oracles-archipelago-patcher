@@ -113,9 +113,10 @@ A: no
 
 **Q: Can I at least do a linked game?**
 
-A: Yes, although linked support has not been extensively tested, and linked
-elements of the games are not randomized. Animal companion is still determined
-by the seed, not by the linked file. Multiworld linked games are not supported.
+A: You can try, as long as you're not doing multiworld, but the consensus seems
+to be that it's not worthwhile. Linked content is unrandomized and sometimes
+inaccessible. Linked Ages seeds also have a chance to be uncompletable due to
+how Sea of Storms works.
 
 **Q: What emulator would you recommend for playing the randomizer?**
 
