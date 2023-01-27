@@ -21,7 +21,8 @@ There are three ways to use the randomizer:
 3. Use the command line. Type `./oracles-randomizer -h` to view the usage
    summary.
 
-There is also a web interface available at [https://cemulate.github.io/oracles-randomizer-web](https://cemulate.github.io/oracles-randomizer-web), created and maintained by [cemulate](https://github.com/cemulate).
+There is also a [web interface](https://cemulate.github.io/oracles-randomizer-web),
+created and maintained by [cemulate](https://github.com/cemulate).
 
 You may also be interested in
 [Oracles Randomizer Extras](https://jangler.github.io/oracles-randomizer-extras/),
