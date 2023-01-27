@@ -24,7 +24,8 @@ There are three ways to use the randomizer:
 There is also a web interface available at [https://cemulate.github.io/oracles-randomizer-web](https://cemulate.github.io/oracles-randomizer-web), created and maintained by [cemulate](https://github.com/cemulate).
 
 You may also be interested in
-[Oracles Randomizer Extras](https://jangler.github.io/oracles-randomizer-extras/).
+[Oracles Randomizer Extras](https://jangler.github.io/oracles-randomizer-extras/),
+or [Oracles Randomizer NG](http://oosarando.zeldahacking.net/) (Drenn's fork).
 
 
 ## Download
