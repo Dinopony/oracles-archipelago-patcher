@@ -1,9 +1,9 @@
 # technical notes
 
 function names and ram address names, when present, correspond to those in
-drenn's oracles-disasm. single addresses are for seasons; double addresses are
-ages/seasons, in that order. if an address ends in a slash, it's the same for
-both games.
+stewmath's oracles-disasm. single addresses are for seasons; double addresses
+are ages/seasons, in that order. if an address ends in a slash, it's the same
+for both games.
 
 
 ## functions not documented elsewhere

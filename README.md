@@ -26,7 +26,7 @@ created and maintained by [cemulate](https://github.com/cemulate).
 
 You may also be interested in
 [Oracles Randomizer Extras](https://jangler.github.io/oracles-randomizer-extras/),
-or [Oracles Randomizer NG](http://oosarando.zeldahacking.net/) (Drenn's fork).
+or [Oracles Randomizer NG](http://oosarando.zeldahacking.net/) (Stewmath's fork).
 
 
 ## Download
@@ -129,7 +129,7 @@ emulation bugs that can cause crashes and other problems.
 
 ## Thanks to:
 
-- Drenn for [oracles-disasm](https://github.com/Drenn1/oracles-disasm) and
+- Stewmath for [oracles-disasm](https://github.com/Stewmath/oracles-disasm) and
   additional code.
 - Herreteman, dragonc0, Phoenomenom714, and jaysee87 for help with logic,
   playtesting, design, and "customer support".

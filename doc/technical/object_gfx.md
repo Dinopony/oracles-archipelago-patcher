@@ -15,7 +15,7 @@ See http://gbdev.gg8.se/wiki/articles/Video_Display for a more detailed
 description about how displaying graphics works on the GB/C in general.
 
 Names for functions and struct fields used here are from
-https://github.com/Drenn1/oracles-disasm.
+https://github.com/Stewmath/oracles-disasm.
 
 
 ## Nomenclature
