@@ -1,5 +1,12 @@
 # Zelda Oracles Randomizer
 
+> Summary of different randomizer versions and links to their web interfaces:
+>
+> - [This version](https://cemulate.github.io/oracles-randomizer-web/), which supports multiworld
+> - [vinheim3's version](https://cemulate.github.io/oracles-randomizer-web/), which supports full entrance randomization
+> - [Stewmath's version](https://oosarando2.zeldahacking.net/), which supports keysanity and cross items
+> - [karafruit's version](https://oracles-dev.gwaa.kiwi/generate), which supports Stewmath's features plus some goodies
+
 This program reads a Zelda: Oracle of Seasons or Oracle of Ages ROM (US
 versions only), shuffles the locations of (most) items and mystical seeds, and
 writes the modified ROM to a new file. In Seasons, the default seasons for each
@@ -11,7 +18,11 @@ all 8 essences to get the Maku Seed and finish the game.
 
 ## Usage
 
-There are three ways to use the randomizer:
+You probably want the
+[web interface](https://cemulate.github.io/oracles-randomizer-web),
+contributed by [cemulate](https://github.com/cemulate).
+
+Otherwise, there are three ways to use the randomizer:
 
 1. Place the randomizer in the same directory as your vanila ROM(s) (or vice
    versa), and run it. The randomizer will automatically find your vanilla
@@ -21,12 +32,8 @@ There are three ways to use the randomizer:
 3. Use the command line. Type `./oracles-randomizer -h` to view the usage
    summary.
 
-There is also a [web interface](https://cemulate.github.io/oracles-randomizer-web),
-created and maintained by [cemulate](https://github.com/cemulate).
-
 You may also be interested in
-[Oracles Randomizer Extras](https://jangler.github.io/oracles-randomizer-extras/),
-or [Oracles Randomizer NG](http://oosarando.zeldahacking.net/) (Stewmath's fork).
+[Oracles Randomizer Extras](https://jangler.github.io/oracles-randomizer-extras/).
 
 
 ## Download
