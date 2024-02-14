@@ -27,13 +27,13 @@ func TestLoadYaml(t *testing.T) {
 				continue
 			}
 
-			path := "/" + dirname + "/" + file.Name()
+			path := dirname + "/" + file.Name()
 
 			// either a slice or a map should work
 			m := make(map[interface{}]interface{})
-			mapErr := yaml.Unmarshal(FSMustByte(false, path), &m)
+			mapErr := ReadEmbeddedYaml(path, &m)
 			a := make([]interface{}, 0)
-			sliceErr := yaml.Unmarshal(FSMustByte(false, path), &a)
+			sliceErr := ReadEmbeddedYaml(path, &a)
 
 			if mapErr != nil && sliceErr != nil {
 				t.Errorf("failed to unmarshal %s into map or slice", path)

@@ -1,8 +1,5 @@
 oracles-randomizer
 oracles-randomizer.exe
-embed.go
-main.go
-version.go
 checklist/
 dist/
 gbc/
@@ -13,3 +10,4 @@ untracked/
 *.out
 *.prof
 *log*.txt
+.idea

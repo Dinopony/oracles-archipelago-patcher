@@ -1,6 +1,7 @@
 package randomizer
 
 import (
+	"os"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -18,7 +19,12 @@ type assembler struct {
 func newAssembler() (*assembler, error) {
 	ls := lua.NewState()
 
-	mod, err := ls.LoadString(FSMustString(false, "/lgbtasm/lgbtasm.lua"))
+    b, err := os.ReadFile("lgbtasm/lgbtasm.lua")
+    if err != nil {
+        return nil, err
+    }
+
+	mod, err := ls.LoadString(string(b))
 	if err != nil {
 		return nil, err
 	}

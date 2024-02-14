@@ -8,8 +8,6 @@ import (
 	"regexp"
 	"sort"
 	"strings"
-
-	"gopkg.in/yaml.v2"
 )
 
 const bankSize = 0x4000
@@ -578,8 +576,7 @@ type warpData struct {
 func (rom *romState) setWarps(warpMap map[string]string, dungeons bool) {
 	// load yaml data
 	wd := make(map[string](map[string]*warpData))
-	if err := yaml.Unmarshal(
-		FSMustByte(false, "/romdata/warps.yaml"), wd); err != nil {
+	if err := ReadEmbeddedYaml("romdata/warps.yaml", wd); err != nil {
 		panic(err)
 	}
 	warps := sora(rom.game, wd["seasons"], wd["ages"]).(map[string]*warpData)

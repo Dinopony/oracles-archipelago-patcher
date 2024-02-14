@@ -3,8 +3,6 @@ package randomizer
 import (
 	"bytes"
 	"fmt"
-
-	"gopkg.in/yaml.v2"
 )
 
 // treasure interaction spawn + collect modes. bits 0-2 are for collect
@@ -95,8 +93,7 @@ func getTreasureAddr(b []byte, game int, id, subid byte) address {
 // data is loaded.
 func loadTreasures(b []byte, game int) map[string]*treasure {
 	allRawIds := make(map[string]map[string]uint16)
-	if err := yaml.Unmarshal(
-		FSMustByte(false, "/romdata/treasures.yaml"), allRawIds); err != nil {
+	if err := ReadEmbeddedYaml("romdata/treasures.yaml", allRawIds); err != nil {
 		panic(err)
 	}
 

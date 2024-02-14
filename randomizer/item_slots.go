@@ -2,8 +2,6 @@ package randomizer
 
 import (
 	"fmt"
-
-	"gopkg.in/yaml.v2"
 )
 
 // an item slot (chest, gift, etc). it references room data and treasure data.
@@ -95,15 +93,13 @@ type musicData struct {
 func (rom *romState) loadSlots() map[string]*itemSlot {
 	raws := make(map[string]*rawSlot)
 
-	filename := fmt.Sprintf("/romdata/%s_slots.yaml", gameNames[rom.game])
-	if err := yaml.Unmarshal(
-		FSMustByte(false, filename), raws); err != nil {
+	filename := fmt.Sprintf("romdata/%s_slots.yaml", gameNames[rom.game])
+	if err := ReadEmbeddedYaml(filename, raws); err != nil {
 		panic(err)
 	}
 
 	allMusic := make(map[string](map[byte]musicData))
-	if err := yaml.Unmarshal(
-		FSMustByte(false, "/romdata/music.yaml"), allMusic); err != nil {
+	if err := ReadEmbeddedYaml("romdata/music.yaml", allMusic); err != nil {
 		panic(err)
 	}
 	musicMap := allMusic[gameNames[rom.game]]

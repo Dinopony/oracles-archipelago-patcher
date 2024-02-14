@@ -1,7 +1,7 @@
 # Oracle of Ages randomization notes
 
 These notes apply specifically to Ages, alongside the game-neutral ones in
-[README.md](https://github.com/jangler/oracles-randomizer/blob/master/README.md).
+[README.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/README.md).
 
 
 ## Randomization
@@ -96,5 +96,5 @@ exception of:
 - Linked secrets
 
 See
-[ages_hard_guide.md](https://github.com/jangler/oracles-randomizer/blob/master/doc/ages_hard_guide.md)
+[ages_hard_guide.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/doc/ages_hard_guide.md)
 for more information on specific tricks in hard logic.

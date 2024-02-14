@@ -1,7 +1,7 @@
 # Oracle of Seasons randomizaton notes
 
 These notes apply specifically to Seasons, alongside the game-neutral ones in
-[README.md](https://github.com/jangler/oracles-randomizer/blob/master/README.md).
+[README.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/README.md).
 
 
 ## Randomization
@@ -95,5 +95,5 @@ exception of:
 - Linked secrets
 
 See
-[seasons_hard_guide.md](https://github.com/jangler/oracles-randomizer/blob/master/doc/seasons_hard_guide.md)
+[seasons_hard_guide.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/doc/seasons_hard_guide.md)
 for more information on specific tricks in hard logic.

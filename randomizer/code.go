@@ -249,7 +249,7 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 }
 
 // applies the labels and EOB declarations in the given asm data files.
-func (rom *romState) applyAsmFiles(infos []os.FileInfo) {
+func (rom *romState) applyAsmFiles(infos []os.DirEntry) {
 	asmFiles := make([]*asmData, len(infos))
 
 	// standard files are embedded
@@ -262,9 +262,13 @@ func (rom *romState) applyAsmFiles(infos []os.FileInfo) {
 			continue
 		}
 
-		path := "/asm/" + info.Name()
-		if err := yaml.Unmarshal(
-			FSMustByte(false, path), asmFiles[i]); err != nil {
+		path := "asm/" + info.Name()
+		b, err := os.ReadFile(path)
+		if err != nil {
+			panic(err)
+		}
+	
+		if err := yaml.Unmarshal(b, asmFiles[i]); err != nil {
 			panic(err)
 		}
 	}
@@ -309,8 +313,7 @@ func parseMetalabel(ml string) (addr address, label string) {
 // given game.
 func loadBankEnds(game string) []uint16 {
 	eobs := make(map[string][]uint16)
-	if err := yaml.Unmarshal(
-		FSMustByte(false, "/romdata/eob.yaml"), eobs); err != nil {
+	if err := ReadEmbeddedYaml("romdata/eob.yaml", eobs); err != nil {
 		panic(err)
 	}
 	return eobs[game]
@@ -320,8 +323,7 @@ func loadBankEnds(game string) []uint16 {
 func (rom *romState) attachText() {
 	// load initial text
 	textMap := make(map[string]map[string]string)
-	if err := yaml.Unmarshal(
-		FSMustByte(false, "/romdata/text.yaml"), textMap); err != nil {
+	if err := ReadEmbeddedYaml("romdata/text.yaml", textMap); err != nil {
 		panic(err)
 	}
 	for label, rawText := range textMap[gameNames[rom.game]] {
@@ -377,12 +379,11 @@ func loadShopNames(game string) map[string]string {
 
 	// load names used for owl hints
 	itemFiles := []string{
-		"/hints/common_items.yaml",
-		fmt.Sprintf("/hints/%s_items.yaml", game),
+		"hints/common_items.yaml",
+		fmt.Sprintf("hints/%s_items.yaml", game),
 	}
 	for _, filename := range itemFiles {
-		if err := yaml.Unmarshal(
-			FSMustByte(false, filename), m); err != nil {
+		if err := ReadEmbeddedYaml(filename, m); err != nil {
 			panic(err)
 		}
 	}
@@ -418,11 +419,7 @@ func (rom *romState) initBanks() {
 		string(make([]byte, numOwlIds*2)))
 
 	// load all asm files in the asm/ directory.
-	dir, err := FS(false).Open("/asm/")
-	if err != nil {
-		panic(err)
-	}
-	fi, err := dir.Readdir(-1)
+	fi, err := os.ReadDir("asm/")
 	if err != nil {
 		panic(err)
 	}

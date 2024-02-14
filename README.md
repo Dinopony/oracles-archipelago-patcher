@@ -39,14 +39,14 @@ You may also be interested in
 ## Download
 
 You can download executables for Windows, macOS, and Linux from the
-[releases](https://github.com/jangler/oracles-randomizer/releases) page. Don't
+[releases](https://github.com/dinopony/oracles-archipelago-patcher/releases) page. Don't
 use the "Download ZIP" link on the main page; that only contains the source
 code. The download also contains a rudimentary location checklist and item
 tracker. If you're looking for a more detailed item and map tracker,
 [EmoTracker](https://emotracker.net/) has a pack developed by Herreteman.
 
 See
-[contributing.md](https://github.com/jangler/oracles-randomizer/blob/master/doc/contributing.md)
+[contributing.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/doc/contributing.md)
 for instructions on building the randomizer from source.
 
 
@@ -90,16 +90,16 @@ General details common to both games:
   playthrough!
 
 For game-specific notes on randomization and logic, see
-[seasons_notes.md](https://github.com/jangler/oracles-randomizer/blob/master/doc/seasons_notes.md)
+[seasons_notes.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/doc/seasons_notes.md)
 and
-[ages_notes.md](https://github.com/jangler/oracles-randomizer/blob/master/doc/ages_notes.md).
+[ages_notes.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/doc/ages_notes.md).
 
 See
-[multiworld.md](https://github.com/jangler/oracles-randomizer/blob/master/doc/multiworld.md)
+[multiworld.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/doc/multiworld.md)
 for information on multiworld seeds.
 
 See
-[plan.md](https://github.com/jangler/oracles-randomizer/blob/master/doc/plan.md)
+[plan.md](https://github.com/dinopony/oracles-archipelago-patcher/blob/master/doc/plan.md)
 for information on plando generation.
 
 

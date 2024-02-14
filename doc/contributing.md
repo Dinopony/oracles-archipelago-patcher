@@ -12,8 +12,8 @@ following instructions are for building the dev branch.
 First, clone and set up the repository:
 
 ```
-go get github.com/jangler/oracles-randomizer
-cd $GOPATH/src/github.com/jangler/oracles-randomizer
+go get github.com/dinopony/oracles-archipelago-patcher
+cd $GOPATH/src/github.com/dinopony/oracles-archipelago-patcher
 git fetch
 git checkout dev
 git submodule init
