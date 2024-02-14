@@ -88,7 +88,7 @@ func initFlags() {
 	flag.StringVar(&flagCpuProf, "cpuprofile", "",
 		"write CPU profile to file")
 	flag.StringVar(&flagDevCmd, "devcmd", "",
-		"subcommands are 'findaddr', 'showasm', 'stats', and 'hardstats'")
+		"subcommands are 'findaddr', 'showasm'")
 	flag.BoolVar(&flagDungeons, "dungeons", false,
 		"shuffle dungeon entrances")
 	flag.BoolVar(&flagHard, "hard", false,
@@ -238,26 +238,6 @@ func Main() {
 		}
 
 		fmt.Println(rom.findAddr(byte(bank), uint16(addr)))
-	case "stats", "hardstats":
-		// do stats instead of randomizing
-		game := reverseLookupOrPanic(gameNames, flag.Arg(0)).(int)
-		numTrials, err := strconv.Atoi(flag.Arg(1))
-		if err != nil {
-			fatal(err, printErrf)
-			return
-		}
-
-		rand.Seed(time.Now().UnixNano())
-
-		statFunc := logStats
-		if flagDevCmd == "hardstats" {
-			statFunc = logHardStats
-		}
-		statFunc(game, numTrials, *optsList[0],
-			func(s string, a ...interface{}) {
-				fmt.Printf(s, a...)
-				fmt.Println()
-			})
 	case "showasm":
 		// print the asm for the named function/etc
 		tokens := strings.Split(flag.Arg(0), "/")
@@ -323,7 +303,6 @@ func runRandomizer(ui *uiInstance, optsList []*randomizerOptions, logf logFunc) 
 			fatal(err, logf)
 			return
 		}
-		src := rand.New(rand.NewSource(int64(seed)))
 
 		// get input for instance
 		for i, infile := range infiles {
@@ -367,27 +346,17 @@ func runRandomizer(ui *uiInstance, optsList []*randomizerOptions, logf logFunc) 
 
 			// find routes
 			if ropts.plan == nil {
-				route, err := findRoute(
-					roms[i], seed, src, *ropts, flagVerbose, logf)
-				if err != nil {
-					fatal(err, logf)
-					return
-				}
-				routes[i] = route
-			} else {
-				route, err := makePlannedRoute(roms[i], ropts.plan)
-				if err != nil {
-					fatal(err, logf)
-					return
-				}
-				routes[i] = route
-				ropts.dungeons = route.entrances != nil && len(route.entrances) > 0
-				ropts.portals = route.portals != nil && len(route.portals) > 0
+				panic("no plando was given")
 			}
-		}
 
-		if len(routes) > 1 {
-			shuffleMultiworld(routes, roms, flagVerbose, logf)
+			route, err := makePlannedRoute(roms[i], ropts.plan)
+			if err != nil {
+				fatal(err, logf)
+				return
+			}
+			routes[i] = route
+			ropts.dungeons = route.entrances != nil && len(route.entrances) > 0
+			ropts.portals = route.portals != nil && len(route.portals) > 0
 		}
 
 		// come up with log data
@@ -694,12 +663,6 @@ func applyRoute(rom *romState, ri *routeInfo, dirName, logFilename string,
 	checksum, err := setRomData(rom, ri, ropts, logf, verbose)
 	if err != nil {
 		return nil, err
-	}
-
-	// write spoiler log
-	if ropts.plan == nil && !ropts.race {
-		writeSummary(filepath.Join(dirName, logFilename), checksum, *ropts,
-			rom, ri, checks, spheres, extra, g, resetFunc, treasures, nil)
 	}
 
 	return checksum, nil

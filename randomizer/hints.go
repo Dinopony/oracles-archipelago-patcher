@@ -2,8 +2,6 @@ package randomizer
 
 import (
 	"fmt"
-	"math/rand"
-	"sort"
 	"strings"
 )
 
@@ -82,59 +80,6 @@ func newHinter(game int) *hinter {
 	return h
 }
 
-// returns a randomly generated map of owl names to owl messages.
-func (h *hinter) generate(src *rand.Rand, g graph, checks map[*node]*node,
-	owlNames []string) map[string]string {
-	// function body starts here lol
-	hints := make(map[string]string)
-	slots := getShuffledHintSlots(src, checks)
-	i := 0
-
-	// keep track of which slots have been hinted at in order to avoid
-	// duplicates. in practice the implementation of the hint loop makes this
-	// very unlikely in the first place.
-	hintedSlots := make(map[*node]bool)
-
-	for _, owlName := range owlNames {
-		// sometimes owls are just unreachable, so anything goes, i guess
-		g.reset()
-		g["start"].explore()
-		owlUnreachable := !g[owlName].reached
-
-		// if we're in plando mode, there could be no slots.
-		if len(slots) == 0 || len(hintedSlots) >= len(slots) {
-			hints[owlName] = h.format("...")
-			continue
-		}
-
-		for {
-			slot, item := slots[i], checks[slots[i]]
-			i = (i + 1) % len(slots)
-
-			if hintedSlots[slot] {
-				continue
-			}
-
-			// don't give hints about checks that are required to reach the owl
-			// in the first place, as dictated by the logic of the seed.
-			item.removeParent(slot)
-			g.reset()
-			g["start"].explore()
-			required := !g[owlName].reached
-			item.addParent(slot)
-
-			if !required || owlUnreachable {
-				hints[owlName] = h.format(fmt.Sprintf("%s holds %s.",
-					h.areas[slot.name], h.items[item.name]))
-				hintedSlots[slot] = true
-				break
-			}
-		}
-	}
-
-	return hints
-}
-
 // formats a string for a text box. this doesn't include control characters.
 // except for newlines.
 func (h *hinter) format(s string) string {
@@ -157,52 +102,6 @@ func (h *hinter) format(s string) string {
 	msg.WriteString(line)
 
 	return msg.String()
-}
-
-// implement sort.Interface for []*node
-type nodeSlice []*node
-
-func (ns nodeSlice) Len() int {
-	return len(ns)
-}
-
-func (ns nodeSlice) Less(i, j int) bool {
-	return ns[i].name < ns[j].name
-}
-
-func (ns nodeSlice) Swap(i, j int) {
-	ns[i], ns[j] = ns[j], ns[i]
-}
-
-// getShuffledHintSlots returns a randomly ordered slice of slot nodes.
-func getShuffledHintSlots(src *rand.Rand, checks map[*node]*node) []*node {
-	// make slice of check names
-	slots, i := make([]*node, len(checks)), 0
-	for slot, item := range checks {
-		// don't include dungeon items, since dungeon item hints would be
-		// useless ("Level 7 holds a Boss Key")
-		if getDungeonName(item.name) != "" {
-			continue
-		}
-		// and don't include these checks, since they're dummy slots that
-		// aren't actually randomized, or seed trees that the player is
-		// guaranteed to know about if they're using seeds.
-		switch slot.name {
-		case "shop, 20 rupees", "shop, 30 rupees",
-			"horon village tree", "south lynna tree":
-			continue
-		}
-		slots[i], i = slot, i+1
-	}
-	slots = slots[:i] // trim to the number of actually hintable checks
-
-	// sort the slots before shuffling to get "deterministic" results
-	sort.Sort(nodeSlice(slots))
-	src.Shuffle(len(slots), func(i, j int) {
-		slots[i], slots[j] = slots[j], slots[i]
-	})
-
-	return slots
 }
 
 // returns truee iff all the characters in s are in the printable range.

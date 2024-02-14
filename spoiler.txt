@@ -1,0 +1,186 @@
+-- items --
+d5 magnet ball chest <- subrosian ring
+goron mountain, across pits <- bombs, 10
+d3 giant blade room <- d3 boss key
+member's shop 3 <- gasha seed
+d3 bombed wall chest <- d3 dungeon map
+d5 cart chest <- d5 small key
+d7 maze chest <- hard ore
+chest on top of D2 <- rupees, 50
+d1 floormaster room <- pyramid jewel
+shop, 150 rupees <- satchel
+d6 escape room <- d6 boss key
+dry eyeglass lake, west cave <- steadfast ring
+subrosian wilds chest <- dragon key
+d0 rupee chest <- flippers
+d8 darknut chest <- d8 small key
+tower of spring <- quicksand ring
+d5 terrace chest <- rare peach stone
+d3 roller chest <- d3 small key
+d2 pot chest <- d2 dungeon map
+d0 sword chest <- bombs, 10
+d2 rope chest <- d2 compass
+temple of seasons <- rupees, 100
+tower of winter <- heart container
+old man in treehouse <- gasha seed
+d4 north of entrance <- heart container
+d5 left chest <- d5 small key
+d4 boss <- rang ring L-1
+d6 2F gibdo chest <- green joy ring
+master diver's challenge <- rupees, 5
+d3 moldorm chest <- boomerang
+mt. cucco, platform cave <- heart container
+d1 goriya chest <- d1 boss key
+d4 maze chest <- d4 dungeon map
+d7 boss <- sword
+horon village SE chest <- ribbon
+member's shop 1 <- dimitri's flute
+sunken city, summer cave <- blue ore
+d2 blade chest <- d2 small key
+d5 boss <- spring
+cave south of mrs. ruul <- feather
+d8 magnet ball room <- d8 dungeon map
+d1 stalfos drop <- d1 small key
+subrosia market, 2nd item <- gnarled key
+cave north of D1 <- x-shaped jewel
+blaino prize <- slingshot
+d6 vire chest <- d6 small key
+subrosia market, 5th item <- fool's ore
+d3 zol chest <- d3 small key
+spool swamp tree <- scent tree seeds
+d2 roller chest <- rupees, 20
+member's shop 2 <- gasha seed
+tarm ruins, under tree <- member's card
+d2 terrace chest <- d2 boss key
+d8 spike room <- d8 compass
+d3 trampoline chest <- d3 compass
+d4 terrace <- d4 small key
+d2 moblin chest <- square jewel
+d8 SE lava chest <- d8 small key
+horon village tree <- ember tree seeds
+sunken city tree <- gale tree seeds
+d1 block-pushing room <- bracelet
+western coast, beach chest <- gasha seed
+samasa desert chest <- rupees, 20
+dry eyeglass lake, east cave <- piece of heart
+subrosian dance hall <- satchel
+floodgate keeper's house <- shovel
+d8 SW lava chest <- heart container
+chest in goron mountain <- rupees, 5
+d6 2F armos chest <- bombs, 10
+d5 basement <- d5 boss key
+d6 spinner north <- d6 small key
+chest in master diver's cave <- magnet gloves
+d2 spiral chest <- d2 small key
+natzu region, across water <- spring banana
+spring banana tree <- heart container
+d1 button chest <- d1 small key
+master diver's reward <- slingshot
+d2 rope drop <- d2 small key
+d7 bombed wall chest <- d7 compass
+d4 water ring room <- d4 compass
+cave outside D2 <- gasha seed
+spool swamp cave <- rupees, 30
+d8 eye drop <- d8 small key
+maku tree <- gasha seed
+subrosia, locked cave <- summer
+d7 stalfos chest <- d7 boss key
+d7 spike chest <- power ring L-1
+holly's house <- round jewel
+d1 lever room <- d1 compass
+diving spot outside D4 <- rupees, 30
+black beast's chest <- rupees, 50
+d1 basement <- piece of heart
+d6 armos hall <- gasha seed
+shop, 20 rupees <- bombs, 10
+d8 armos chest <- rupees, 10
+d5 armos chest <- d5 small key
+d5 spiral chest <- d5 compass
+d6 boss <- rusty bell
+d0 key chest <- d0 small key
+subrosia market, 1st item <- red ore
+d1 railway chest <- rupees, 30
+tower of autumn <- rupees, 100
+subrosia village chest <- floodgate key
+d3 quicksand terrace <- gasha seed
+d8 three eyes chest <- gasha seed
+d4 dive spot <- d4 boss key
+woods of winter, 2nd cave <- armor ring L-2
+north horon tree <- pegasus tree seeds
+d7 quicksand chest <- d7 dungeon map
+d4 cracked floor room <- rupees, 10
+d1 boss <- master's plaque
+d6 crystal trap room <- octo ring
+d7 magunesu chest <- d7 small key
+d8 pols voice chest <- d8 boss key
+subrosia seaside <- boomerang
+d2 boss <- heart container
+d5 stalfos room <- d5 small key
+d8 spinner chest <- d8 small key
+tower of summer <- gasha seed
+d5 gibdo/zol chest <- d5 dungeon map
+eyeglass lake, across bridge <- winter
+mt. cucco, talon's cave <- feather
+d8 spark chest <- d8 small key
+d8 ghost armos drop <- d8 small key
+horon village SW chest <- autumn
+samasa desert pit <- iron shield
+d6 beamos room <- d6 compass
+d6 1F terrace <- d6 dungeon map
+d4 torch chest <- d4 small key
+d1 stalfos chest <- d1 dungeon map
+d4 pool <- d4 small key
+d3 water room <- rupees, 5
+d2 left from entrance <- treasure map
+tarm ruins tree <- ember tree seeds
+d7 armos puzzle <- d7 small key
+subrosian smithy <- blast ring
+d4 pot puzzle <- d4 small key
+d6 1F east <- heart container
+d8 boss <- gasha seed
+western coast, in house <- gasha seed
+d7 right of entrance <- bombs, 10
+shop, 30 rupees <- wooden shield
+eastern suburbs, on cliff <- heart container
+d4 dark room <- d4 small key
+woods of winter tree <- mystery tree seeds
+lost woods <- rupees, 1
+woods of winter, 1st cave <- sword
+great furnace <- bombs, 10
+d7 B2F drop <- d7 small key
+d7 zol button <- d7 small key
+d5 spinner chest <- d5 small key
+d3 mimic chest <- star ore
+d8 hardhat drop <- d8 small key
+moblin keep <- discovery ring
+d7 wizzrobe chest <- d7 small key
+d3 boss <- bombs, 10
+subrosia, open cave <- moblin ring
+d6 magnet ball drop <- d6 small key
+-- default seasons --
+north horon <- autumn
+holodrum plain <- autumn
+eastern suburbs <- autumn
+woods of winter <- autumn
+sunken city <- winter
+western coast <- winter
+spool swamp <- winter
+temple remains <- winter
+tarm ruins <- autumn
+-- dungeon entrances --
+D1 entrance <- D1
+D2 entrance <- D2
+D3 entrance <- D3
+D4 entrance <- D4
+D5 entrance <- D5
+D6 entrance <- D6
+D7 entrance <- D7
+D8 entrance <- D8
+-- subrosia portals --
+eastern suburbs <- volcanoes east
+spool swamp <- subrosia market
+mt. cucco <- strange brothers
+horon village <- house of pirates
+eyeglass lake <- great furnace
+temple remains lower <- volcanoes west
+temple remains upper <- D8 entrance
