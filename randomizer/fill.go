@@ -96,6 +96,19 @@ func newRouteGraph(rom *romState) graph {
 	return g
 }
 
+// getChecks converts a route info into a map of checks.
+func getChecks(usedItems, usedSlots *list.List) map[*node]*node {
+	checks := make(map[*node]*node)
+
+	ei, es := usedItems.Front(), usedSlots.Front()
+	for ei != nil {
+		checks[es.Value.(*node)] = ei.Value.(*node)
+		ei, es = ei.Next(), es.Next()
+	}
+
+	return checks
+}
+
 var (
 	seasonsById = []string{"spring", "summer", "autumn", "winter"}
 	seasonAreas = []string{
@@ -136,175 +149,6 @@ var seedTreeNames = map[string]bool{
 	"rolling ridge east tree": true,
 	"ambi's palace tree":      true,
 	"zora village tree":       true,
-}
-
-// return shuffled lists of item and slot nodes
-func initRouteInfo(
-	ri *routeInfo, rom *romState) (itemList, slotList *list.List) {
-	// get slices of names
-	var itemNames []string
-	slotNames := make([]string, 0, len(ri.slots))
-
-	// get count of each seed tree from RNG
-	nTrees := sora(rom.game, 6, 8).(int)
-	thisSeeds := make([]int, 0, nTrees)
-	seedCounts := make(map[int]int)
-	for len(thisSeeds) < cap(thisSeeds) {
-		id := ri.src.Intn(len(seedNames))
-		for seedCounts[id] > len(seedCounts)/len(seedNames) {
-			id = ri.src.Intn(len(seedNames))
-		}
-		thisSeeds = append(thisSeeds, id)
-		seedCounts[id]++
-	}
-
-	for key, slot := range rom.itemSlots {
-		switch {
-		case seedTreeNames[key]:
-			id := thisSeeds[0]
-			thisSeeds = thisSeeds[1:]
-			itemNames = append(itemNames, seedNames[id])
-		default:
-			// substitute identified flute for strange flute
-			tName, _ := reverseLookup(rom.treasures, slot.treasure)
-			treasureName := tName.(string)
-			if strings.HasSuffix(treasureName, " flute") {
-				switch ri.companion {
-				case ricky:
-					treasureName = "ricky's flute"
-				case dimitri:
-					treasureName = "dimitri's flute"
-				case moosh:
-					treasureName = "moosh's flute"
-				}
-			}
-
-			// substitute ring pool
-			if ringSub, ok := ri.ringMap[treasureName]; ok {
-				treasureName = ringSub
-			}
-
-			itemNames = append(itemNames, treasureName)
-		}
-	}
-	for key := range ri.slots {
-		slotNames = append(slotNames, key)
-	}
-
-	// sort the slices so that order isn't dependent on map implementation,
-	// then shuffle the sorted slices
-	sort.Strings(itemNames)
-	sort.Strings(slotNames)
-	ri.src.Shuffle(len(itemNames), func(i, j int) {
-		itemNames[i], itemNames[j] = itemNames[j], itemNames[i]
-	})
-	ri.src.Shuffle(len(slotNames), func(i, j int) {
-		slotNames[i], slotNames[j] = slotNames[j], slotNames[i]
-	})
-
-	// push the graph nodes by name onto stacks
-	itemList = list.New()
-	slotList = list.New()
-	for _, key := range itemNames {
-		itemList.PushBack(ri.graph[key])
-	}
-	for _, key := range slotNames {
-		slotList.PushBack(ri.graph[key])
-	}
-
-	return itemList, slotList
-}
-
-// returns true iff successful
-func tryPlaceItems(ri *routeInfo, itemList, slotList *list.List,
-	treasures map[string]*treasure, game int, verbose bool, logf logFunc) bool {
-	for itemList.Len() > 0 && slotList.Len() > 0 {
-		if verbose {
-			logf("searching; filling %d more slots", slotList.Len())
-			logf("(%d more items)", itemList.Len())
-		}
-
-		eItem, eSlot := trySlotRandomItem(
-			ri.graph, ri.src, itemList, slotList, treasures, game)
-
-		if eItem != nil {
-			item := itemList.Remove(eItem).(*node)
-			ri.usedItems.PushBack(item)
-			slot := slotList.Remove(eSlot).(*node)
-			ri.usedSlots.PushBack(slot)
-			if verbose {
-				logf("placing: %s <- %s", slot.name, item.name)
-			}
-		} else {
-			if verbose {
-				logf("search failed. unplaced items:")
-				for ei := itemList.Front(); ei != nil; ei = ei.Next() {
-					logf(ei.Value.(*node).name)
-				}
-				logf("unfilled slots:")
-				for es := slotList.Front(); es != nil; es = es.Next() {
-					logf(es.Value.(*node).name)
-				}
-			}
-			return false
-		}
-	}
-	return true
-}
-
-func trySlotRandomItem(g graph, src *rand.Rand, itemPool, slotPool *list.List,
-	treasures map[string]*treasure, game int) (usedItem, usedSlot *list.Element) {
-	// try placing the first item in a slot until it fits
-	triedProgression := false
-	for _, progressionItemsOnly := range []bool{true, false} {
-		if !progressionItemsOnly && triedProgression {
-			return nil, nil
-		}
-
-		for ei := itemPool.Front(); ei != nil; ei = ei.Next() {
-			item := ei.Value.(*node)
-
-			if progressionItemsOnly && itemIsInert(treasures, item.name) {
-				continue
-			}
-			item.removeParent(g["start"])
-			triedProgression = true
-
-			for es := slotPool.Front(); es != nil; es = es.Next() {
-				slot := es.Value.(*node)
-
-				if !itemFitsInSlot(item, slot) {
-					continue
-				}
-
-				// make sure enough space is left for remaining dungeon items
-				if dungeonsOverfilled(game, ei, es, itemPool, slotPool) {
-					continue
-				}
-
-				// test whether seed is still beatable w/ item placement
-				g.reset()
-				item.addParent(slot)
-				g["start"].explore()
-				if !g["done"].reached {
-					item.removeParent(slot)
-					continue
-				}
-
-				// make sure item didn't cause a forward-wise dead end
-				if isDeadEnd(g, ei, es, itemPool, slotPool) {
-					item.removeParent(slot)
-					continue
-				}
-
-				return ei, es
-			}
-
-			item.addParent(g["start"])
-		}
-	}
-
-	return nil, nil
 }
 
 // checks whether the item fits in the slot due to things like seeds only going
@@ -368,108 +212,6 @@ func getDungeonName(name string) string {
 		return name[:2]
 	default:
 		return ""
-	}
-}
-
-// returns true iff no open slots beyond curSlot are reachable if all the items
-// left in the pool, except for curItem, are assumed to be unreachable. returns
-// false if only one slot remains in the pool, since that slot is assumed to be
-// curSlot.
-func isDeadEnd(g graph, curItem, curSlot *list.Element,
-	itemPool, slotPool *list.List) bool {
-	if slotPool.Len() == 1 {
-		return false
-	}
-
-	for ei := itemPool.Front(); ei != nil; ei = ei.Next() {
-		if ei != curItem {
-			ei.Value.(*node).removeParent(g["start"])
-		}
-	}
-	g.reset()
-	g["start"].explore()
-
-	dead := true
-	for es := slotPool.Front(); es != nil; es = es.Next() {
-		if es != curSlot && es.Value.(*node).reached {
-			dead = false
-			break
-		}
-	}
-
-	for ei := itemPool.Front(); ei != nil; ei = ei.Next() {
-		if ei != curItem {
-			ei.Value.(*node).addParent(g["start"])
-		}
-	}
-
-	return dead
-}
-
-// returns true iff there are more items specific to any dungeon than there are
-// slots remaining in that dungeon. elements item and slot are not counted.
-func dungeonsOverfilled(game int, item, slot *list.Element,
-	itemPool, slotPool *list.List) bool {
-	for _, name := range dungeonNames[game] {
-		// ages d6 boss key isn't correctly accounted for here. oh well.
-		nItems := countList(itemPool, func(e *list.Element) bool {
-			return e != item && getDungeonName(e.Value.(*node).name) == name
-		})
-		nSlots := countList(slotPool, func(e *list.Element) bool {
-			return e != slot && getDungeonName(e.Value.(*node).name) == name
-		})
-		if nItems > nSlots {
-			return true
-		}
-	}
-	return false
-}
-
-// returns the number of elements in the list for which the given function
-// returns true.
-func countList(l *list.List, f func(*list.Element) bool) int {
-	n := 0
-	for e := l.Front(); e != nil; e = e.Next() {
-		if f(e) {
-			n++
-		}
-	}
-	return n
-}
-
-// itemIsInert returns true iff the item with the given name can never be
-// progression, regardless of context.
-func itemIsInert(treasures map[string]*treasure, name string) bool {
-	switch name {
-	case "fist ring", "expert's ring", "energy ring", "toss ring",
-		"swimmer's ring":
-		return false
-	}
-
-	// non-default junk rings
-	if treasures[name] == nil {
-		return true
-	}
-
-	// not part of next switch since the ID is only junk in seasons
-	if name == "treasure map" {
-		return true
-	}
-
-	switch treasures[name].id {
-	// heart refill, PoH, HC, ring, compass, dungeon map, gasha seed
-	case 0x29, 0x2a, 0x2b, 0x2d, 0x32, 0x33, 0x34:
-		return true
-	}
-	return false
-}
-
-// moves the first matching string in the slice to the end of the slice.
-func moveStringToBack(a []string, s string) {
-	for i, s2 := range a {
-		if s2 == s {
-			a = append(a[:i], append(a[i+1:], s)...)
-		}
 	}
 }
 

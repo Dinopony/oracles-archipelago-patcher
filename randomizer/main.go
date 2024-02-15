@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"bufio"
 )
 
 type logFunc func(string, ...interface{})
@@ -254,22 +255,15 @@ func Main() {
 			return
 		}
 	case "":
-		// no devcmd, run randomizer normally
-		if flagMulti != "" ||
-			(flag.NArg() > 0 && flag.NArg()+flag.NFlag() > 1) { // CLI used
-			// run randomizer on main goroutine
-			runRandomizer(nil, optsList, func(s string, a ...interface{}) {
-				fmt.Printf(s, a...)
-				fmt.Println()
-			})
-		} else { // CLI maybe not used
-			// run TUI on main goroutine and randomizer on alternate goroutine
-			ui := newUI("oracles randomizer " + version)
-			go runRandomizer(ui, optsList, func(s string, a ...interface{}) {
-				ui.printf(s, a...)
-			})
-			ui.run()
-		}
+		fmt.Println()
+		fmt.Println("Oracles Archipelago Patcher - " + version)
+		fmt.Println("=========================================")
+		fmt.Println()
+
+		runRandomizer(optsList, func(s string, a ...interface{}) {
+			fmt.Printf(s, a...)
+			fmt.Println()
+		})
 	default:
 		fmt.Printf("invalid dev command: %s\n", flagDevCmd)
 	}
@@ -277,28 +271,14 @@ func Main() {
 
 // run the main randomizer routine, printing messages via logf, which should
 // act analogously to fmt.Printf with added newline.
-func runRandomizer(ui *uiInstance, optsList []*randomizerOptions, logf logFunc) {
-	// close TUI after randomizer is done
-	defer func() {
-		if ui != nil {
-			ui.done()
-		}
-	}()
-
+func runRandomizer(optsList []*randomizerOptions, logf logFunc) {
 	// if rom is to be randomized, infile must be non-empty after switch
-	dirName, infiles, outfiles := getRomPaths(ui, optsList, logf)
+	dirName, infiles, outfiles := getRomPaths(optsList, logf)
 	if infiles != nil {
 		roms := make([]*romState, len(infiles))
 		routes := make([]*routeInfo, len(infiles))
 
-		if ui != nil {
-			if ui.doPrompt("use specific seed? (y/n)") == 'y' {
-				optsList[0].seed =
-					ui.promptSeed("enter seed: (8-digit hex number)")
-				logf("using seed %s.", optsList[0].seed)
-			}
-		}
-		seed, err := setRandomSeed(optsList[0].seed)
+		seed, err := setRandomSeed("")
 		if err != nil {
 			fatal(err, logf)
 			return
@@ -327,11 +307,12 @@ func runRandomizer(ui *uiInstance, optsList []*randomizerOptions, logf logFunc) 
 				return
 			}
 
-			logf("randomizing %s.", infile)
-			getAndLogOptions(game, ui, ropts, logf)
-			if ui != nil {
-				logf("")
-			}
+			logf("Patching %s...", infile)
+
+			ropts.hard = false
+			ropts.treewarp = true
+			ropts.dungeons = false
+			ropts.portals = false
 
 			roms[i].setTreewarp(ropts.treewarp)
 
@@ -359,18 +340,6 @@ func runRandomizer(ui *uiInstance, optsList []*randomizerOptions, logf logFunc) 
 			ropts.portals = route.portals != nil && len(route.portals) > 0
 		}
 
-		// come up with log data
-		g, checks, spheres, extra := getAllSpheres(routes)
-		resetFunc := func() {
-			for _, ri := range routes {
-				ri.graph.reset()
-			}
-		}
-		if flagVerbose {
-			logf("%d checks", len(checks))
-			logf("%d spheres", len(spheres))
-		}
-
 		// accumulate all treasures for reference by log functions
 		treasures := make(map[string]*treasure)
 		for _, rom := range roms {
@@ -396,8 +365,7 @@ func runRandomizer(ui *uiInstance, optsList []*randomizerOptions, logf logFunc) 
 			}
 			logFilename := strings.Replace(outfile, ".gbc", "", 1) + "_log.txt"
 
-			sum, err := applyRoute(rom, routes[i], dirName, logFilename, ropts,
-				checks, spheres, extra, g, resetFunc, treasures, flagVerbose, logf)
+			sum, err := setRomData(rom, routes[i], ropts, logf, flagVerbose)
 			if err != nil {
 				fatal(err, logf)
 				return
@@ -408,24 +376,18 @@ func runRandomizer(ui *uiInstance, optsList []*randomizerOptions, logf logFunc) 
 				return
 			}
 		}
-
-		for _, ri := range routes {
-			ri.graph["start"].removeParent(g["start"])
-			g["done"].removeParent(ri.graph["done"])
-		}
 	}
 }
 
 // returns the target directory and filenames of input and output files. the
 // output filename may be empty, in which case it will be automatically
 // determined.
-func getRomPaths(ui *uiInstance, optsList []*randomizerOptions,
-	logf logFunc) (dir string, in, out []string) {
+func getRomPaths(optsList []*randomizerOptions, logf logFunc) (dir string, in, out []string) {
 	switch flag.NArg() {
 	case 0: // no specified files, search in executable's directory
 		var seasons, ages string
 		var err error
-		dir, seasons, ages, err = findVanillaRoms(ui, logf)
+		dir, seasons, ages, err = findVanillaRoms(logf)
 		if err != nil {
 			fatal(err, logf)
 			break
@@ -433,25 +395,15 @@ func getRomPaths(ui *uiInstance, optsList []*randomizerOptions,
 
 		// print which files, if any, are found.
 		if seasons != "" {
-			if ui != nil {
-				ui.printPath("found vanilla US seasons ROM: ", seasons, "")
-			} else {
-				logf("found vanilla US seasons ROM: %s", seasons)
-			}
+			logf("found vanilla US seasons ROM: %s", seasons)
 		} else {
 			logf("no vanilla US seasons ROM found.")
 		}
+		
 		if ages != "" {
-			if ui != nil {
-				ui.printPath("found vanilla US ages ROM: ", ages, "")
-			} else {
-				logf("found vanilla US ages ROM: %s", ages)
-			}
+			logf("found vanilla US ages ROM: %s", ages)
 		} else {
 			logf("no vanilla US ages ROM found.")
-		}
-		if ui != nil {
-			logf("")
 		}
 
 		// determine which filename to use based on what roms are found, and on
@@ -471,8 +423,10 @@ func getRomPaths(ui *uiInstance, optsList []*randomizerOptions,
 					break
 				}
 			} else if seasons != "" && ages != "" {
-				which := ui.doPrompt("randomize (s)easons or (a)ges?")
-				in[i] = ternary(which == 's', seasons, ages).(string)
+				reader := bufio.NewReader(os.Stdin)
+				logf("randomize (s)easons or (a)ges?")
+				which, _ := reader.ReadString('\n')
+				in[i] = ternary(which == "s", seasons, ages).(string)
 			} else if seasons != "" {
 				in[i] = seasons
 			} else {
@@ -489,33 +443,6 @@ func getRomPaths(ui *uiInstance, optsList []*randomizerOptions,
 	}
 
 	return dir, in, out
-}
-
-// getAndLogOptions logs values of selected options, prompting for them first
-// if the TUI is used.
-func getAndLogOptions(game int, ui *uiInstance, ropts *randomizerOptions,
-	logf logFunc) {
-	if ui != nil {
-		ropts.hard = ui.doPrompt("enable hard difficulty? (y/n)") == 'y'
-	}
-	logf("using %s difficulty.", ternary(ropts.hard, "hard", "normal"))
-
-	if ui != nil {
-		ropts.treewarp = ui.doPrompt("enable tree warp? (y/n)") == 'y'
-	}
-	logf("tree warp %s.", ternary(ropts.treewarp, "on", "off"))
-
-	if ui != nil {
-		ropts.dungeons = ui.doPrompt("shuffle dungeons? (y/n)") == 'y'
-	}
-	logf("dungeon shuffle %s.", ternary(ropts.dungeons, "on", "off"))
-
-	if game == gameSeasons {
-		if ui != nil {
-			ropts.portals = ui.doPrompt("shuffle portals? (y/n)") == 'y'
-		}
-		logf("portal shuffle %s.", ternary(ropts.portals, "on", "off"))
-	}
 }
 
 // attempt to write rom data to a file and print summary info.
@@ -546,19 +473,15 @@ func writeRom(b []byte, dirName, filename, logFilename string, seed uint32,
 
 // search for a vanilla US seasons and ages roms in the executable's directory,
 // and return their filenames.
-func findVanillaRoms(
-	ui *uiInstance, logf logFunc) (dirName, seasons, ages string, err error) {
+func findVanillaRoms(logf logFunc) (dirName, seasons, ages string, err error) {
 	// read slice of file info from executable's dir
 	exe, err := os.Executable()
 	if err != nil {
 		return
 	}
 	dirName = filepath.Dir(exe)
-	if ui != nil {
-		ui.printPath("searching ", dirName, " for ROMs.")
-	} else {
-		logf("searching %s for ROMs.", dirName)
-	}
+
+	logf("searching %s for ROMs.", dirName)
 	dir, err := os.Open(dirName)
 	if err != nil {
 		return
@@ -653,19 +576,6 @@ func setRandomSeed(hexString string) (uint32, error) {
 	rand.Seed(int64(seed))
 
 	return seed, nil
-}
-
-// messes up rom data and writes it to a file.
-func applyRoute(rom *romState, ri *routeInfo, dirName, logFilename string,
-	ropts *randomizerOptions, checks map[*node]*node, spheres [][]*node,
-	extra []*node, g graph, resetFunc func(), treasures map[string]*treasure,
-	verbose bool, logf logFunc) ([]byte, error) {
-	checksum, err := setRomData(rom, ri, ropts, logf, verbose)
-	if err != nil {
-		return nil, err
-	}
-
-	return checksum, nil
 }
 
 // mutates the rom data in-place based on the given route. this doesn't write

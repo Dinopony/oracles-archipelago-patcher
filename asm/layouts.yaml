@@ -151,13 +151,14 @@ seasons:
 
   # change water tiles outside d4 from deep to shallow, to prevent softlock
   # from entering without flippers or default summer.
-  21/54a9/: db fa,6b,6b,53,fa,3f,fa
-  22/5197/: db fa,6b,6b,53,fa,3f,fa
-  23/4f6c/: db fa,6b,6b,53,fa,3f,fa
-  24/4cec/: db dc,00,fc,06,dc,dc,dc,dc
+  # 21/54a9/: db fa,6b,6b,53,fa,3f,fa
+  # 22/5197/: db fa,6b,6b,53,fa,3f,fa
+  # 23/4f6c/: db fa,6b,6b,53,fa,3f,fa
+  # 24/4cec/: db dc,00,fc,06,dc,dc,dc,dc
 
   # block the waterfalls from mt cucco to sunken city, so that there only needs
   # to be one warning interaction at the vines.
+  # TODO: Remove?
   21/5bd1/: db 40,40,40
   21/5c17/: db 40,40,40
   22/58a4/: db 40,40,40
@@ -177,20 +178,20 @@ seasons:
   # it, with shallow water. applySeasonsTileSubstitutions also contributes to
   # this, since in-place changes can't keep deep water tiles on the edge of the
   # screen.
-  21/6d9b/: db fa,fa,fa
-  21/6da3/: db fa
-  21/6db4/: db fa,fa,fa
-  21/6dbd/: db fa
-  21/71f1/: db fa,fa,fa
-  21/71f9/: db fa,fa
-  21/71fd/: db fa
-  21/7208/: db fa
-  21/7214/: db fa
+  # 21/6d9b/: db fa,fa,fa
+  # 21/6da3/: db fa
+  # 21/6db4/: db fa,fa,fa
+  # 21/6dbd/: db fa
+  # 21/71f1/: db fa,fa,fa
+  # 21/71f9/: db fa,fa
+  # 21/71fd/: db fa
+  # 21/7208/: db fa
+  # 21/7214/: db fa
 
   # replace deep water in eyeglass lake water with shallow water to prevent a
   # softlock from default winter + summer rod + no flippers.
-  22/74e4/: db fa
-  22/78ed/: db fa,fa,fa,fa
+  # 22/74e4/: db fa
+  # 22/78ed/: db fa,fa,fa,fa
 
   # replace the stairs outside the portal in eyeglass lake summer with a
   # railing, since if the player jumps off they fall into lost woods.
