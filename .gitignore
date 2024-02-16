@@ -11,3 +11,5 @@ untracked/
 *.prof
 *log*.txt
 .idea
+oracles-archipelago-patcher.exe
+*.txt
