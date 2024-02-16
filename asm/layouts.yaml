@@ -151,22 +151,21 @@ seasons:
 
   # change water tiles outside d4 from deep to shallow, to prevent softlock
   # from entering without flippers or default summer.
-  # 21/54a9/: db fa,6b,6b,53,fa,3f,fa
-  # 22/5197/: db fa,6b,6b,53,fa,3f,fa
-  # 23/4f6c/: db fa,6b,6b,53,fa,3f,fa
-  # 24/4cec/: db dc,00,fc,06,dc,dc,dc,dc
+  21/54a9/: db fa,6b,6b,53,fa,3f,fa
+  22/5197/: db fa,6b,6b,53,fa,3f,fa
+  23/4f6c/: db fa,6b,6b,53,fa,3f,fa
+  24/4cec/: db dc,00,fc,06,dc,dc,dc,dc
 
   # block the waterfalls from mt cucco to sunken city, so that there only needs
   # to be one warning interaction at the vines.
-  # TODO: Remove?
-  21/5bd1/: db 40,40,40
-  21/5c17/: db 40,40,40
-  22/58a4/: db 40,40,40
-  22/58ea/: db 40,40,40
-  23/5645/: db 40,40,40
-  23/568b/: db 40,40,40
-  24/54fa/: db 40,40,40
-  24/5540/: db 40,40,40
+  # 21/5bd1/: db 40,40,40
+  # 21/5c17/: db 40,40,40
+  # 22/58a4/: db 40,40,40
+  # 22/58ea/: db 40,40,40
+  # 23/5645/: db 40,40,40
+  # 23/568b/: db 40,40,40
+  # 24/54fa/: db 40,40,40
+  # 24/5540/: db 40,40,40
 
   # replace some currents in spool swamp in spring so that the player isn't
   # trapped by them.
