@@ -1,7 +1,7 @@
 package main
 
 import (
-  "oracles-randomizer-ng/randomizer"
+  "oracles-archipelago-patcher/randomizer"
 )
 
 func main() {

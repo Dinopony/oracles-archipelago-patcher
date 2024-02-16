@@ -1,3 +1,3 @@
-module oracles-randomizer-ng/randomizer
+module oracles-archipelago-patcher/randomizer
 
 go 1.21.1
