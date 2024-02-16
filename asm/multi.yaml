@@ -1,35 +1,4 @@
 floating:
-  # returns b = id, c = subid for b = id, c = param.
-  # might loop forever if given bad data.
-  reverseTreasureLookup: |
-      ld hl,treasureObjectData
-      ld a,b
-      rst 18
-      rst 18
-      .idLoop
-      bit 7,(hl)
-      jr z,.idDone
-      inc hl
-      ldi a,(hl)
-      ld h,(hl)
-      ld l,a
-      jr .idLoop
-      .idDone
-      ld a,c
-      ld c,00
-      inc hl
-      .paramLoop
-      cp (hl)
-      jr z,.paramDone
-      inc hl
-      inc hl
-      inc hl
-      inc hl
-      inc c
-      jr .paramLoop
-      .paramDone
-      ret
-
   # use different text if the item you receive is for another player.
   subMultiworldText: |
       call getMultiworldItemDest
@@ -149,12 +118,11 @@ common:
       jr nz,.done
       ld hl,wNetTreasureIn
       ldi a,(hl)
-      and a
+      ld b,a
+      ld c,(hl)
+      and b
       jr z,.done
       cp a,TREASURE_FEATHER
-      ld b,a
-      ld a,(hl)
-      ld c,a
       jr nz,.noUpgradeFeather
       ld a,(wWhichGame)
       and a
@@ -164,9 +132,6 @@ common:
       jr z,.noUpgradeFeather
       ld c,02
       .noUpgradeFeather
-      ld e,BANK_TREASURE_DATA
-      ld hl,reverseTreasureLookup
-      call interBankCall
       call createTreasure
       jr nz,.done
       ld de,w1Link.yh
@@ -176,8 +141,6 @@ common:
       ld (hl),a
       ld l,71
       ld (hl),02
-      ld hl,wNetCountIn
-      inc (hl)
       ld hl,wNetTreasureIn
       xor a
       ldi (hl),a
@@ -202,7 +165,6 @@ seasons:
       jp setGlobalFlag
   0f/7145/: call checkSetFlag30
 
-  15/reverseTreasureLookup: /include reverseTreasureLookup
   15/subMultiworldText: /include subMultiworldText
   15/getMultiworldItemDest: /include getMultiworldItemDest
   15/setTextNumberSubstitution: /include setTextNumberSubstitution
@@ -238,7 +200,6 @@ ages:
       jp setGlobalFlag
   15/4303/: jp checkSetFileCompleted
 
-  16/reverseTreasureLookup: /include reverseTreasureLookup
   16/subMultiworldText: /include subMultiworldText
   16/getMultiworldItemDest: /include getMultiworldItemDest
   16/setTextNumberSubstitution: /include setTextNumberSubstitution
