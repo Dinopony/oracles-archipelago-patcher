@@ -18,6 +18,8 @@ import (
 	"bufio"
 )
 
+const version = "0.9.0"
+
 type logFunc func(string, ...interface{})
 
 var keyRegexp = regexp.MustCompile("(slate|(small|boss) key)$")
