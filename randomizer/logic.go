@@ -164,14 +164,14 @@ func loadParents(v interface{}) []interface{} {
 }
 
 var rupeeValues = map[string]int{
-	"rupees, 1":   1,
-	"rupees, 5":   5,
-	"rupees, 10":  10,
-	"rupees, 20":  20,
-	"rupees, 30":  30,
-	"rupees, 50":  50,
-	"rupees, 100": 100,
-	"rupees, 200": 200,
+	"Rupees (1)":   1,
+	"Rupees (5)":   5,
+	"Rupees (10)":  10,
+	"Rupees (20)":  20,
+	"Rupees (30)":  30,
+	"Rupees (50)":  50,
+	"Rupees (100)": 100,
+	"Rupees (200)": 200,
 
 	"goron mountain old man":      300,
 	"western coast old man":       300,

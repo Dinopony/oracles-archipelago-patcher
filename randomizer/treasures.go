@@ -127,45 +127,45 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 	if game == gameSeasons {
 		// these treasures don't exist as treasure interactions in the vanilla
 		// game, so they're missing some data.
-		m["fool's ore"].text = 0x36
-		m["fool's ore"].sprite = 0x4a
-		m["rare peach stone"].sprite = 0x4e
-		m["ribbon"].text = 0x41
-		m["ribbon"].sprite = 0x4f
-		m["treasure map"].text = 0x6c
-		m["treasure map"].sprite = 0x49
-		m["member's card"].text = 0x45
-		m["member's card"].sprite = 0x48
+		m["Fool's Ore"].text = 0x36
+		m["Fool's Ore"].sprite = 0x4a
+		m["Rare Peach Stone"].sprite = 0x4e
+		m["Ribbon"].text = 0x41
+		m["Ribbon"].sprite = 0x4f
+		m["Treasure Map"].text = 0x6c
+		m["Treasure Map"].sprite = 0x49
+		m["Member's Card"].text = 0x45
+		m["Member's Card"].sprite = 0x48
 
 		// and seasons flutes aren't initially real treasures like ages ones are
-		t := m["ricky's flute"]
+		t := m["Ricky's Flute"]
 		t.addr = address{}
 		t.param = 0x0b
-		t = m["dimitri's flute"]
+		t = m["Dimitri's Flute"]
 		t.addr = address{}
 		t.param = 0x0c
-		t = m["moosh's flute"]
+		t = m["Moosh's Flute"]
 		t.addr = address{}
 		t.param = 0x0d
 
 		// give bracelet a level for ages multiworld compatibility
-		m["bracelet"].param = 0x01
+		m["Bracelet"].param = 0x01
 	} else {
 		// give strange flutes identified flute text and palettes
-		m["ricky's flute"].text = 0x38
-		m["ricky's flute"].sprite = 0x6c
-		m["dimitri's flute"].text = 0x39
-		m["dimitri's flute"].sprite = 0x6d
-		m["moosh's flute"].text = 0x3a
-		m["moosh's flute"].sprite = 0x6e
+		m["Ricky's Flute"].text = 0x38
+		m["Ricky's Flute"].sprite = 0x6c
+		m["Dimitri's Flute"].text = 0x39
+		m["Dimitri's Flute"].sprite = 0x6d
+		m["Moosh's Flute"].text = 0x3a
+		m["Moosh's Flute"].sprite = 0x6e
 	}
 
 	// add dummy treasures for seed trees
-	m["ember tree seeds"] = &treasure{id: 0x00}
-	m["scent tree seeds"] = &treasure{id: 0x01}
-	m["pegasus tree seeds"] = &treasure{id: 0x02}
-	m["gale tree seeds"] = &treasure{id: 0x03}
-	m["mystery tree seeds"] = &treasure{id: 0x04}
+	m["Ember Seeds"] = &treasure{id: 0x00}
+	m["Scent Seeds"] = &treasure{id: 0x01}
+	m["Pegasus Seeds"] = &treasure{id: 0x02}
+	m["Gale Seeds"] = &treasure{id: 0x03}
+	m["Mystery Seeds"] = &treasure{id: 0x04}
 
 	return m
 }

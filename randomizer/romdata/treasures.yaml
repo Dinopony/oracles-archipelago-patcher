@@ -4,124 +4,122 @@
 
 common:
   # equip items
-  wooden shield: 0x0100
-  iron shield: 0x0101
-  bombs, 10: 0x0300
-  sword: 0x0500
-  boomerang: 0x0600
-  biggoron's sword: 0x0c00
-  bombchu, 10: 0x0d00
-  ricky's flute: 0x0e00 # these flutes are correct for ages but fake for seasons
-  dimitri's flute: 0x0e01
-  moosh's flute: 0x0e02
-  shovel: 0x1500
-  bracelet: 0x1600
-  feather: 0x1700
-  satchel: 0x1900
+  Wooden Shield: 0x0100
+  Iron Shield: 0x0101
+  Bombs (10): 0x0300
+  Progressive Sword: 0x0500
+  Progressive Boomerang: 0x0600
+  Biggoron's Sword: 0x0c00
+  Bombchu (10): 0x0d00
+  Ricky's Flute: 0x0e00 # these flutes are correct for ages but fake for seasons
+  Dimitri's Flute: 0x0e01
+  Moosh's Flute: 0x0e02
+  Shovel: 0x1500
+  Bracelet: 0x1600
+  Progressive Feather: 0x1700
+  Seed Satchel: 0x1900
 
   # rupees
-  rupees, 10: 0x2802
-  rupees, 20: 0x2803
-  rupees, 30: 0x2804
-  rupees, 50: 0x2805
-  rupees, 100: 0x2806
+  Rupees (10): 0x2802
+  Rupees (20): 0x2803
+  Rupees (30): 0x2804
+  Rupees (50): 0x2805
+  Rupees (100): 0x2806
 
   # hearts
-  heart container: 0x2a00
-  piece of heart: 0x2b01
+  Heart Container: 0x2a00
+  Piece of Heart: 0x2b01
 
   # rings
-  discovery ring: 0x2d04
-  power ring L-1: 0x2d0e
-
-  # dungeon items
-  d0 small key: 0x3003
-  d1 small key: 0x3003
-  d2 small key: 0x3003
-  d3 small key: 0x3003
-  d4 small key: 0x3003
-  d5 small key: 0x3003
-  d7 small key: 0x3003
-  d8 small key: 0x3003
-  d1 boss key: 0x3103
-  d2 boss key: 0x3103
-  d3 boss key: 0x3103
-  d4 boss key: 0x3103 # technically a different subid for seasons
-  d5 boss key: 0x3103 # ^
-  d6 boss key: 0x3103
-  d7 boss key: 0x3103
-  d8 boss key: 0x3103
-  d1 compass: 0x3202
-  d2 compass: 0x3202
-  d3 compass: 0x3202
-  d4 compass: 0x3202
-  d5 compass: 0x3202
-  d7 compass: 0x3202
-  d8 compass: 0x3202
-  d1 dungeon map: 0x3302
-  d2 dungeon map: 0x3302
-  d3 dungeon map: 0x3302
-  d4 dungeon map: 0x3302
-  d5 dungeon map: 0x3302
-  d7 dungeon map: 0x3302
-  d8 dungeon map: 0x3302
+  Discovery Ring: 0x2d04
+  Power Ring L-1: 0x2d0e
 
   # common page 2
-  flippers: 0x2e00
-  gasha seed: 0x3401
+  Flippers: 0x2e00
+  Gasha Seed: 0x3401
 
 seasons:
+  # dungeon items
+  Small Key (Hero's Cave): 0x3003
+  Small Key (Gnarled Root Dungeon): 0x3003
+  Small Key (Snake's Remains): 0x3003
+  Small Key (Poison Moth's Lair): 0x3003
+  Small Key (Dancing Dragon Dungeon): 0x3003
+  Small Key (Unicorn's Cave): 0x3003
+  Small Key (Ancient Ruins): 0x3003
+  Small Key (Explorer's Crypt): 0x3003
+  Small Key (Sword & Shield Maze): 0x3003
+  Boss Key (Gnarled Root Dungeon): 0x3103
+  Boss Key (Snake's Remains): 0x3103
+  Boss Key (Poison Moth's Lair): 0x3103
+  Boss Key (Dancing Dragon Dungeon): 0x3103 # technically a different subid for seasons
+  Boss Key (Unicorn's Cave): 0x3103 # ^
+  Boss Key (Ancient Ruins): 0x3103
+  Boss Key (Explorer's Crypt): 0x3103
+  Boss Key (Sword & Shield Maze): 0x3103
+  Compass (Gnarled Root Dungeon): 0x3202
+  Compass (Snake's Remains): 0x3202
+  Compass (Poison Moth's Lair): 0x3202
+  Compass (Dancing Dragon Dungeon): 0x3202
+  Compass (Unicorn's Cave): 0x3202
+  Compass (Ancient Ruins): 0x3202
+  Compass (Explorer's Crypt): 0x3202
+  Compass (Sword & Shield Maze): 0x3202
+  Dungeon Map (Gnarled Root Dungeon): 0x3302
+  Dungeon Map (Snake's Remains): 0x3302
+  Dungeon Map (Poison Moth's Lair): 0x3302
+  Dungeon Map (Dancing Dragon Dungeon): 0x3302
+  Dungeon Map (Unicorn's Cave): 0x3302
+  Dungeon Map (Ancient Ruins): 0x3302
+  Dungeon Map (Explorer's Crypt): 0x3302
+  Dungeon Map (Sword & Shield Maze): 0x3302
+
   # equip items
-  spring: 0x0702
-  summer: 0x0703
-  autumn: 0x0704
-  winter: 0x0705
-  magnet gloves: 0x0800
-  slingshot: 0x1300
-  fool's ore: 0x1e00
+  Rod of Seasons (Spring): 0x0702
+  Rod of Seasons (Summer): 0x0703
+  Rod of Seasons (Autumn): 0x0704
+  Rod of Seasons (Winter): 0x0705
+  Magnet Gloves: 0x0800
+  Progressive Slingshot: 0x1300
+  Fool's Ore: 0x1e00
 
   # rupees
-  rupees, 1: 0x2800
-  rupees, 5: 0x2801
+  Rupees (1): 0x2800
+  Rupees (5): 0x2801
 
   # hearts
-  rare peach stone: 0x2b02 # subrosia market
-
-  # dungeon items
-  d6 small key: 0x3003
-  d6 compass: 0x3202
-  d6 dungeon map: 0x3302
+  Rare Peach Stone: 0x2b02 # subrosia market
 
   # rings
-  green joy ring: 0x2d01
-  moblin ring: 0x2d05
-  steadfast ring: 0x2d06
-  blast ring: 0x2d07
-  rang ring L-1: 0x2d08
-  octo ring: 0x2d09
-  quicksand ring: 0x2d0a
-  armor ring L-2: 0x2d0b
-  subrosian ring: 0x2d10
+  Green Joy Ring: 0x2d01
+  Moblin Ring: 0x2d05
+  Steadfast Ring: 0x2d06
+  Blast Ring: 0x2d07
+  Rang Ring L-1: 0x2d08
+  Octo Ring: 0x2d09
+  Quicksand Ring: 0x2d0a
+  Armor Ring L-2: 0x2d0b
+  Subrosian Ring: 0x2d10
 
   # page 2
-  gnarled key: 0x4200
-  floodgate key: 0x4300
-  dragon key: 0x4400
-  star ore: 0x4500
-  ribbon: 0x4600
-  spring banana: 0x4700
-  ricky's gloves: 0x4800
-  rusty bell: 0x4a00
-  treasure map: 0x4b00
-  round jewel: 0x4c00
-  pyramid jewel: 0x4d00
-  square jewel: 0x4e00
-  x-shaped jewel: 0x4f00
-  red ore: 0x5000
-  blue ore: 0x5100
-  hard ore: 0x5200
-  member's card: 0x5300
-  master's plaque: 0x5400
+  Gnarled Key: 0x4200
+  Floodgate Key: 0x4300
+  Dragon Key: 0x4400
+  Star Ore: 0x4500
+  Ribbon: 0x4600
+  Spring Banana: 0x4700
+  Ricky's Gloves: 0x4800
+  Rusty Bell: 0x4a00
+  Treasure Map: 0x4b00
+  Round Jewel: 0x4c00
+  Pyramid Jewel: 0x4d00
+  Square Jewel: 0x4e00
+  X-Shaped Jewel: 0x4f00
+  Red Ore: 0x5000
+  Blue Ore: 0x5100
+  Hard Ore: 0x5200
+  Member's Card: 0x5300
+  Master's Plaque: 0x5400
 
 ages:
   cane: 0x0400
@@ -130,7 +128,7 @@ ages:
   harp: 0x2500 # actually tune of echoes, which gives harp as well
 
   # rupees
-  rupees, 200: 0x2808
+  Rupees (200): 0x2808
 
   # rings
   gold joy ring: 0x2d16
@@ -163,7 +161,7 @@ ages:
   mermaid key: 0x4400
   old mermaid key: 0x4500
   library key: 0x4600
-  ricky's gloves: 0x4800
+  Ricky's Gloves: 0x4800
   bomb flower: 0x4900
   slate: 0x4b00
   tuni nut: 0x4c00

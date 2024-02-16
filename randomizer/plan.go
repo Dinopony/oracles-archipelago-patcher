@@ -79,10 +79,9 @@ func parseSummary(path string, game int) (*plan, error) {
 							break
 						}
 					}
-					section[nullKey] = ungetNiceName(submatches[2], game)
+					section[nullKey] = submatches[2]
 				} else {
-					section[ungetNiceName(submatches[1], game)] =
-						ungetNiceName(submatches[2], game)
+					section[submatches[1]] = submatches[2]
 				}
 			}
 		}
@@ -105,7 +104,7 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	// must init rings before item placement
 	ringValues := make([]string, 0)
 	for _, item := range p.items {
-		if strings.Contains(item, " ring") {
+		if strings.Contains(item, " Ring") {
 			ringValues = append(ringValues, item)
 		}
 	}
@@ -138,14 +137,14 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 		ri.usedSlots.PushBack(ri.graph[slot])
 
 		// set flute if applicable
-		if strings.HasSuffix(item, "flute") {
+		if strings.HasSuffix(item, "Flute") {
 			prevCompanion := ri.companion
 			switch item {
-			case "ricky's flute":
+			case "Ricky's Flute":
 				ri.companion = ricky
-			case "dimitri's flute":
+			case "Dimitri's Flute":
 				ri.companion = dimitri
-			case "moosh's flute":
+			case "Moosh's Flute":
 				ri.companion = moosh
 			}
 			if fluteSet && ri.companion != prevCompanion {

@@ -131,8 +131,8 @@ func rollSeasons(src *rand.Rand, g graph) map[string]byte {
 	return seasonMap
 }
 
-var seedNames = []string{"ember tree seeds", "scent tree seeds",
-	"pegasus tree seeds", "gale tree seeds", "mystery tree seeds"}
+var seedNames = []string{"Ember Seeds", "Scent Seeds",
+	"Pegasus Seeds", "Gale Seeds", "Mystery Seeds"}
 
 var seedTreeNames = map[string]bool{
 	"horon village tree":      true,
@@ -157,11 +157,11 @@ var seedTreeNames = map[string]bool{
 func itemFitsInSlot(itemNode, slotNode *node) bool {
 	// dummy shop slots 1 and 2 can only hold their vanilla items.
 	switch {
-	case slotNode.name == "shop, 20 rupees" && itemNode.name != "bombs, 10":
+	case slotNode.name == "shop, 20 rupees" && itemNode.name != "Bombs (10)":
 		fallthrough
-	case slotNode.name == "shop, 30 rupees" && itemNode.name != "wooden shield":
+	case slotNode.name == "shop, 30 rupees" && itemNode.name != "Wooden Shield":
 		fallthrough
-	case itemNode.name == "wooden shield" && slotNode.name != "shop, 30 rupees":
+	case itemNode.name == "Wooden Shield" && slotNode.name != "shop, 30 rupees":
 		return false
 	}
 
@@ -186,8 +186,8 @@ func itemFitsInSlot(itemNode, slotNode *node) bool {
 
 	// and only seeds can be slotted in seed trees, of course
 	switch itemNode.name {
-	case "ember tree seeds", "mystery tree seeds", "scent tree seeds",
-		"pegasus tree seeds", "gale tree seeds":
+	case "Ember Seeds", "Mystery Seeds", "Scent Seeds",
+		"Pegasus Seeds", "Gale Seeds":
 		return seedTreeNames[slotNode.name]
 	default:
 		return !seedTreeNames[slotNode.name]

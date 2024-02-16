@@ -174,7 +174,7 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 
 		// annoying special case to prevent text on key drop
 		mut := rom.itemSlots["d7 armos puzzle"]
-		if mut.treasure.id == rom.treasures["d7 small key"].id {
+		if mut.treasure.id == rom.treasures["Small Key (Explorer's Crypt)"].id {
 			rom.data[mut.subidAddrs[0].fullOffset()] = 0x01
 		}
 	} else {
@@ -185,7 +185,7 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 
 		// other special case to prevent text on key drop
 		mut := rom.itemSlots["d8 stalfos"]
-		if mut.treasure.id == rom.treasures["d8 small key"].id {
+		if mut.treasure.id == rom.treasures["Small Key (Sword & Shield Maze)"].id {
 			rom.data[mut.subidAddrs[0].fullOffset()] = 0x00
 		}
 	}
@@ -212,15 +212,15 @@ func (rom *romState) verify() []error {
 		// ignore special cases that would error even when correct
 		switch k {
 		// seasons shop items
-		case "zero shop text", "member's card", "treasure map",
-			"rare peach stone", "ribbon":
+		case "zero shop text", "Member's Card", "Treasure Map",
+			"Rare Peach Stone", "Ribbon":
 		// flutes
-		case "ricky's flute", "dimitri's flute", "moosh's flute":
+		case "Ricky's Flute", "Dimitri's Flute", "Moosh's Flute":
 		// seasons linked chests
 		case "spool swamp cave", "woods of winter, 2nd cave",
 			"dry eyeglass lake, west cave":
 		// seasons misc.
-		case "bracelet", "temple of seasons", "fool's ore", "blaino prize",
+		case "Bracelet", "temple of seasons", "Fool's Ore", "blaino prize",
 			"mt. cucco, platform cave", "diving spot outside D4":
 		// ages progressive w/ different item IDs
 		case "nayru's house", "tokkey's composition", "rescue nayru",
@@ -383,7 +383,7 @@ func (rom *romState) setCompassData() {
 		case "d0", "d6 present":
 			break
 		case "d6 past":
-			if slot := rom.lookupItemSlot("d6 boss key"); slot != nil {
+			if slot := rom.lookupItemSlot("Boss Key (Ancient Ruins)"); slot != nil {
 				slots = append(slots, slot)
 			}
 		default:
@@ -474,7 +474,7 @@ func (rom *romState) randomizeRingPool(src *rand.Rand,
 				"slayer's ring", "rupee ring", "victory ring", "sign ring",
 				"100th ring":
 				break
-			case "rang ring L-1", "rang ring L-2", "green joy ring":
+			case "Rang Ring L-1", "rang ring L-2", "Green Joy Ring":
 				// these rings are literally useless in ages.
 				if rom.game == gameAges {
 					break
@@ -546,7 +546,7 @@ func (rom *romState) setLinkedData() {
 
 		// create slot for linked hero's cave terrace
 		linkedChest := &itemSlot{
-			treasure:    rom.treasures["rupees, 20"],
+			treasure:    rom.treasures["Rupees (20)"],
 			idAddrs:     []address{{0x15, 0x50e2}},
 			subidAddrs:  []address{{0x15, 0x50e3}},
 			group:       0x05,
