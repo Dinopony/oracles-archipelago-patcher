@@ -638,6 +638,11 @@ d8 boss:
   room: 0x0564
   addr: {bank: 0x15} # addr set at EOB
 
+mayor's gift:
+  treasure: Gasha Seed
+  room: 0x0085
+  addr: {bank: 0x0c, addr: 0xfd5} # 0x2CFD5
+
 # seed trees; semi-fake in that they don't slot real treasures
 horon village tree:
   treasure: Ember Seeds

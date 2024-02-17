@@ -8,6 +8,7 @@ hard: {or: []}
 # horon village
 horon village: {or: [start, # portal included in case something changes
     [exit horon village portal, or: [hit lever, [hard, jump 6]]]]}
+mayor's gift: [horon village]
 maku tree: [horon village, sword]
 horon village tree: [horon village, seed item,
     or: [harvest tree, dimitri's flute, [hard, break bush]]]
