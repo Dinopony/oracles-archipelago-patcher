@@ -275,7 +275,7 @@ func Main() {
 // act analogously to fmt.Printf with added newline.
 func runRandomizer(optsList []*randomizerOptions, logf logFunc) {
 	// if rom is to be randomized, infile must be non-empty after switch
-	dirName, infiles, outfiles := getRomPaths(optsList, logf)
+	dirName, infiles, _ := getRomPaths(optsList, logf)
 	if infiles != nil {
 		roms := make([]*romState, len(infiles))
 		routes := make([]*routeInfo, len(infiles))
@@ -320,7 +320,8 @@ func runRandomizer(optsList []*randomizerOptions, logf logFunc) {
 
 			if flagPlan != "" {
 				var err error
-				ropts.plan, err = parseSummary(flagPlan, game)
+				// ropts.plan, err = parseSummary(flagPlan, game)
+				ropts.plan, err = parseYamlInput(flagPlan, game)
 				if err != nil {
 					fatal(err, logf)
 					return
@@ -354,17 +355,7 @@ func runRandomizer(optsList []*randomizerOptions, logf logFunc) {
 		for i, rom := range roms {
 			ropts := optsList[i]
 
-			gamePrefix := sora(rom.game, "oos", "ooa")
-			var outfile string
-			if outfiles != nil && len(outfiles) > i {
-				outfile = outfiles[i]
-			} else if len(roms) == 1 {
-				outfile = fmt.Sprintf("%srando_%s_%s.gbc", gamePrefix, version,
-					optString(seed, ropts, "-"))
-			} else {
-				outfile = fmt.Sprintf("%srando_%s_%s_p%d.gbc", gamePrefix, version,
-					optString(seed, ropts, "-"), i+1)
-			}
+			outfile := strings.Replace(flagPlan, ".yml", ".gbc", 1)
 			logFilename := strings.Replace(outfile, ".gbc", "", 1) + "_log.txt"
 
 			sum, err := setRomData(rom, routes[i], ropts, logf, flagVerbose)

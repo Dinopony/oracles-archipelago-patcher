@@ -13,3 +13,5 @@ untracked/
 .idea
 oracles-archipelago-patcher.exe
 *.txt
+*.yaml
+*.yml

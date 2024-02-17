@@ -8,6 +8,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"gopkg.in/yaml.v2"
 )
 
 // implements the -plan flag: read a spoiler log and gen a seed from it,
@@ -20,6 +21,7 @@ type plan struct {
 	portals  map[string]string
 	seasons  map[string]string
 	hints    map[string]string
+	settings map[string]string
 }
 
 func newPlan() *plan {
@@ -29,13 +31,13 @@ func newPlan() *plan {
 		portals:  make(map[string]string),
 		seasons:  make(map[string]string),
 		hints:    make(map[string]string),
+		settings: make(map[string]string),
 	}
 }
 
 var conditionRegexp = regexp.MustCompile(`(.+?) +<- (.+)`)
 
-// loads conditions from a file in spoiler log format.
-func parseSummary(path string, game int) (*plan, error) {
+func parseYamlInput(path string, game int) (*plan, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -47,53 +49,103 @@ func parseSummary(path string, game int) (*plan, error) {
 		return nil, err
 	}
 
+	planObj := make(map[string]map[string]string)
+	yaml.Unmarshal(b, planObj)
+
 	p := newPlan()
 	p.source = string(b)
 	section := p.items
-	for _, line := range strings.Split(string(b), "\n") {
-		line = strings.Replace(line, "\r", "", 1)
-		if strings.HasPrefix(line, "--") {
-			switch line {
-			case "-- items --", "-- progression items --",
-				"-- small keys and boss keys --", "-- other items --":
-				section = p.items
-			case "-- dungeon entrances --":
-				section = p.dungeons
-			case "-- subrosia portals --":
-				section = p.portals
-			case "-- default seasons --":
-				section = p.seasons
-			case "-- hints --":
-				section = p.hints
-			default:
-				return nil, fmt.Errorf("unknown section: %q", line)
-			}
+	for name, contents := range planObj {
+		if(name == "locations") {
+			section = p.items
+		} else if(name == "dungeon entrances") {
+			section = p.dungeons
+		} else if(name == "subrosia portals") {
+			section = p.portals
+		} else if(name == "default seasons") {
+			section = p.seasons
+		} else if(name == "hints") {
+			section = p.hints
+		} else if(name == "settings") {
+			section = p.settings
 		} else {
-			submatches := conditionRegexp.FindStringSubmatch(line)
-			if submatches != nil {
-				if submatches[1] == "null" {
-					var nullKey string
-					for i := 0; true; i++ {
-						nullKey = fmt.Sprintf("null %d", i)
-						if section[nullKey] == "" {
-							break
-						}
-					}
-					section[nullKey] = submatches[2]
-				} else {
-					section[submatches[1]] = submatches[2]
-				}
-			}
+			return nil, fmt.Errorf("unknown section: %q", name)
+		}
+
+		for k,v := range contents {
+			section[k] = v
 		}
 	}
 
 	return p, nil
 }
 
+// loads conditions from a file in spoiler log format.
+//func parseSummary(path string, game int) (*plan, error) {
+//	f, err := os.Open(path)
+//	if err != nil {
+//		return nil, err
+//	}
+//	defer f.Close()
+//
+//	b, err := ioutil.ReadAll(f)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	p := newPlan()
+//	p.source = string(b)
+//	section := p.items
+//	for _, line := range strings.Split(string(b), "\n") {
+//		line = strings.Replace(line, "\r", "", 1)
+//		if strings.HasPrefix(line, "--") {
+//			switch line {
+//			case "-- items --", "-- progression items --",
+//				"-- small keys and boss keys --", "-- other items --":
+//				section = p.items
+//			case "-- dungeon entrances --":
+//				section = p.dungeons
+//			case "-- subrosia portals --":
+//				section = p.portals
+//			case "-- default seasons --":
+//				section = p.seasons
+//			case "-- hints --":
+//				section = p.hints
+//			default:
+//				return nil, fmt.Errorf("unknown section: %q", line)
+//			}
+//		} else {
+//			submatches := conditionRegexp.FindStringSubmatch(line)
+//			if submatches != nil {
+//				if submatches[1] == "null" {
+//					var nullKey string
+//					for i := 0; true; i++ {
+//						nullKey = fmt.Sprintf("null %d", i)
+//						if section[nullKey] == "" {
+//							break
+//						}
+//					}
+//					section[nullKey] = submatches[2]
+//				} else {
+//					section[submatches[1]] = submatches[2]
+//				}
+//			}
+//		}
+//	}
+//
+//	return p, nil
+//}
+
+const (
+	COMPANION_RICKY   = 1
+	COMPANION_DIMITRI = 2
+	COMPANION_MOOSH   = 3
+)
+
 // like findRoute, but uses a specified configuration instead of a random one.
 func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	ri := &routeInfo{
-		companion: sora(rom.game, moosh, dimitri).(int), // shop is default
+		companion: sora(rom.game, COMPANION_MOOSH, COMPANION_DIMITRI).(int), // shop is default
 		entrances: make(map[string]string),
 		graph:     newRouteGraph(rom),
 		src:       rand.New(rand.NewSource(0)),
@@ -101,11 +153,26 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 		usedSlots: list.New(),
 	}
 
+	switch p.settings["companion"] {
+	case "Ricky":
+		ri.companion = COMPANION_RICKY
+	case "Dimitri":
+		ri.companion = COMPANION_DIMITRI
+	case "Moosh":
+		ri.companion = COMPANION_MOOSH
+	}
+	
 	// must init rings before item placement
 	ringValues := make([]string, 0)
-	for _, item := range p.items {
+	for loc, item := range p.items {
 		if strings.Contains(item, " Ring") {
 			ringValues = append(ringValues, item)
+		}
+		if(item == "Archipelago Item") {
+			p.items[loc] = "Ricky's Gloves"
+		}
+		if(item == "Flute") {
+			p.items[loc] = fmt.Sprintf("%s's Flute", p.settings["companion"])
 		}
 	}
 	ringMap, err := rom.randomizeRingPool(ri.src, ringValues)
@@ -114,7 +181,6 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	}
 
 	// item slots
-	fluteSet := false // error if different flutes are given
 	for slot, item := range p.items {
 		// use original ring names
 		if ringName, ok := reverseLookup(ringMap, item); ok {
@@ -135,23 +201,6 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 		ri.graph[item].addParent(ri.graph[slot])
 		ri.usedItems.PushBack(ri.graph[item])
 		ri.usedSlots.PushBack(ri.graph[slot])
-
-		// set flute if applicable
-		if strings.HasSuffix(item, "Flute") {
-			prevCompanion := ri.companion
-			switch item {
-			case "Ricky's Flute":
-				ri.companion = ricky
-			case "Dimitri's Flute":
-				ri.companion = dimitri
-			case "Moosh's Flute":
-				ri.companion = moosh
-			}
-			if fluteSet && ri.companion != prevCompanion {
-				return nil, fmt.Errorf("can't have multiple types of flute")
-			}
-			fluteSet = true
-		}
 	}
 
 	// seasons
