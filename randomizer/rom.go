@@ -129,6 +129,15 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 		codeAddr = rom.codeMutables["createMtCuccoItem"].addr
 		rom.itemSlots["mt. cucco, platform cave"].idAddrs[0].offset = codeAddr.offset + 2
 		rom.itemSlots["mt. cucco, platform cave"].subidAddrs[0].offset = codeAddr.offset + 1
+
+		// prepare static items addresses
+		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
+		var i uint16 = 0
+		for _, key := range STATIC_SLOTS {
+			rom.itemSlots[key].idAddrs = []address{{codeAddr.bank, codeAddr.offset + (i*3) + 1}}
+			rom.itemSlots[key].subidAddrs = []address{{codeAddr.bank, codeAddr.offset + (i*3) + 2}}
+			i++
+		}
 	} else {
 		// explicitly set these addresses and IDs after their functions
 		mut := rom.codeMutables["script_soldierGiveItem"]
@@ -177,6 +186,12 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 		if mut.treasure.id == rom.treasures["Small Key (Explorer's Crypt)"].id {
 			rom.data[mut.subidAddrs[0].fullOffset()] = 0x01
 		}
+
+		// mutate static items
+		for _, key := range STATIC_SLOTS {
+			rom.itemSlots[key].mutate(rom.data)
+		}
+		
 	} else {
 		rom.itemSlots["nayru's house"].mutate(rom.data)
 		rom.itemSlots["deku forest soldier"].mutate(rom.data)

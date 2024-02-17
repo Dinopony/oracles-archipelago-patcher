@@ -9,6 +9,18 @@ hard: {or: []}
 horon village: {or: [start, # portal included in case something changes
     [exit horon village portal, or: [hit lever, [hard, jump 6]]]]}
 mayor's gift: [horon village]
+horon heart piece: [horon village]
+woods of winter heart piece: [horon village]
+mt. cucco heart piece: [horon village]
+windmill heart piece: [horon village]
+graveyard heart piece: [horon village]
+spool swamp heart piece: [horon village]
+temple remains heart piece: [horon village]
+mayor's house secret room: [horon village]
+subrosian house: [horon village]
+subrosian 2d cave: [horon village]
+
+mayor's house secret room: [horon village]
 maku tree: [horon village, sword]
 horon village tree: [horon village, seed item,
     or: [harvest tree, dimitri's flute, [hard, break bush]]]

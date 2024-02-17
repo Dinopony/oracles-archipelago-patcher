@@ -1,0 +1,39 @@
+seasons:
+  0a/staticItemsReplacementsLookup_body: |
+    ld a,(wActiveRoom)
+    ld b,a
+    ld hl,staticItemsReplacementsTable
+
+    .loop
+    ldi a,(hl)
+    cp a,ff
+    jr z,.notfound
+    cp b
+    jr z,.foundroom
+    inc hl
+    inc hl
+    jr .loop
+
+    .foundroom
+    ldi a,(hl)
+    ld b,a
+    ld a,(hl)
+    ld c,a
+    ret
+
+    .notfound
+    ld bc,0000
+    ret
+
+  09/staticItemsReplacementsLookup: |
+    ld e,0a
+    ld hl,staticItemsReplacementsLookup_body
+    call interBankCall
+    ret
+
+  # staticHeartPiece (0x26381)
+  09/6381/: call staticItemsReplacementsLookup
+  # staticGashaSeed (0x26608)
+  09/6608/: call staticItemsReplacementsLookup
+  # sidescrollingStaticGashaSeed (0x266aa)
+  09/66aa/: call staticItemsReplacementsLookup

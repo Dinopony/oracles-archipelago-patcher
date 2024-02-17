@@ -104,6 +104,30 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 	return b.String()
 }
 
+var STATIC_SLOTS = [...]string {
+	"horon heart piece",
+	"woods of winter heart piece",
+	"mt. cucco heart piece",
+	"windmill heart piece",
+	"graveyard heart piece",
+	"spool swamp heart piece",
+	"temple remains heart piece",
+	"mayor's house secret room",
+	"subrosian house",
+	"subrosian 2d cave",
+}
+
+func makeStaticItemsReplacementTable(game, player int, itemSlots map[string]*itemSlot) string {
+	b := new(strings.Builder)
+	for _, key := range STATIC_SLOTS {
+		slot := itemSlots[key]
+		b.Write([]byte{slot.room & 0xff, slot.treasure.id, slot.treasure.subid})
+	}
+
+	b.Write([]byte{0xff})
+	return b.String()
+}
+
 // returns a byte table (group, room, id, subid) entries for randomized small
 // key drops (and other falling items, but those entries won't be used).
 func makeRoomTreasureTable(game int, itemSlots map[string]*itemSlot) string {
@@ -417,6 +441,8 @@ func (rom *romState) initBanks() {
 		makeRoomTreasureTable(rom.game, rom.itemSlots))
 	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets",
 		string(make([]byte, numOwlIds*2)))
+	rom.replaceRaw(address{0x0a, 0}, "staticItemsReplacementsTable",
+		makeStaticItemsReplacementTable(rom.game, rom.player, rom.itemSlots))
 
 	// load all asm files in the asm/ directory.
 	fi, err := os.ReadDir("asm/")

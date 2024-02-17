@@ -167,7 +167,9 @@ func (rom *romState) loadSlots() map[string]*itemSlot {
 			if addr != (address{}) {
 				slot.idAddrs = []address{{addr.bank, addr.offset}}
 				slot.subidAddrs = []address{{addr.bank, addr.offset + 1}}
-			} else {
+			} else if raw.Collect != "touch" {
+				// touch slots with no address are static items on ground (heart pieces, gasha seeds)
+				// and their address is going to be filled later on after creating a custom table
 				panic(fmt.Sprintf("invalid raw slot: %s: %#v", name, raw))
 			}
 		}

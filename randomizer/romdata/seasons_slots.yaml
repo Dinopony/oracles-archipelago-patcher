@@ -638,6 +638,54 @@ d8 boss:
   room: 0x0564
   addr: {bank: 0x15} # addr set at EOB
 
+# static items
+horon heart piece:
+  treasure: Piece of Heart
+  room: 0x00d8
+  collect: touch
+woods of winter heart piece:
+  treasure: Piece of Heart
+  room: 0x00af
+  collect: touch
+mt. cucco heart piece:
+  treasure: Piece of Heart
+  room: 0x002d
+  collect: touch
+windmill heart piece:
+  treasure: Piece of Heart
+  room: 0x05b2
+  collect: touch
+  maptile: 0xea
+graveyard heart piece:
+  treasure: Piece of Heart
+  room: 0x00d1
+  collect: touch
+spool swamp heart piece:
+  treasure: Piece of Heart
+  room: 0x0077
+  collect: touch
+temple remains heart piece:
+  treasure: Piece of Heart
+  room: 0x05c7
+  collect: touch
+  maptile: 0x15
+mayor's house secret room:
+  treasure: Gasha Seed
+  room: 0x0387
+  collect: touch
+  maptile: 0xc8
+subrosian house:
+  treasure: Gasha Seed
+  room: 0x03a1
+  collect: touch
+  maptile: 0x1e
+subrosian 2d cave:
+  treasure: Gasha Seed
+  room: 0x07e3
+  collect: touch
+  maptile: 0x1e
+
+# npc rewards
 mayor's gift:
   treasure: Gasha Seed
   room: 0x0085
@@ -674,3 +722,22 @@ tarm ruins tree:
   room: 0x0010
   ids: [{bank: 0x0d, addr: 0x690a}]
   local: true
+
+# Bank 0x04 starts at 0x0C000
+# Bank 0x05 starts at 0x10000
+# Bank 0x06 starts at 0x14000
+# Bank 0x07 starts at 0x18000
+# Bank 0x08 starts at 0x1C000
+# Bank 0x09 starts at 0x20000
+# Bank 0x0A starts at 0x24000
+# Bank 0x0B starts at 0x28000
+# Bank 0x0C starts at 0x2C000
+# Bank 0x0D starts at 0x30000
+# Bank 0x0E starts at 0x34000
+# Bank 0x0F starts at 0x38000
+# Bank 0x10 starts at 0x3C000
+# Bank 0x11 starts at 0x40000
+# Bank 0x12 starts at 0x44000
+# Bank 0x13 starts at 0x48000
+# Bank 0x14 starts at 0x4c000
+# Bank 0x15 starts at 0x50000

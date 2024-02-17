@@ -81,12 +81,6 @@ type routeInfo struct {
 	src          *rand.Rand
 }
 
-const (
-	ricky   = 1
-	dimitri = 2
-	moosh   = 3
-)
-
 func newRouteGraph(rom *romState) graph {
 	g := newGraph()
 	totalPrenodes := getPrenodes(rom.game)

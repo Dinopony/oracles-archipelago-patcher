@@ -294,9 +294,9 @@ func runRandomizer(optsList []*randomizerOptions, logf logFunc) {
 			if err != nil {
 				fatal(err, logf)
 				return
-			} else {
-				roms[i] = newRomState(b, game, i+1, ropts.include)
 			}
+			
+			roms[i] = newRomState(b, game, i+1, ropts.include)
 
 			// sanity check beforehand
 			if errs := roms[i].verify(); errs != nil {
