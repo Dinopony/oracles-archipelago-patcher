@@ -227,7 +227,10 @@ seasons:
   0b/72f0/: db jumpifitemobtained,11 # master diver
 
   # stop hero's cave chest from giving a second sword that causes a spin slash.
-  0a/7bb8/: ld (hl),3f
+  0a/7bb9/: |
+    db 00,00,00,00,00,00,00
+    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+    db 00
 
   # remove second sword (used to trigger spin slash) from lost woods script.
   0b/641a/: db retscript
