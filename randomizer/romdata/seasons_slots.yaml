@@ -662,7 +662,7 @@ graveyard heart piece:
   collect: touch
 spool swamp heart piece:
   treasure: Piece of Heart
-  room: 0x0077
+  room: 0x00b1
   collect: touch
 temple remains heart piece:
   treasure: Piece of Heart
