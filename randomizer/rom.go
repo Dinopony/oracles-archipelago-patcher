@@ -181,6 +181,12 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 		rom.itemSlots["great furnace"].mutate(rom.data)
 		rom.itemSlots["master diver's reward"].mutate(rom.data)
 
+		codeAddr := rom.codeMutables["vasuGiveItem"].addr
+		slotToMutate := rom.itemSlots["vasu's gift"]
+		slotToMutate.idAddrs = []address{{codeAddr.bank, codeAddr.offset + 2}}
+		slotToMutate.subidAddrs = []address{{codeAddr.bank, codeAddr.offset + 1}}
+		slotToMutate.mutate(rom.data)
+
 		// annoying special case to prevent text on key drop
 		mut := rom.itemSlots["d7 armos puzzle"]
 		if mut.treasure.id == rom.treasures["Small Key (Explorer's Crypt)"].id {
@@ -236,7 +242,10 @@ func (rom *romState) verify() []error {
 			"dry eyeglass lake, west cave":
 		// seasons misc.
 		case "Bracelet", "temple of seasons", "Fool's Ore", "blaino prize",
-			"mt. cucco, platform cave", "diving spot outside D4":
+			"mt. cucco, platform cave", "diving spot outside D4", "vasu's gift",
+			"goron's gift", "dr. left reward", "malon trade", "mrs. ruul trade",
+			"subrosian chef trade", "biggoron trade", "ingo trade", "old man trade",
+			"talon trade", "syrup trade", "tick tock trade", "guru-guru trade":
 		// ages progressive w/ different item IDs
 		case "nayru's house", "tokkey's composition", "rescue nayru",
 			"d6 present vire chest":

@@ -100,8 +100,8 @@ seasons:
   0b/4dea/: db b2
 
   # move sleeping talon and his mushroom so they don't block the chest.
-  0b/6080/: db 78,a8 # mushroom
-  11/6d2b/: db 88,a8 # talon
+  # 0b/6080/: db 78,a8 # mushroom
+  # 11/6d2b/: db 88,a8 # talon
 
   # make all seeds grow in all seasons.
   0d/68b5/: cp a

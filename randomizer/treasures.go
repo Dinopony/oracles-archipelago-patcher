@@ -148,6 +148,20 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 		t.addr = address{}
 		t.param = 0x0d
 
+		// prevent changes on trade items
+		m["Cuccodex"].addr = address{}
+		m["Lon Lon Egg"].addr = address{}
+		m["Ghastly Doll"].addr = address{}
+		m["Iron Pot"].addr = address{}
+		m["Lava Soup"].addr = address{}
+		m["Goron Vase"].addr = address{}
+		m["Fish"].addr = address{}
+		m["Megaphone"].addr = address{}
+		m["Mushroom"].addr = address{}
+		m["Wooden Bird"].addr = address{}
+		m["Engine Grease"].addr = address{}
+		m["Phonograph"].addr = address{}
+
 		// give bracelet a level for ages multiworld compatibility
 		m["Bracelet"].param = 0x01
 	} else {

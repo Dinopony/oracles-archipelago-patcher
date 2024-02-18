@@ -688,8 +688,91 @@ subrosian 2d cave:
 # npc rewards
 mayor's gift:
   treasure: Gasha Seed
-  room: 0x0085
-  addr: {bank: 0x0c, addr: 0xfd5} # 0x2CFD5
+  room: 0x0385
+  collect: touch
+  addr: {bank: 0x0c, addr: 0xfd5}  # 0x2CFD5
+  maptile: 0xc8
+vasu's gift:
+  treasure: Gasha Seed  # no friendship ring
+  room: 0x0391
+  collect: touch
+  maptile: 0xe8
+goron's gift:
+  treasure: Rupees (50)  # no ring box
+  addr: {bank: 0x0c, addr: 0x1c1b}  # 0x2DC1B
+  room: 0x05c5
+  collect: touch
+  maptile: 0x19
+
+# trade items
+dr. left reward:
+  treasure: Cuccodex
+  room: 0x03a4
+  addr: {bank: 0x0b, addr: 0x5094}
+  maptile: 0xf9
+  collect: touch
+malon trade:
+  treasure: Lon Lon Egg
+  room: 0x0380
+  addr: {bank: 0x0b, addr: 0x50e3} # 2D0E3
+  maptile: 0x88
+  collect: touch
+#maple trade:
+#  treasure: ghastly doll
+#  room: 0x0000                                                     # no fixed room for ghastly doll
+#  ids: [{bank: 0x0b, addr: 0x1403}, {bank: 0x06, addr: 0x28E0}]    # 29403 / 168E0
+#  subids: [{bank: 0x0b, addr: 0x1405}, {bank: 0x06, addr: 0x28E7}] # 29405 / 168E7
+mrs. ruul trade:
+  treasure: Iron Pot
+  room: 0x03b3
+  addr: {bank: 0x0b, addr: 0x5067} # 2D067
+  maptile: 0xa3
+  collect: touch
+subrosian chef trade:
+  treasure: Lava Soup
+  room: 0x008f
+  addr: {bank: 0x15, addr: 0xbda} # 50BDA
+  maptile: 0x9a
+  collect: touch
+biggoron trade:
+  treasure: Goron Vase
+  room: 0x0008
+  addr: {bank: 0x0b, addr: 0x61d3} # 2E1D3
+  collect: touch
+ingo trade:
+  treasure: Fish
+  room: 0x0399
+  addr: {bank: 0x0b, addr: 0x6353} # 2E353
+  maptile: 0x4d
+  collect: touch
+old man trade:
+  treasure: Megaphone
+  room: 0x00b7
+  addr: {bank: 0x0b, addr: 0x5263} # 2D263
+  collect: touch
+talon trade:
+  treasure: Mushroom
+  room: 0x05b6
+  addr: {bank: 0x15, addr: 0x9f6} # 509F6
+  maptile: 0x1b
+  collect: touch
+syrup trade:
+  treasure: Wooden Bird
+  room: 0x039c
+  addr: {bank: 0x0b, addr: 0x5f41} # 2DF41
+  maptile: 0x5e
+  collect: touch
+tick tock trade:
+  treasure: Engine Grease
+  room: 0x0383
+  addr: {bank: 0x0b, addr: 0x521a} # 2D21A
+  maptile: 0xd7
+  collect: touch
+guru-guru trade:
+  treasure: Phonograph
+  room: 0x00da
+  addr: {bank: 0x0b, addr: 0x63e5} # 2E3E5
+  collect: touch
 
 # seed trees; semi-fake in that they don't slot real treasures
 horon village tree:
@@ -741,3 +824,46 @@ tarm ruins tree:
 # Bank 0x13 starts at 0x48000
 # Bank 0x14 starts at 0x4c000
 # Bank 0x15 starts at 0x50000
+# Bank 0x16 starts at 0x54000
+# Bank 0x17 starts at 0x58000
+# Bank 0x18 starts at 0x5C000
+# Bank 0x19 starts at 0x60000
+# Bank 0x1A starts at 0x64000
+# Bank 0x1B starts at 0x68000
+# Bank 0x1C starts at 0x6C000
+# Bank 0x1D starts at 0x70000
+# Bank 0x1E starts at 0x74000
+# Bank 0x1F starts at 0x78000
+# Bank 0x20 starts at 0x7C000
+# Bank 0x21 starts at 0x80000
+# Bank 0x22 starts at 0x84000
+# Bank 0x23 starts at 0x88000
+# Bank 0x24 starts at 0x8C000
+# Bank 0x25 starts at 0x90000
+# Bank 0x26 starts at 0x94000
+# Bank 0x27 starts at 0x98000
+# Bank 0x28 starts at 0x9C000
+# Bank 0x29 starts at 0xA0000
+# Bank 0x2A starts at 0xA4000
+# Bank 0x2B starts at 0xA8000
+# Bank 0x2C starts at 0xAC000
+# Bank 0x2D starts at 0xB0000
+# Bank 0x2E starts at 0xB4000
+# Bank 0x2F starts at 0xB8000
+# Bank 0x30 starts at 0xBC000
+# Bank 0x31 starts at 0xC0000
+# Bank 0x32 starts at 0xC4000
+# Bank 0x33 starts at 0xC8000
+# Bank 0x34 starts at 0xCC000
+# Bank 0x35 starts at 0xD0000
+# Bank 0x36 starts at 0xD4000
+# Bank 0x37 starts at 0xD8000
+# Bank 0x38 starts at 0xDC000
+# Bank 0x39 starts at 0xE0000
+# Bank 0x3A starts at 0xE4000
+# Bank 0x3B starts at 0xE8000
+# Bank 0x3C starts at 0xEC000
+# Bank 0x3D starts at 0xF0000
+# Bank 0x3E starts at 0xF4000
+# Bank 0x3F starts at 0xF8000
+# Bank 0x40 starts at 0xFC000
