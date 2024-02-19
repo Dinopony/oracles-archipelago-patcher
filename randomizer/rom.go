@@ -4,15 +4,11 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"fmt"
-	"math/rand"
 	"regexp"
-	"sort"
 	"strings"
 )
 
 const bankSize = 0x4000
-
-var rings []string
 
 // only applies to seasons! used for warps
 var dungeonNameRegexp = regexp.MustCompile(`^d[1-8]$`)
@@ -446,81 +442,6 @@ func getDungeonPropertiesAddr(game int, group, room byte) *address {
 		offset += 0x100
 	}
 	return &address{0x01, offset}
-}
-
-// randomizes the types of rings in the item pool, returning a map of vanilla
-// ring names to the randomized ones.
-func (rom *romState) randomizeRingPool(src *rand.Rand,
-	planValues []string) (map[string]string, error) {
-	nameMap := make(map[string]string)
-	usedRings := make([]bool, 0x40)
-
-	originalKeys := orderedKeys(rom.itemSlots)
-
-	nRings := 0
-	for _, slot := range rom.itemSlots {
-		if slot.treasure.id == 0x2d {
-			nRings++
-		}
-	}
-	ringValues, i := make([]int, nRings), 0
-
-	// load planned values if present
-	for _, v := range planValues {
-		if id := getStringIndex(rings, v); id != -1 {
-			if i >= len(ringValues) {
-				return nil, fmt.Errorf("too many rings in plan")
-			}
-			ringValues[i] = id
-			i++
-		} else {
-			return nil, fmt.Errorf("no such ring: %s", v)
-		}
-	}
-
-	// then roll random ones for the rest
-	for i < len(ringValues) {
-		// loop until we get a random ring that's not literally useless, and
-		// which we haven't used before.
-		done := false
-		for !done {
-			param := src.Intn(0x40)
-			switch rings[param] {
-			case "friendship ring", "GBA time ring", "GBA nature ring",
-				"slayer's ring", "rupee ring", "victory ring", "sign ring",
-				"100th ring":
-				break
-			case "Rang Ring L-1", "rang ring L-2", "Green Joy Ring":
-				// these rings are literally useless in ages.
-				if rom.game == gameAges {
-					break
-				}
-				fallthrough
-			default:
-				if !usedRings[param] {
-					usedRings[param] = true
-					ringValues[i] = param
-					done = true
-					i++
-				}
-			}
-		}
-	}
-	sort.Ints(ringValues)
-
-	i = 0
-	for _, key := range originalKeys {
-		slot := rom.itemSlots[key]
-		if slot.treasure.id == 0x2d {
-			oldName, _ := reverseLookup(rom.treasures, slot.treasure)
-			slot.treasure.param = byte(ringValues[i])
-			slot.treasure.displayName = rings[ringValues[i]]
-			nameMap[oldName.(string)] = slot.treasure.displayName
-			i++
-		}
-	}
-
-	return nameMap, nil
 }
 
 func (rom *romState) setBossItemAddrs() {

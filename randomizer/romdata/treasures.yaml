@@ -31,9 +31,71 @@ common:
   Piece of Heart: 0x2b01
 
   # rings
-  Discovery Ring: 0x2d04
-  Power Ring L-1: 0x2d0e
-
+  Friendship Ring: 0x2d04
+  Power Ring L-1: 0x2d05
+  Power Ring L-2: 0x2d06
+  Power Ring L-3: 0x2d07
+  Armor Ring L-1: 0x2d08
+  Armor Ring L-2: 0x2d09
+  Armor Ring L-3: 0x2d0a
+  Red Ring: 0x2d0b
+  Blue Ring: 0x2d0c
+  Green Ring: 0x2d0d
+  Cursed Ring: 0x2d0e
+  Expert's Ring: 0x2d0f
+  Blast Ring: 0x2d10
+  Rang Ring L-1: 0x2d11
+  GBA Time Ring: 0x2d12
+  Maple's Ring: 0x2d13
+  Steadfast Ring: 0x2d14
+  Pegasus Ring: 0x2d15
+  Toss Ring: 0x2d16
+  Heart Ring L-1: 0x2d17
+  Heart Ring L-2: 0x2d18
+  Swimmer's Ring: 0x2d19
+  Charge Ring: 0x2d1a
+  Light Ring L-1: 0x2d1b
+  Light Ring L-2: 0x2d1c
+  Bomber's Ring: 0x2d1d
+  Green Luck Ring: 0x2d1e
+  Blue Luck Ring: 0x2d1f
+  Gold Luck Ring: 0x2d20
+  Red Luck Ring: 0x2d21
+  Green Holy Ring: 0x2d22
+  Blue Holy Ring: 0x2d23
+  Red Holy Ring: 0x2d24
+  Snowshoe Ring: 0x2d25
+  Roc's Ring: 0x2d26
+  Quicksand Ring: 0x2d27
+  Red Joy Ring: 0x2d28
+  Blue Joy Ring: 0x2d29
+  Gold Joy Ring: 0x2d2a
+  Green Joy Ring: 0x2d2b
+  Discovery Ring: 0x2d2c
+  Rang Ring L-2: 0x2d2d
+  Octo Ring: 0x2d2e
+  Moblin Ring: 0x2d2f
+  Like Like Ring: 0x2d30
+  Subrosian Ring: 0x2d31
+  First Gen Ring: 0x2d32
+  Spin Ring: 0x2d33
+  Boombproof Ring: 0x2d34
+  Energy Ring: 0x2d35
+  Double Edge Ring: 0x2d36
+  GBA Nature Ring: 0x2d37
+  Slayer's Ring: 0x2d38
+  Rupee Ring: 0x2d39
+  Victory Ring: 0x2d3a
+  Sign Ring: 0x2d3b
+  100th Ring: 0x2d3c
+  Whisp Ring: 0x2d3d
+  Gasha Ring: 0x2d3e
+  Peace Ring: 0x2d3f
+  Zora Ring: 0x2d40
+  Fist Ring: 0x2d41
+  Whimsical Ring: 0x2d42
+  Protection Ring: 0x2d43
+  
   # common page 2
   Flippers: 0x2e00
   Gasha Seed: 0x3401
@@ -90,17 +152,6 @@ seasons:
   # hearts
   Rare Peach Stone: 0x2b02 # subrosia market
 
-  # rings
-  Green Joy Ring: 0x2d01
-  Moblin Ring: 0x2d05
-  Steadfast Ring: 0x2d06
-  Blast Ring: 0x2d07
-  Rang Ring L-1: 0x2d08
-  Octo Ring: 0x2d09
-  Quicksand Ring: 0x2d0a
-  Armor Ring L-2: 0x2d0b
-  Subrosian Ring: 0x2d10
-
   # page 2
   Gnarled Key: 0x4200
   Floodgate Key: 0x4300
@@ -143,23 +194,6 @@ ages:
 
   # rupees
   Rupees (200): 0x2808
-
-  # rings
-  gold joy ring: 0x2d16
-  armor ring L-1: 0x2d17
-  light ring L-1: 0x2d19
-  blue luck ring: 0x2d1a
-  power ring L-2: 0x2d1b
-  gold luck ring: 0x2d1c
-  pegasus ring: 0x2d1e
-  green luck ring: 0x2d20
-  green holy ring: 0x2d21
-  red holy ring: 0x2d22
-  whisp ring: 0x2d23
-  whimsical ring: 0x2d25
-  toss ring: 0x2d26
-  blue ring: 0x2d27
-  like-like ring: 0x2d28
 
   # dungeon items
   d6 present small key: 0x3003

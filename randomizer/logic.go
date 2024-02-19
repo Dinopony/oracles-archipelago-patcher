@@ -36,11 +36,6 @@ func init() {
 		loadLogic("ages_items.yaml"), loadLogic("ages_kill.yaml"),
 		loadLogic("labrynna.yaml"), loadLogic("ages_dungeons.yaml"))
 	flattenNestedPrenodes(agesPrenodes)
-
-	err := ReadEmbeddedYaml("romdata/rings.yaml", &rings)
-	if err != nil {
-		panic(err)
-	}
 }
 
 // add nested nodes to the map and turn their references into strings, adding

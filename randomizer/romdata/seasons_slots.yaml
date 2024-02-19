@@ -70,6 +70,7 @@ goron mountain, across pits:
   reverseaddr: {bank: 0x09, addr: 0x62a3}
 mt. cucco, platform cave:
   treasure: Green Joy Ring
+  collect: drop
   room: 0x05bb
   maptile: 0x1f
   reverseaddr: {bank: 0x09} # addr set at EOB
@@ -101,9 +102,11 @@ samasa desert pit:
   subids: [{bank: 0x09, addr: 0x648c}]
 samasa desert chest:
   treasure: Rang Ring L-1
+  collect: chest
   room: 0x00ff
 western coast, beach chest:
   treasure: Blast Ring
+  collect: chest
   room: 0x00e3
 western coast, in house:
   treasure: Bombs (10)
@@ -111,14 +114,17 @@ western coast, in house:
   maptile: 0xd2
 cave south of mrs. ruul:
   treasure: Octo Ring
+  collect: chest
   room: 0x04e0
   maptile: 0xb3
 cave north of D1:
   treasure: Quicksand Ring
+  collect: chest
   room: 0x04e1
   maptile: 0x87
 cave outside D2:
   treasure: Moblin Ring
+  collect: chest
   room: 0x05b3
   maptile: 0x8e
 woods of winter, 1st cave:
@@ -141,6 +147,7 @@ dry eyeglass lake, east cave:
   maptile: 0xaa
 chest in goron mountain:
   treasure: Armor Ring L-2
+  collect: chest
   room: 0x05c8
   maptile: 0x18
 natzu region, across water:
@@ -149,6 +156,7 @@ natzu region, across water:
   maptile: 0x49
 mt. cucco, talon's cave:
   treasure: Subrosian Ring
+  collect: chest
   room: 0x05b6
   maptile: 0x1b
   local: true
@@ -339,6 +347,7 @@ d1 railway chest:
   room: 0x0410
 d1 floormaster room:
   treasure: Discovery Ring
+  collect: chest
   room: 0x0417
 d1 lever room:
   treasure: Compass (Gnarled Root Dungeon)
@@ -558,6 +567,7 @@ d7 maze chest:
   room: 0x0543
 d7 right of entrance:
   treasure: Power Ring L-1
+  collect: chest
   room: 0x055a
 d7 bombed wall chest:
   treasure: Compass (Explorer's Crypt)
@@ -603,6 +613,7 @@ d8 SW lava chest:
   room: 0x056a
 d8 three eyes chest:
   treasure: Steadfast Ring
+  collect: chest
   room: 0x057d
 d8 hardhat drop:
   treasure: Small Key (Sword & Shield Maze)
@@ -755,7 +766,7 @@ talon trade:
   room: 0x05b6
   addr: {bank: 0x15, addr: 0x9f6} # 509F6
   maptile: 0x1b
-  collect: touch
+  collect: chest # could be touch, but there is another chest in this room and chest is more versatile
 syrup trade:
   treasure: Wooden Bird
   room: 0x039c

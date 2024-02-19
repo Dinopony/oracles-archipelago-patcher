@@ -162,12 +162,7 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 		ri.companion = COMPANION_MOOSH
 	}
 	
-	// must init rings before item placement
-	ringValues := make([]string, 0)
 	for loc, item := range p.items {
-		if strings.Contains(item, " Ring") {
-			ringValues = append(ringValues, item)
-		}
 		if(item == "Archipelago Item") {
 			p.items[loc] = "Ricky's Gloves"
 		}
@@ -175,18 +170,9 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 			p.items[loc] = fmt.Sprintf("%s's Flute", p.settings["companion"])
 		}
 	}
-	ringMap, err := rom.randomizeRingPool(ri.src, ringValues)
-	if err != nil {
-		return nil, err
-	}
 
 	// item slots
 	for slot, item := range p.items {
-		// use original ring names
-		if ringName, ok := reverseLookup(ringMap, item); ok {
-			item = ringName.(string)
-		}
-
 		// add given item/slot combo to list and graph
 		if _, ok := rom.treasures[item]; !ok {
 			return nil, fmt.Errorf("no such item: %s", item)
