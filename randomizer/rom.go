@@ -161,14 +161,6 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 	rom.codeMutables["collectPropertiesTable"].new =
 		[]byte(makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
 
-	// set the text IDs for all rings to $ff (blank), since custom code deals
-	// with text
-	for _, t := range rom.treasures {
-		if t.id == 0x2d {
-			t.text = 0xff
-		}
-	}
-
 	mutables := rom.getAllMutables()
 	for _, k := range orderedKeys(mutables) {
 		mutables[k].mutate(rom.data)
