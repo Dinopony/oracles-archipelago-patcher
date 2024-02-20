@@ -70,6 +70,11 @@ seasons:
     \x04\xfc\x02\x8b\x04\xb7 # How about it?
     \x02\xfe\x03\xbf\x00 # Sure / No
 
+  getArchipelagoItemText: |
+    \x03\xe8\x04\x42\x05\xea # You found an
+    item \x04\x91an\x03\x0f\x01 # item for another
+    \x03\x75!\x00 # world!
+
 ages:
   # this would overflow if the number were >2 digits.
   remoteItemText: P\x0c\x08 got an item!\x00

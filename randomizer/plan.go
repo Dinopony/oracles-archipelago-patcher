@@ -162,15 +162,6 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 		ri.companion = COMPANION_MOOSH
 	}
 	
-	for loc, item := range p.items {
-		if(item == "Archipelago Item") {
-			p.items[loc] = "Ricky's Gloves"
-		}
-		if(item == "Flute") {
-			p.items[loc] = fmt.Sprintf("%s's Flute", p.settings["companion"])
-		}
-	}
-
 	// item slots
 	for slot, item := range p.items {
 		// add given item/slot combo to list and graph

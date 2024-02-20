@@ -82,6 +82,8 @@ seasons:
 
   # 3f/4fd9/: call useOwlText
 
+  1d/5b01/getArchipelagoItemText: ''
+
 ages:
   # set text index for portal sign on crescent island.
   06/setSignTextIndex: |

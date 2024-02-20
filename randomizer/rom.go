@@ -240,6 +240,8 @@ func (rom *romState) verify() []error {
 		// ages misc.
 		case "south shore dirt", "target carts 2", "sea of storms past",
 			"starting chest", "graveyard poe":
+		// additional misc.
+		case "Archipelago Item":
 		default:
 			if err := m.check(rom.data); err != nil {
 				errors = append(errors, fmt.Errorf("%s: %v", k, err))

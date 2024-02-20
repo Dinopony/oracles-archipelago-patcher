@@ -162,6 +162,9 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 		m["Engine Grease"].addr = address{}
 		m["Phonograph"].addr = address{}
 
+		m["Archipelago Item"].text = 0x57
+		m["Archipelago Item"].sprite = 0x53
+
 		// give bracelet a level for ages multiworld compatibility
 		m["Bracelet"].param = 0x01
 	} else {
