@@ -22,6 +22,7 @@ var collectModes = map[string]byte{
 	"maku tree (seasons)": 0x82,
 	"d4 pool":             0x83,
 	"d5 armos":            0x84,
+	"talon cave":          0x85,
 	"maku tree (ages)":    0x80,
 	"target carts":        0x81,
 	"big bang game":       0x82,

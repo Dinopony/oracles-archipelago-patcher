@@ -156,7 +156,7 @@ natzu region, across water:
   maptile: 0x49
 mt. cucco, talon's cave:
   treasure: Subrosian Ring
-  collect: chest
+  collect: talon cave
   room: 0x05b6
   maptile: 0x1b
   local: true
@@ -763,10 +763,10 @@ old man trade:
   collect: touch
 talon trade:
   treasure: Mushroom
+  collect: talon cave
   room: 0x05b6
   addr: {bank: 0x15, addr: 0x9f6} # 509F6
   maptile: 0x1b
-  collect: chest # could be touch, but there is another chest in this room and chest is more versatile
 syrup trade:
   treasure: Wooden Bird
   room: 0x039c
