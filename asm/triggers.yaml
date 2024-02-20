@@ -24,7 +24,8 @@ seasons:
   09/4e72/: or a,4f  # spawn ricky
   09/7750/: or a,01  # stock member's card
 
-  0a/4f8a/: cp a,00  # old man (round jewel)
+  # 0a/4f8a/: cp a,00  # old man (round jewel)
+  
   # dimitri also won't spawn normally if you have flippers.
   09/4e55/: ld a,TREASURE_CANE_OF_SOMARIA
 
