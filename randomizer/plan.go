@@ -86,6 +86,56 @@ const (
 	COMPANION_MOOSH   = 3
 )
 
+func processLostWoodsItemSequence(sequence string, rom *romState) {
+	builder := new(strings.Builder)
+	lostWoodsItemSequence := strings.Split(sequence, " ")
+	for i:=0 ; i<4 ; i++ {
+		seasonByte := 0
+		seasonStr := ""
+		switch lostWoodsItemSequence[2*i] {
+		case "spring": 
+			seasonByte = 0
+			seasonStr = "\x02\xde"
+		case "summer": 
+			seasonByte = 1
+			seasonStr = "S\x04\xbc"
+		case "autumn": 
+			seasonByte = 2
+			seasonStr = "A\x05\x25"
+		case "winter": 
+			seasonByte = 3
+			seasonStr = "\x03\x7e"
+		}
+
+		directionByte := 0
+		directionStr := ""
+		switch lostWoodsItemSequence[2*i+1] {
+		case "up": 
+			directionByte = 0
+			directionStr = "\x03\x01"
+		case "right": 
+			directionByte = 1
+			directionStr = " \x04\x31"
+		case "down": 
+			directionByte = 2
+			directionStr = " south"
+		case "left": 
+			directionByte = 3
+			directionStr = " \x05\x1e"
+		}
+
+		builder.WriteString(seasonStr + directionStr)
+		if(i != 3) {
+			builder.WriteString("\x01")
+		} else { 
+			builder.WriteString("\x00")
+		}
+		mutableName := "lostWoodsItemSequence" + strconv.Itoa(i+1)
+		rom.codeMutables[mutableName].new = []byte{byte(seasonByte), byte(directionByte)}
+	}
+	rom.codeMutables["lostWoodsPhonographText"].new = []byte(builder.String())
+}
+
 // like findRoute, but uses a specified configuration instead of a random one.
 func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	ri := &routeInfo{
@@ -117,8 +167,7 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	// seasons
 	if rom.game == gameSeasons {
 		// Set Maku Seed to be given at the specified amount of essences
-		str, ok := p.settings["required_essences"]
-		if ok {
+		if str, ok := p.settings["required_essences"]; ok {
 			requiredEssences, err := strconv.Atoi(str)
 			if err == nil {
 				giveMakuTreeScriptAddr := rom.codeMutables["makuStageEssence8"].new
@@ -130,8 +179,7 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 		}
 
 		// Set Fool's Ore damage if specified
-		str, ok = p.settings["fools_ore_damage"]
-		if ok {
+		if str, ok := p.settings["fools_ore_damage"]; ok {
 			foolsOreDamage, err := strconv.Atoi(str); 
 			if err == nil {
 				foolsOreDamage *= -1
@@ -140,8 +188,7 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 		}
 
 		// Set heart beep interval if specified
-		str, ok = p.settings["heart_beep_interval"]
-		if ok {
+		if str, ok := p.settings["heart_beep_interval"]; ok {
 			mutable := rom.codeMutables["heartBeepInterval"]
 			switch str {
 			case "half": 	  mutable.new = []byte{0x3f * 2}
@@ -151,29 +198,8 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 			}
 		}
 		
-		str = p.settings["lost_woods_item_sequence"]
-		if ok {
-			lostWoodsItemSequence := strings.Split(str, " ")
-			for i:=0 ; i<4 ; i++ {
-				seasonByte := 0
-				switch lostWoodsItemSequence[2*i] {
-				case "spring": seasonByte = 0
-				case "summer": seasonByte = 1
-				case "autumn": seasonByte = 2
-				case "winter": seasonByte = 3
-				}
-	
-				directionByte := 0
-				switch lostWoodsItemSequence[2*i+1] {
-				case "up": directionByte = 0
-				case "right": directionByte = 1
-				case "down": directionByte = 2
-				case "left": directionByte = 3
-				}
-	
-				mutableName := "lostWoodsItemSequence" + strconv.Itoa(i+1)
-				rom.codeMutables[mutableName].new = []byte{byte(seasonByte), byte(directionByte)}
-			}
+		if str, ok := p.settings["lost_woods_item_sequence"]; ok {
+			processLostWoodsItemSequence(str, rom)
 		}
 
 		ri.seasons = make(map[string]byte, len(p.seasons))
