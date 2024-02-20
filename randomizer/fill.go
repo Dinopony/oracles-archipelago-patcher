@@ -2,10 +2,7 @@ package randomizer
 
 import (
 	"container/list"
-	"fmt"
 	"math/rand"
-	"reflect"
-	"sort"
 	"strings"
 )
 
@@ -30,45 +27,7 @@ var dungeonNames = map[int][]string{
 		"d1", "d2", "d3", "d4", "d5", "d6 present", "d6 past", "d7", "d8"},
 }
 
-// adds nodes to the map based on default contents of item slots.
-func addDefaultItemNodes(rom *romState, nodes map[string]*prenode) {
-	for _, slot := range rom.itemSlots {
-		tName, _ := reverseLookup(rom.treasures, slot.treasure)
-		nodes[tName.(string)] = rootPrenode()
-	}
-}
-
-func addNodes(prenodes map[string]*prenode, g graph) {
-	for key, pn := range prenodes {
-		switch pn.nType {
-		case andNode, orNode, rupeesNode:
-			g[key] = newNode(key, pn.nType)
-		case countNode:
-			g[key] = newNode(key, countNode)
-			g[key].minCount = pn.minCount
-		default:
-			panic("unknown logic type for " + key)
-		}
-	}
-}
-
-func addNodeParents(prenodes map[string]*prenode, g graph) {
-	for k, pn := range prenodes {
-		if g[k] == nil {
-			continue
-		}
-		for _, parent := range pn.parents {
-			if g[parent.(string)] == nil {
-				continue
-			}
-			g.addParents(map[string][]string{k: []string{parent.(string)}})
-		}
-	}
-}
-
 type routeInfo struct {
-	graph        graph
-	slots        map[string]*node
 	seed         uint32
 	seasons      map[string]byte
 	entrances    map[string]string
@@ -81,22 +40,13 @@ type routeInfo struct {
 	src          *rand.Rand
 }
 
-func newRouteGraph(rom *romState) graph {
-	g := newGraph()
-	totalPrenodes := getPrenodes(rom.game)
-	addDefaultItemNodes(rom, totalPrenodes)
-	addNodes(totalPrenodes, g)
-	addNodeParents(totalPrenodes, g)
-	return g
-}
-
 // getChecks converts a route info into a map of checks.
-func getChecks(usedItems, usedSlots *list.List) map[*node]*node {
-	checks := make(map[*node]*node)
+func getChecks(usedItems, usedSlots *list.List) map[string]string {
+	checks := make(map[string]string)
 
 	ei, es := usedItems.Front(), usedSlots.Front()
 	for ei != nil {
-		checks[es.Value.(*node)] = ei.Value.(*node)
+		checks[es.Value.(string)] = ei.Value.(string)
 		ei, es = ei.Next(), es.Next()
 	}
 
@@ -112,21 +62,13 @@ var (
 	}
 )
 
-// set the default seasons for all the applicable areas in the game, and return
-// a mapping of area name to season value.
-func rollSeasons(src *rand.Rand, g graph) map[string]byte {
-	seasonMap := make(map[string]byte, len(seasonAreas))
-	for _, area := range seasonAreas {
-		id := src.Intn(len(seasonsById))
-		season := seasonsById[id]
-		g[fmt.Sprintf("%s default %s", area, season)].addParent(g["start"])
-		seasonMap[area] = byte(id)
-	}
-	return seasonMap
+var seedNames = []string{
+	"Ember Seeds", 
+	"Scent Seeds", 
+	"Pegasus Seeds", 
+	"Gale Seeds", 
+	"Mystery Seeds",
 }
-
-var seedNames = []string{"Ember Seeds", "Scent Seeds",
-	"Pegasus Seeds", "Gale Seeds", "Mystery Seeds"}
 
 var seedTreeNames = map[string]bool{
 	"horon village tree":      true,
@@ -145,25 +87,47 @@ var seedTreeNames = map[string]bool{
 	"zora village tree":       true,
 }
 
+var rupeeValues = map[string]int{
+	"Rupees (1)":   1,
+	"Rupees (5)":   5,
+	"Rupees (10)":  10,
+	"Rupees (20)":  20,
+	"Rupees (30)":  30,
+	"Rupees (50)":  50,
+	"Rupees (100)": 100,
+	"Rupees (200)": 200,
+
+	"goron mountain old man":      300,
+	"western coast old man":       300,
+	"holodrum plain east old man": 200,
+	"horon village old man":       100,
+	"north horon old man":         100,
+
+	// rng is involved: each rupee is worth 1, 5, 10, or 20.
+	// these totals are about 2 standard deviations below mean.
+	"d2 rupee room": 150,
+	"d6 rupee room": 90,
+}
+
 // checks whether the item fits in the slot due to things like seeds only going
 // in trees, certain item slots not accomodating sub IDs. this doesn't check
 // for softlocks or the availability of the slot and item.
-func itemFitsInSlot(itemNode, slotNode *node) bool {
+func itemFitsInSlot(item string, slot string) bool {
 	// dummy shop slots 1 and 2 can only hold their vanilla items.
 	switch {
-	case slotNode.name == "shop, 20 rupees" && itemNode.name != "Bombs (10)":
-		fallthrough
-	case slotNode.name == "shop, 30 rupees" && itemNode.name != "Wooden Shield":
-		fallthrough
-	case itemNode.name == "Wooden Shield" && slotNode.name != "shop, 30 rupees":
+	case slot == "shop, 20 rupees" && item != "Bombs (10)":
+		return false
+	case slot == "shop, 30 rupees" && item != "Wooden Shield":
+		return false
+	case slot != "shop, 30 rupees" && item == "Wooden Shield":
 		return false
 	}
 
 	// bomb flower has special graphics something. this could probably be
 	// worked around like with the temple of seasons, but i'm not super
 	// interested in doing that.
-	if itemNode.name == "bomb flower" {
-		switch slotNode.name {
+	if item == "bomb flower" {
+		switch slot {
 		case "cheval's test", "cheval's invention", "wild tokay game",
 			"hidden tokay cave", "library present", "library past":
 			return false
@@ -172,19 +136,19 @@ func itemFitsInSlot(itemNode, slotNode *node) bool {
 
 	// dungeons can only hold their respective dungeon-specific items. the
 	// HasPrefix is specifically for ages d6 boss key.
-	dungeonName := getDungeonName(itemNode.name)
+	dungeonName := getDungeonName(item)
 	if dungeonName != "" &&
-		!strings.HasPrefix(getDungeonName(slotNode.name), dungeonName) {
+		!strings.HasPrefix(getDungeonName(slot), dungeonName) {
 		return false
 	}
 
 	// and only seeds can be slotted in seed trees, of course
-	switch itemNode.name {
+	switch item {
 	case "Ember Seeds", "Mystery Seeds", "Scent Seeds",
 		"Pegasus Seeds", "Gale Seeds":
-		return seedTreeNames[slotNode.name]
+		return seedTreeNames[slot]
 	default:
-		return !seedTreeNames[slotNode.name]
+		return !seedTreeNames[slot]
 	}
 }
 
@@ -207,28 +171,4 @@ func getDungeonName(name string) string {
 	default:
 		return ""
 	}
-}
-
-// returns true iff a is a slice and v is a value in that slice. panics if a is
-// not a slice.
-func sliceContains(a interface{}, v interface{}) bool {
-	aValue := reflect.ValueOf(a)
-	for i := 0; i < aValue.Len(); i++ {
-		v2 := aValue.Index(i).Interface()
-		if reflect.DeepEqual(v, v2) {
-			return true
-		}
-	}
-	return false
-}
-
-// return alphabetically sorted string values from a map.
-func orderedValues(m map[string]string) []string {
-	a, i := make([]string, len(m)), 0
-	for _, v := range m {
-		a[i] = v
-		i++
-	}
-	sort.Strings(a)
-	return a
 }

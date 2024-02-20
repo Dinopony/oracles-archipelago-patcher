@@ -579,14 +579,9 @@ func setRomData(rom *romState, ri *routeInfo, ropts *randomizerOptions,
 	checks := getChecks(ri.usedItems, ri.usedSlots)
 	for slot, item := range checks {
 		if verbose {
-			logf("%s <- %s", slot.name, item.name)
+			logf("%s <- %s", slot, item)
 		}
-
-		romItemName := item.name
-		if ringName, ok := reverseLookup(ri.ringMap, item.name); ok {
-			romItemName = ringName.(string)
-		}
-		rom.itemSlots[slot.name].treasure = rom.treasures[romItemName]
+		rom.itemSlots[slot].treasure = rom.treasures[item]
 	}
 
 	// set season data

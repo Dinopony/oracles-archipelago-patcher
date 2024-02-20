@@ -7,7 +7,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-//go:embed hints/* logic/* romdata/*
+//go:embed hints/* romdata/*
 var embeddedFS embed.FS
 
 func ReadEmbeddedYaml(filename string, out interface{}) error {

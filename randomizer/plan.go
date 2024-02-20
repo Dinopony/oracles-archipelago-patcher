@@ -81,62 +81,6 @@ func parseYamlInput(path string, game int) (*plan, error) {
 	return p, nil
 }
 
-// loads conditions from a file in spoiler log format.
-//func parseSummary(path string, game int) (*plan, error) {
-//	f, err := os.Open(path)
-//	if err != nil {
-//		return nil, err
-//	}
-//	defer f.Close()
-//
-//	b, err := ioutil.ReadAll(f)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	p := newPlan()
-//	p.source = string(b)
-//	section := p.items
-//	for _, line := range strings.Split(string(b), "\n") {
-//		line = strings.Replace(line, "\r", "", 1)
-//		if strings.HasPrefix(line, "--") {
-//			switch line {
-//			case "-- items --", "-- progression items --",
-//				"-- small keys and boss keys --", "-- other items --":
-//				section = p.items
-//			case "-- dungeon entrances --":
-//				section = p.dungeons
-//			case "-- subrosia portals --":
-//				section = p.portals
-//			case "-- default seasons --":
-//				section = p.seasons
-//			case "-- hints --":
-//				section = p.hints
-//			default:
-//				return nil, fmt.Errorf("unknown section: %q", line)
-//			}
-//		} else {
-//			submatches := conditionRegexp.FindStringSubmatch(line)
-//			if submatches != nil {
-//				if submatches[1] == "null" {
-//					var nullKey string
-//					for i := 0; true; i++ {
-//						nullKey = fmt.Sprintf("null %d", i)
-//						if section[nullKey] == "" {
-//							break
-//						}
-//					}
-//					section[nullKey] = submatches[2]
-//				} else {
-//					section[submatches[1]] = submatches[2]
-//				}
-//			}
-//		}
-//	}
-//
-//	return p, nil
-//}
-
 const (
 	COMPANION_RICKY   = 1
 	COMPANION_DIMITRI = 2
@@ -148,7 +92,6 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	ri := &routeInfo{
 		companion: sora(rom.game, COMPANION_MOOSH, COMPANION_DIMITRI).(int), // shop is default
 		entrances: make(map[string]string),
-		graph:     newRouteGraph(rom),
 		src:       rand.New(rand.NewSource(0)),
 		usedItems: list.New(),
 		usedSlots: list.New(),
@@ -165,20 +108,12 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	
 	// item slots
 	for slot, item := range p.items {
-		// add given item/slot combo to list and graph
-		if _, ok := rom.treasures[item]; !ok {
-			return nil, fmt.Errorf("no such item: %s", item)
-		}
-		if _, ok := ri.graph[slot]; !ok {
-			return nil, fmt.Errorf("no such check: %s", slot)
-		}
-		ri.graph[item] = newNode(item, orNode)
-		if !itemFitsInSlot(ri.graph[item], ri.graph[slot]) {
+		if !itemFitsInSlot(item, slot) {
 			return nil, fmt.Errorf("%s doesn't fit in %s", item, slot)
 		}
-		ri.graph[item].addParent(ri.graph[slot])
-		ri.usedItems.PushBack(ri.graph[item])
-		ri.usedSlots.PushBack(ri.graph[slot])
+
+		ri.usedItems.PushBack(item)
+		ri.usedSlots.PushBack(slot)
 	}
 
 	// seasons
