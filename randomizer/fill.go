@@ -2,7 +2,6 @@ package randomizer
 
 import (
 	"container/list"
-	"math/rand"
 	"strings"
 )
 
@@ -35,9 +34,7 @@ type routeInfo struct {
 	companion    int // 1 to 3
 	usedItems    *list.List
 	usedSlots    *list.List
-	ringMap      map[string]string
 	attemptCount int
-	src          *rand.Rand
 }
 
 // getChecks converts a route info into a map of checks.

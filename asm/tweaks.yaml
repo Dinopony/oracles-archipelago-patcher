@@ -1,0 +1,8 @@
+seasons:
+  08/23cb/foolsOreDamage: db f4
+  03/1116/heartBeepInterval: db 3f
+
+  02/1e3e/lostWoodsItemSequence1: ''
+  02/1e46/lostWoodsItemSequence2: ''
+  02/1e4e/lostWoodsItemSequence3: ''
+  02/1e56/lostWoodsItemSequence4: ''

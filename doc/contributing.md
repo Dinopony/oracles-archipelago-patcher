@@ -25,8 +25,6 @@ since some of the code isn't tracked by the repository and hasn't been
 generated locally yet. Then install Go dependencies:
 
 ```
-go get github.com/mjibson/esc
-go get github.com/gdamore/tcell
 go get github.com/yuin/gopher-lua
 go get gopkg.in/yaml.v2
 ```

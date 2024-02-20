@@ -4,7 +4,6 @@ import (
 	"container/list"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"regexp"
 	"strings"
@@ -92,7 +91,6 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	ri := &routeInfo{
 		companion: sora(rom.game, COMPANION_MOOSH, COMPANION_DIMITRI).(int), // shop is default
 		entrances: make(map[string]string),
-		src:       rand.New(rand.NewSource(0)),
 		usedItems: list.New(),
 		usedSlots: list.New(),
 	}
@@ -119,15 +117,63 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 	// seasons
 	if rom.game == gameSeasons {
 		// Set Maku Seed to be given at the specified amount of essences
-		requiredEssences, err := strconv.Atoi(p.settings["required_essences"])
-		if err != nil {
-			return nil, err
+		str, ok := p.settings["required_essences"]
+		if ok {
+			requiredEssences, err := strconv.Atoi(str)
+			if err == nil {
+				giveMakuTreeScriptAddr := rom.codeMutables["makuStageEssence8"].new
+				for i:=7 ; i >= requiredEssences; i-- {
+					mutableName := "makuStageEssence" + strconv.Itoa(i)
+					rom.codeMutables[mutableName].new = giveMakuTreeScriptAddr
+				}
+			}
 		}
 
-		giveMakuTreeScriptAddr := rom.codeMutables["makuStageEssence8"].new
-		for i:=7 ; i >= requiredEssences; i-- {
-			mutableName := "makuStageEssence" + strconv.Itoa(i)
-			rom.codeMutables[mutableName].new = giveMakuTreeScriptAddr
+		// Set Fool's Ore damage if specified
+		str, ok = p.settings["fools_ore_damage"]
+		if ok {
+			foolsOreDamage, err := strconv.Atoi(str); 
+			if err == nil {
+				foolsOreDamage *= -1
+				rom.codeMutables["foolsOreDamage"].new = []byte{byte(foolsOreDamage)}
+			}
+		}
+
+		// Set heart beep interval if specified
+		str, ok = p.settings["heart_beep_interval"]
+		if ok {
+			mutable := rom.codeMutables["heartBeepInterval"]
+			switch str {
+			case "half": 	  mutable.new = []byte{0x3f * 2}
+			case "quarter":	  mutable.new = []byte{0x3f * 4}
+			case "disabled":  mutable.new = []byte{0x00, 0xc9}
+									// c9 => Unconditional return
+			}
+		}
+		
+		str = p.settings["lost_woods_item_sequence"]
+		if ok {
+			lostWoodsItemSequence := strings.Split(str, " ")
+			for i:=0 ; i<4 ; i++ {
+				seasonByte := 0
+				switch lostWoodsItemSequence[2*i] {
+				case "spring": seasonByte = 0
+				case "summer": seasonByte = 1
+				case "autumn": seasonByte = 2
+				case "winter": seasonByte = 3
+				}
+	
+				directionByte := 0
+				switch lostWoodsItemSequence[2*i+1] {
+				case "up": directionByte = 0
+				case "right": directionByte = 1
+				case "down": directionByte = 2
+				case "left": directionByte = 3
+				}
+	
+				mutableName := "lostWoodsItemSequence" + strconv.Itoa(i+1)
+				rom.codeMutables[mutableName].new = []byte{byte(seasonByte), byte(directionByte)}
+			}
 		}
 
 		ri.seasons = make(map[string]byte, len(p.seasons))
