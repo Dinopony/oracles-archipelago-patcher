@@ -8,6 +8,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"strconv"
 	"gopkg.in/yaml.v2"
 )
 
@@ -182,6 +183,18 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 
 	// seasons
 	if rom.game == gameSeasons {
+		// Set Maku Seed to be given at the specified amount of essences
+		requiredEssences, err := strconv.Atoi(p.settings["required_essences"])
+		if err != nil {
+			return nil, err
+		}
+
+		giveMakuTreeScriptAddr := rom.codeMutables["makuStageEssence8"].new
+		for i:=7 ; i >= requiredEssences; i-- {
+			mutableName := "makuStageEssence" + strconv.Itoa(i)
+			rom.codeMutables[mutableName].new = giveMakuTreeScriptAddr
+		}
+
 		ri.seasons = make(map[string]byte, len(p.seasons))
 		for area, season := range p.seasons {
 			id := getStringIndex(seasonsById, season)
