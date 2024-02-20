@@ -273,20 +273,40 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 }
 
 // applies the labels and EOB declarations in the given asm data files.
-func (rom *romState) applyAsmFiles(infos []os.DirEntry) {
-	asmFiles := make([]*asmData, len(infos))
+func (rom *romState) applyAsmFiles() {
+	filePaths := []string{}
+
+	infos, err := os.ReadDir("asm/")
+	if err != nil { panic(err) }
+	for _, info := range infos {
+		filePaths = append(filePaths, info.Name())
+	}
+
+	infosSeasons, err := os.ReadDir("asm/seasons/")
+	if err != nil { panic(err) }
+	for _, info := range infosSeasons {
+		filePaths = append(filePaths, "seasons/" + info.Name())
+	}
+
+	infosAges, err := os.ReadDir("asm/ages/")
+	if err != nil { panic(err) }
+	for _, info := range infosAges {
+		filePaths = append(filePaths, "ages/" + info.Name())
+	}
+
+	asmFiles := make([]*asmData, len(filePaths))
 
 	// standard files are embedded
-	for i, info := range infos {
+	for i, relPath := range filePaths {
 		asmFiles[i] = new(asmData)
-		asmFiles[i].filename = info.Name()
+		asmFiles[i].filename = relPath
 
 		// readme etc
-		if !strings.HasSuffix(info.Name(), ".yaml") {
+		if !strings.HasSuffix(relPath, ".yaml") {
 			continue
 		}
 
-		path := "asm/" + info.Name()
+		path := "asm/" + relPath
 		b, err := os.ReadFile(path)
 		if err != nil {
 			panic(err)
@@ -445,12 +465,7 @@ func (rom *romState) initBanks() {
 		makeStaticItemsReplacementTable(rom.game, rom.player, rom.itemSlots))
 
 	// load all asm files in the asm/ directory.
-	fi, err := os.ReadDir("asm/")
-	if err != nil {
-		panic(err)
-	}
-
-	rom.applyAsmFiles(fi)
+	rom.applyAsmFiles()
 }
 
 // apply user-included asm files.

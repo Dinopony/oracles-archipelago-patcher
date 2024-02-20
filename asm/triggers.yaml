@@ -31,9 +31,6 @@ seasons:
   # allow desert pits to work even if player has the actual bell already.
   08/73a2/: nop; nop
 
-  # maku seed: count number of essences, not highest numbered essence.
-  09/7da3/: call getNumSetBits; jr 01
-
   # don't require rod to get items from season spirits.
   0b/4eb1/: db jumpifitemobtained,TREASURE_PUNCH
 

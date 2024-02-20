@@ -1,0 +1,66 @@
+seasons:
+  09/makuTreeRooms: db 0b,0c,7b,2b,2c,2d,5b,5c,5d,ff
+  09/checkMakuItemObtained: |
+    push de
+    push hl
+    ld de,makuTreeRooms
+    ld h,c8
+    call scanItemGetFlagsForMaps
+    pop hl
+    pop de
+    ret
+  # 09/7dfc/: |
+  #   nop
+  #   nop
+  #   call checkMakuItemObtained
+  #   ret z
+
+  # Rework makuTree_setAppropriateStage to put a stage really depending
+  # on essence count and if Gnarled Key location was obtained
+  09/7d8b/: |
+    ld a,0a
+    call checkMakuItemObtained
+    jr nz,.gnarledObtained
+    ld a,0
+    jr .setStage
+
+    .gnarledObtained
+    ld a,28
+    call checkGlobalFlag
+    jr z,.gameNotFinished
+    ld a,0e
+    jr .setStage
+    
+    .gameNotFinished
+    ld a,TREASURE_MAKU_SEED
+    call checkTreasureObtained
+    jr nc,.makuSeedNotObtained
+    ld a,0c
+    jr .setStage
+
+    .makuSeedNotObtained
+    ld a,(wEssencesObtained)
+    call getNumSetBits
+    inc a
+
+    .setStage
+    ld (cc39),a
+    ret
+  
+  # edit "stage table" to adapt it to the values provided by the function above:
+  # - stage 0 => item not obtained
+  # - stage 1-9 => 0-8 essences obtained
+  # - stage C => maku seed obtained
+  # - stage E => game finished
+  # The stage 1-9 mapping will depend on the number of essences set to complete
+  # the seed as a setting
+  0c/3115/makuStageNotChecked: dw 7154
+  0c/3117/makuStageEssence0: dw 7154
+  0c/3119/makuStageEssence1: dw 71a2
+  0c/311b/makuStageEssence2: dw 71a2
+  0c/311d/makuStageEssence3: dw 71a2
+  0c/311f/makuStageEssence4: dw 71a2
+  0c/3121/makuStageEssence5: dw 71a2
+  0c/3123/makuStageEssence6: dw 71a2
+  0c/3125/makuStageEssence7: dw 71a2
+  0c/3127/makuStageEssence8: dw 71c8
