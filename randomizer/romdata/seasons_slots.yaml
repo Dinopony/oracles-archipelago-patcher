@@ -164,7 +164,7 @@ tarm ruins, under tree:
   treasure: Gasha Seed
   room: 0x039b
   maptile: 0x10
-eastern suburbs, on cliff:
+eastern suburbs spring cave:
   treasure: Gasha Seed
   room: 0x04f7
   maptile: 0xcc
@@ -742,7 +742,7 @@ mrs. ruul trade:
 subrosian chef trade:
   treasure: Lava Soup
   room: 0x008f
-  addr: {bank: 0x15, addr: 0xbda} # 50BDA
+  addr: {bank: 0x14, addr: 0x4bda} # 50BDA
   maptile: 0x9a
   collect: touch
 biggoron trade:
