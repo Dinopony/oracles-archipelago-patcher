@@ -128,6 +128,7 @@ common:
     define jumpifmemoryeq,cb
     define checkcollidedwithlink_onground,d0
     define setcounter1,d7
+    define loseitem,dc
     define spawnitem,dd
     define giveitem,de
     define jumpifitemobtained,df

@@ -34,98 +34,98 @@ seasons:
   # Write object info
 
   # 55 => Cuccodex
-  3f/6ff4/: db 55
+  3f/6ff4/: db TREASURE_CUCCODEX
   3f/6ff5/: /include cuccodex_display
   15/527d/: /include cuccodex_obj
   # Malon requirement
-  0c/10c6/: db df,55
+  0b/50c6/: db df,TREASURE_CUCCODEX
 
   # 56 => Lon Lon Egg
-  3f/6ffb/: db 56
+  3f/6ffb/: db TREASURE_LON_LON_EGG
   3f/6ffc/: /include lon_lon_egg_display
   15/5281/: /include lon_lon_egg_obj
   # Maple Requirement
   05/loseLonLonEgg: |
-    ld a,56
+    ld a,TREASURE_LON_LON_EGG
     jp loseTreasure
-  05/68e0/: db 56
+  05/68e0/: db TREASURE_LON_LON_EGG
   05/68e6/: |
     nop
     call loseLonLonEgg
 
   # 57 => Ghastly Doll
-  3f/7002/: db 57
+  3f/7002/: db TREASURE_GHASTLY_DOLL
   3f/7003/: /include ghastly_doll_display
   15/5285/: /include ghastly_doll_obj
   # Mrs. Ruul requirement
-  0c/104a/: db df,57
+  0b/504a/: db df,TREASURE_GHASTLY_DOLL
   # Make Maple drop the new Ghastly Doll
   0b/1402/: |
     ld a,57
     ld c,00
 
   # 35 => Iron Pot
-  3f/6f14/: db 35
+  3f/6f14/: db TREASURE_IRON_POT
   3f/6f15/: /include iron_pot_display
   15/51fd/: /include iron_pot_obj
   # Subrosian chef requirement
-  0c/2552/: db df,35
+  0b/6552/: db df,TREASURE_IRON_POT
 
   # 38 => Lava Soup
-  3f/6f29/: db 38
+  3f/6f29/: db TREASURE_LAVA_SOUP
   3f/6f2a/: /include lava_soup_display
   15/5209/: /include lava_soup_obj
   # Biggoron requirement
-  0c/2192/: db df,38
+  0c/2192/: db df,TREASURE_LAVA_SOUP
 
   # 39 => Goron Vase
-  3f/6f30/: db 39
+  3f/6f30/: db TREASURE_GORON_VASE
   3f/6f31/: /include goron_vase_display
   15/520d/: /include goron_vase_obj
   # Ingo requirement
-  0c/2332/: db df,39
+  0c/2332/: db df,TREASURE_GORON_VASE
 
   # 3A => Fish
-  3f/6f37/: db 3a
+  3f/6f37/: db TREASURE_FISH
   3f/6f38/: /include fish_display
   15/5211/: /include fish_obj
   # Old man requirement
-  0c/1230/: db df,3a
+  0c/1230/: db df,TREASURE_FISH
 
   # 3B => Megaphone
-  3f/6f3e/: db 3b
+  3f/6f3e/: db TREASURE_MEGAPHONE
   3f/6f3f/: /include megaphone_display
   15/5215/: /include megaphone_obj
   # Talon requirement
-  0c/2087/: db df,3b
+  0c/2087/: db df,TREASURE_MEGAPHONE
 
   # 3C => Mushroom
-  3f/6f45/: db 3c
+  3f/6f45/: db TREASURE_MUSHROOM
   3f/6f46/: /include mushroom_display
   15/5219/: /include mushroom_obj
   # Syrup requirement
-  0c/1f26/: db df,3c
+  0c/1f26/: db df,TREASURE_MUSHROOM
 
   # 3D => Wooden Bird
-  3f/6f4c/: db 3d
+  3f/6f4c/: db TREASURE_WOODEN_BIRD
   3f/6f4d/: /include wooden_bird_display
   15/521d/: /include wooden_bird_obj
   # Tick-Tock requirement
-  0c/11fd/: db df,3d
+  0c/11fd/: db df,TREASURE_WOODEN_BIRD
 
   # 3E => Engine Grease
-  3f/6f53/: db 3e
+  3f/6f53/: db TREASURE_ENGINE_GREASE
   3f/6f54/: /include engine_grease_display
   15/5221/: /include engine_grease_obj
   # Guru-Guru requirement
-  0c/23b9/: db df,3e
+  0c/23b9/: db df,TREASURE_ENGINE_GREASE
 
   # 3F => Phonograph
-  3f/6f5a/: db 3f
+  3f/6f5a/: db TREASURE_PHONOGRAPH
   3f/6f5b/: /include phonograph_display
   15/5225/: /include phonograph_obj
   # Deku scrub requirement
-  0c/2519/: db df,3f
+  0c/2519/: db df,TREASURE_PHONOGRAPH
 
   # Remove visible mushroom in Talon's cave
   0c/207d/: db eb,eb,eb,eb,eb
@@ -134,3 +134,87 @@ seasons:
   # We basically extract the "OR" and "AND" operations from talon_giveMushroomAfterWaking to reinsert those at the end of 
   # the script to ensure they are effective.
   15/9f8/: db f6,8e,7a,01,8b,50,89,08,8c,11,8f,01,89,10,8c,29,e0,d1,5a,b1,40 
+
+  # ----- item removal script changes -----
+
+  # Add a "remove item" script command attached to unused byte 0xdc
+  0b/scriptCmd_removeItem: |
+    pop hl
+    inc hl
+    ldi a,(hl)
+    call loseTreasure
+    ret
+  0b/40c1/: dw scriptCmd_removeItem
+
+  # Overwrite INTERACID_S_GREAT_FAIRY to have some space for item removal scripts
+  0b/7e73/: |
+    db orroomflag,40
+    db loseitem,TREASURE_GHASTLY_DOLL
+    db 50,6b
+  0b/: define removeGhastlyDoll,737e
+  0b/5069/: dw removeGhastlyDoll
+
+  0b/7e79/: |
+    db orroomflag,40
+    db loseitem,TREASURE_CUCCODEX
+    db 50,e7
+  0b/: define removeCuccodex,797e
+  0b/50e5/: dw removeCuccodex
+
+  0b/7e7f/: |
+    db loseitem,TREASURE_IRON_POT
+    .loadscript_scripts2_lavaSoupSubrosianScript_fillPot
+    db 83,14,8e,4b
+  0b/: define removeIronPot,7f7e
+  0b/6568/: dw removeIronPot
+
+  0b/7e85/: |
+    db orroomflag,40
+    db loseitem,TREASURE_LAVA_SOUP
+    db 61,d7
+  0b/: define removeLavaSoup,857e
+  0b/61d5/: dw removeLavaSoup
+
+  0b/7e8b/: |
+    db orroomflag,40
+    db loseitem,TREASURE_GORON_VASE
+    db 63,5c
+  0b/: define removeGoronVase,8b7e
+  0b/635a/: dw removeGoronVase
+
+  0b/7e91/: |
+    db orroomflag,40
+    db loseitem,TREASURE_FISH
+    db 52,67
+  0b/: define removeFish,917e
+  0b/5265/: dw removeFish
+
+  # Overwrite INTERACID_LINKED_HEROS_CAVE_OLD_MAN to have more space for item removal scripts
+  # 7F33 -> 7F65 (included)
+  0b/7f33/: |
+    db loseitem,TREASURE_MEGAPHONE
+    .loadscript_scripts2_talon_giveMushroomAfterWaking
+    db 83,14,db,49
+  0b/: define removeMegaphone,337f
+  0b/60a0/: dw removeMegaphone
+
+  0b/7f39/: |
+    db orroomflag,40
+    db loseitem,TREASURE_MUSHROOM
+    db 5f,49
+  0b/: define removeMushroom,397f
+  0b/5f47/: dw removeMushroom
+
+  0b/7f3f/: |
+    db orroomflag,40
+    db loseitem,TREASURE_WOODEN_BIRD
+    db 52,1e
+  0b/: define removeWoodenBird,3f7f
+  0b/521c/: dw removeWoodenBird
+
+  0b/7f45/: |
+    db orroomflag,40
+    db loseitem,TREASURE_ENGINE_GREASE
+    db 63,e9
+  0b/: define removeEngineGrease,457f
+  0b/63e7/: dw removeEngineGrease

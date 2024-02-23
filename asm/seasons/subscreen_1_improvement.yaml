@@ -136,3 +136,15 @@ seasons:
 
   # Remove the Maku Seed from the subscreen
   02/5d26/: ret
+
+  # Lose keys when used in keyholes for inventory cleansing
+  06/loseKeyInsideKeyhole: |
+    ld (wSubscreen1CurrentSlotIndex),a
+    call checkTreasureObtained
+    jr nc,.end
+    ld a,(wSubscreen1CurrentSlotIndex)
+    call loseTreasure
+    scf
+    .end
+    ret
+  06/420d/: call loseKeyInsideKeyhole
