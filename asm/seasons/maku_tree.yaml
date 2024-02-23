@@ -9,11 +9,11 @@ seasons:
     pop hl
     pop de
     ret
-  # 09/7dfc/: |
-  #   nop
-  #   nop
-  #   call checkMakuItemObtained
-  #   ret z
+  09/7dfc/: |
+    nop
+    nop
+    call checkMakuItemObtained
+    ret z
 
   # Rework makuTree_setAppropriateStage to put a stage really depending
   # on essence count and if Gnarled Key location was obtained
