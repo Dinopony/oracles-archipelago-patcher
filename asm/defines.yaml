@@ -98,7 +98,7 @@ common:
     define TX_REMOTE_ITEM,3b
     define DEV_RING,40
     define INTERAC_MULTI_BYTE,7f # low byte of struct
-
+    define INTERACID_TREASURE,60
 
     # script commands
     define scriptend,00

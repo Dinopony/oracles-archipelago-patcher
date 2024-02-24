@@ -1,0 +1,25 @@
+seasons:
+
+  14/subrosianWildsDiggingSpotItem: db TREASURE_GASHA_SEED
+  14/subrosianWildsDiggingSpotItemSubid: db 00
+  
+  14/handleSubrosianWildsDiggingSpot: |
+    call getFreeInteractionSlot
+    ret nz
+    ld (hl),INTERACID_TREASURE
+    inc l
+    ld a,(subrosianWildsDiggingSpotItem)
+    ld (hl),a
+    inc l
+    ld a,(subrosianWildsDiggingSpotItemSubid)
+    ld (hl),a
+    call objectCopyPosition
+    ret
+
+  09/65fd/: |
+    ld e,14
+    ld hl,handleSubrosianWildsDiggingSpot
+    call interBankCall
+    jp interactionDelete
+
+  # Up to 6607

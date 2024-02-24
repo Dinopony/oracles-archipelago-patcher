@@ -126,6 +126,10 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 		rom.itemSlots["mt. cucco, platform cave"].idAddrs[0].offset = codeAddr.offset + 2
 		rom.itemSlots["mt. cucco, platform cave"].subidAddrs[0].offset = codeAddr.offset + 1
 
+		wildsDigSpotSlot := rom.itemSlots["subrosian wilds digging spot"]
+		wildsDigSpotSlot.idAddrs[0].offset = rom.codeMutables["subrosianWildsDiggingSpotItem"].addr.offset
+		wildsDigSpotSlot.subidAddrs[0].offset = rom.codeMutables["subrosianWildsDiggingSpotItemSubid"].addr.offset
+
 		// prepare static items addresses
 		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
 		var i uint16 = 0
@@ -168,6 +172,7 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 		rom.itemSlots["subrosia seaside"].mutate(rom.data)
 		rom.itemSlots["great furnace"].mutate(rom.data)
 		rom.itemSlots["master diver's reward"].mutate(rom.data)
+		rom.itemSlots["subrosian wilds digging spot"].mutate(rom.data)
 
 		codeAddr := rom.codeMutables["vasuGiveItem"].addr
 		slotToMutate := rom.itemSlots["vasu's gift"]

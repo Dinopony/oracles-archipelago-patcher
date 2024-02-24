@@ -272,6 +272,12 @@ subrosian wilds chest:
   treasure: Blue Ore
   room: 0x0141
   maptile: 0x1e
+subrosian wilds digging spot:
+  treasure: Gasha Seed
+  room: 0x0140
+  maptile: 0x1e
+  collect: dig
+  addr: {bank: 0x14} # addr set at EOB
 subrosia village chest:
   treasure: Red Ore
   room: 0x0158
