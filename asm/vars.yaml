@@ -19,10 +19,10 @@ seasons:
   01/7e6c/templeRemainsSeason: db SEASON_WINTER
 
   # locations of sparkles on treasure map
-  02/6663/roundJewelCoords: db b5
-  02/6664/pyramidJewelCoords: db 1d
-  02/6665/squareJewelCoords: db c2
-  02/6666/xShapedJewelCoords: db f4
+  02/6663/jewelCoordsRound: db b5
+  02/6664/jewelCoordsPyramid: db 1d
+  02/6665/jewelCoordsSquare: db c2
+  02/6666/jewelCoordsXShaped: db f4
 
   # map pop-up icons for seed trees
   02/6c51/tarmRuinsTreeMapIcon: db 18

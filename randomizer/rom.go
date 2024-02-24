@@ -10,9 +10,6 @@ import (
 
 const bankSize = 0x4000
 
-// only applies to seasons! used for warps
-var dungeonNameRegexp = regexp.MustCompile(`^d[1-8]$`)
-
 // a fully-specified memory address. "offset" isn't true offset from the start
 // of the bank (except for bank 0); it's bus address.
 type address struct {
@@ -363,10 +360,10 @@ func setTreeNybble(subid *mutableRange, slot *itemSlot) {
 
 // set the locations of the sparkles for the jewels on the treasure map.
 func (rom *romState) setTreasureMapData() {
-	for _, name := range []string{"round", "pyramid", "square", "x-shaped"} {
-		label := strings.ReplaceAll(name, "-s", "S") + "JewelCoords"
+	for _, name := range []string{"Round", "Pyramid", "Square", "X-Shaped"} {
+		label := "jewelCoords" + strings.ReplaceAll(name, "-", "")
 		rom.codeMutables[label].new[0] = 0x63 // default to tarm gate
-		for _, slot := range rom.lookupAllItemSlots(name + " jewel") {
+		for _, slot := range rom.lookupAllItemSlots(name + " Jewel") {
 			if int(slot.player) == 0 || int(slot.player) == rom.player {
 				rom.codeMutables[label].new[0] = slot.mapTile
 			}
@@ -574,6 +571,7 @@ func (rom *romState) setWarps(warpMap map[string]string, dungeons bool) {
 	if rom.game == gameSeasons {
 		// set treasure map data. because of d8, portals go first, then dungeon
 		// entrances.
+		dungeonNameRegexp := regexp.MustCompile(`^d[1-8]$`)
 		conditions := [](func(string) bool){
 			dungeonNameRegexp.MatchString,
 			func(s string) bool { return strings.HasSuffix(s, "portal") },
