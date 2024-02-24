@@ -705,7 +705,7 @@ subrosian 2d cave:
 # npc rewards
 mayor's gift:
   treasure: Gasha Seed
-  room: 0x0385
+  room: 0x0386
   collect: touch
   addr: {bank: 0x0c, addr: 0xfd5}  # 0x2CFD5
   maptile: 0xc8
@@ -747,7 +747,7 @@ mrs. ruul trade:
   collect: touch
 subrosian chef trade:
   treasure: Lava Soup
-  room: 0x008f
+  room: 0x038f
   addr: {bank: 0x14, addr: 0x4bda} # 50BDA
   maptile: 0x9a
   collect: touch
