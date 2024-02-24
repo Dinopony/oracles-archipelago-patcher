@@ -1,7 +1,6 @@
 package randomizer
 
 import (
-	"crypto/sha1"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -18,7 +17,7 @@ import (
 	"bufio"
 )
 
-const version = "0.9.0"
+const VERSION = "0.9a"
 
 type logFunc func(string, ...interface{})
 
@@ -258,7 +257,7 @@ func Main() {
 		}
 	case "":
 		fmt.Println()
-		fmt.Println("Oracles Archipelago Patcher - " + version)
+		fmt.Println("Oracles Archipelago Patcher - " + VERSION)
 		fmt.Println("=========================================")
 		fmt.Println()
 
@@ -607,54 +606,18 @@ func setRomData(rom *romState, ri *routeInfo, ropts *randomizerOptions,
 		}
 	}
 
+	// set slot name
+	slotNameAsBytes := []byte(ri.archipelagoSlotName)
+	for i := 0 ; i<0x40 ; i++ {
+		if i < len(slotNameAsBytes) {
+			rom.data[0xFFFC0 + i] = slotNameAsBytes[i]
+		} else {
+			rom.data[0xFFFC0 + i] = 0x00
+		}		
+	}
+
 	// do it! (but don't write anything)
-	return rom.mutate(warps, ri.seed, ropts)
-}
-
-// returns a string representing a seed/has plus the randomizer options that
-// affect the generated seed or how it's played - so not including things like
-// music on/off.
-func optString(seed uint32, ropts *randomizerOptions, flagSep string) string {
-	s := ""
-
-	if ropts.plan != nil {
-		// -plan gets a hash based on source file rather than a seed
-		sum := sha1.Sum([]byte(ropts.plan.source))
-		s += fmt.Sprintf("plan-%03x", ((int(sum[0])<<8)+int(sum[1]))>>4)
-
-		// treewarp is the only option that makes a difference in plando
-		if ropts.treewarp {
-			s += flagSep + "t"
-		}
-
-		return s
-	}
-
-	if ropts.race {
-		s += fmt.Sprintf("race-%03x", seed>>20)
-	} else {
-		s += fmt.Sprintf("%08x", seed)
-	}
-
-	if ropts.treewarp || ropts.hard || ropts.dungeons || ropts.portals {
-		// these are in chronological order of introduction, for no particular
-		// reason.
-		s += flagSep
-		if ropts.treewarp {
-			s += "t"
-		}
-		if ropts.hard {
-			s += "h"
-		}
-		if ropts.dungeons {
-			s += "d"
-		}
-		if ropts.portals {
-			s += "p"
-		}
-	}
-
-	return s
+	return rom.mutate(warps, ri.archipelagoSlotName, ropts)
 }
 
 // reverseLookup looks up the key for a given map value. If multiple keys are

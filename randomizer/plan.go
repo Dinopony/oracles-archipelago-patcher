@@ -187,6 +187,10 @@ func makePlannedRoute(rom *romState, p *plan) (*routeInfo, error) {
 			}
 		}
 
+		if str, ok := p.settings["slot_name"]; ok {
+			ri.archipelagoSlotName = str
+		}
+
 		// Set heart beep interval if specified
 		if str, ok := p.settings["heart_beep_interval"]; ok {
 			mutable := rom.codeMutables["heartBeepInterval"]

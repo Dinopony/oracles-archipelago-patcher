@@ -90,7 +90,7 @@ func newRomState(data []byte, game, player int, includes []string) *romState {
 
 // changes the contents of loaded ROM bytes in place. returns a checksum of the
 // result or an error.
-func (rom *romState) mutate(warpMap map[string]string, seed uint32,
+func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName string,
 	ropts *randomizerOptions) ([]byte, error) {
 	// need to set this *before* treasure map data
 	if len(warpMap) != 0 {
@@ -150,7 +150,7 @@ func (rom *romState) mutate(warpMap map[string]string, seed uint32,
 	rom.setBossItemAddrs()
 	rom.setSeedData()
 	rom.setRoomTreasureData()
-	rom.setFileSelectText(optString(seed, ropts, "+"))
+	rom.setFileSelectText(archipelagoSlotName)
 	rom.attachText()
 	rom.codeMutables["multiPlayerNumber"].new[0] = byte(rom.player)
 
@@ -633,21 +633,19 @@ func changeTreasureMapTiles(slots map[string]*itemSlot,
 // set the string to display on the file select screen.
 func (rom *romState) setFileSelectText(row2 string) {
 	// construct tiles from strings
-	version := strings.Replace(version, "beta", "bet", 1) // full won't fit
-	fileSelectRow1 := stringToTiles(strings.ToUpper(ternary(len(version) == 5,
-		fmt.Sprintf("randomizer %s", version),
-		fmt.Sprintf("rando %10s", version)[:16]).(string)))
-	fileSelectRow2 := stringToTiles(
-		strings.ToUpper(strings.ReplaceAll(row2, "-", " ")))
+	fileSelectRow1 := stringToTiles(strings.ToUpper(fmt.Sprintf("archipelago %s", VERSION)))
+	fileSelectRow2 := stringToTiles(strings.ToUpper(strings.ReplaceAll(row2, "-", " ")))
 
 	tiles := rom.codeMutables["dma_FileSelectStringTiles"]
 	buf := new(bytes.Buffer)
 	buf.Write(tiles.new[:2])
 	buf.Write(fileSelectRow1)
+
 	padding := 16 - len(fileSelectRow2) // bias toward right padding
 	buf.Write(tiles.new[2+len(fileSelectRow1) : 0x22+padding/2])
 	buf.Write(fileSelectRow2)
 	buf.Write(tiles.new[0x22+len(fileSelectRow2)+padding/2:])
+
 	tiles.new = buf.Bytes()
 }
 

@@ -35,6 +35,7 @@ type routeInfo struct {
 	usedItems    *list.List
 	usedSlots    *list.List
 	attemptCount int
+	archipelagoSlotName string
 }
 
 // getChecks converts a route info into a map of checks.
