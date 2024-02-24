@@ -68,11 +68,13 @@ seasons:
       ld a,03
       ld (wRingBoxLevel),a
 
-      # linked start item
-      ld a,(wIsLinkedGame)
-      or a
-      call nz,giveLinkedStartItem
+      # remove floating cutscene
+      ld a,04
+      ld (c6cf),a
 
+      # no linked gaming
+      ld a,00
+      ld (wIsLinkedGame),a
       ret
   0a/66ed/: call setInitialFlags; jp objectDelete_useActiveObjectType
 
