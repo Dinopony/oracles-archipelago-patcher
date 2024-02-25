@@ -32,8 +32,13 @@ seasons:
   # could be uncompleteable without a way to kill the moblins.
   14/5247/: db writememory; dw wDisableTransitions; db 00
 
-  # give shield upgrade secret instead of smithy check when appropriate.
+  # give shield upgrade secret instead of smithy check when appropriate (everytime?)
+  # Also set a unique room flag to recognize the check was obtained
   15/giveSmithySecret: |
+      push hl
+      ld hl,c897
+      set 6,(hl)
+      pop hl
       ld de,d00b
       push bc
       push hl
