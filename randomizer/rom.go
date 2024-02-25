@@ -75,13 +75,13 @@ type romState struct {
 	includes     []string // filenames
 }
 
-func newRomState(data []byte, game, player int, includes []string) *romState {
+func newRomState(data []byte, game int) *romState {
 	rom := &romState{
 		game:      game,
-		player:    player,
+		player:    0,
 		data:      data,
 		treasures: loadTreasures(data, game),
-		includes:  includes,
+		includes:  []string{},
 	}
 	rom.itemSlots = rom.loadSlots()
 	rom.initBanks()

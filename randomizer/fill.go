@@ -27,14 +27,12 @@ var dungeonNames = map[int][]string{
 }
 
 type routeInfo struct {
-	seed         uint32
 	seasons      map[string]byte
 	entrances    map[string]string
 	portals      map[string]string
 	companion    int // 1 to 3
 	usedItems    *list.List
 	usedSlots    *list.List
-	attemptCount int
 	archipelagoSlotName string
 }
 
