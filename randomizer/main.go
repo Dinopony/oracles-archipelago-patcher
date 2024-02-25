@@ -10,9 +10,9 @@ import (
 )
 
 // attempt to write rom data to a file and print summary info.
-func writeRom(b []byte, dirName string, filename string, sum []byte) error {
+func writeRom(b []byte, outPath string, sum []byte) error {
     // write file
-    f, err := os.Create(filepath.Join(dirName, filename))
+    f, err := os.Create(outPath)
     if err != nil {
         return err
     }
@@ -23,7 +23,7 @@ func writeRom(b []byte, dirName string, filename string, sum []byte) error {
 
     // print summary
     fmt.Println("SHA-1 sum:", hex.EncodeToString(sum))
-    fmt.Println("wrote new ROM to '" + filename + "'")
+    fmt.Println("wrote new ROM to '" + outPath + "'")
 
     return nil
 }
@@ -193,15 +193,20 @@ func Main() {
     }
 
     // write roms
-    outfile := strings.Replace(yamlPath, ".yml", ".gbc", 1)
-
     sum, err := rom.setData(ri)
     if err != nil {
         fatal(err)
         return
     }
 
-    if writeRom(rom.data, dirName, outfile, sum); err != nil {
+    var outPath string
+    if strings.Contains(yamlPath, ".apseasons") {
+        outPath = strings.Replace(yamlPath, ".apseasons", ".gbc", 1)
+    } else {
+        outPath = yamlPath + ".gbc"
+    }
+    
+    if writeRom(rom.data, outPath, sum); err != nil {
         fatal(err)
         return
     }

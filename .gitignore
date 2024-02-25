@@ -15,5 +15,6 @@ oracles-archipelago-patcher.exe
 *.txt
 /*.yaml
 /*.yml
+*.apseasons
 *.bak
 *.sum
