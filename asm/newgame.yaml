@@ -68,15 +68,17 @@ seasons:
       ld a,03
       ld (wRingBoxLevel),a
 
-      # remove floating cutscene
-      ld a,04
-      ld (c6cf),a
-
       # no linked gaming
       ld a,00
       ld (wIsLinkedGame),a
       ret
   0a/66ed/: call setInitialFlags; jp objectDelete_useActiveObjectType
+
+  # Remove the "Accept our quest, hero!" cutscene
+  02/1874/: |
+    nop
+    ld a,0
+    cp a,1
 
 ages:
   # flags in wGlobalFlags to be set at start of game.
