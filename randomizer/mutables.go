@@ -84,6 +84,48 @@ func (rom *romState) setArchipelagoSlotName(slotName string) {
     }
 }
 
+func (rom *romState) setOldManRupeeValues(values map[string]int) {
+	valuesArray := rom.codeMutables["oldManRupeeValues"]
+	giveTakeArray := rom.codeMutables["oldManGiveTake"]
+
+	funcGiveAddr := giveTakeArray.new[0:2]
+	funcTakeAddr := giveTakeArray.new[14:16]
+
+	var OLD_MEN_OFFSETS map[string]int
+
+	if rom.game == GAME_SEASONS {
+		OLD_MEN_OFFSETS = map[string]int{
+			"old man in goron mountain": 0,
+			"old man near blaino": 1,
+			"old man near d1": 2,
+			"old man near western coast house": 3,
+			"old man in horon": 4,
+			"old man in treehouse": 5,
+			"old man near holly's house": 6,
+			"old man near mrs. ruul": 7,
+		}
+	}
+
+	for key, value := range values {
+		offset := OLD_MEN_OFFSETS[key]
+
+		absValue := value
+		if value < 0 {
+			absValue *= -1
+		}
+		valuesArray.new[offset] = RUPEE_VALUES[absValue]
+
+		offset *= 2
+		if absValue == value {  // Give
+			giveTakeArray.new[offset] = funcGiveAddr[0]
+			giveTakeArray.new[offset+1] = funcGiveAddr[1]
+		} else { 				// Take
+			giveTakeArray.new[offset] = funcTakeAddr[0]
+			giveTakeArray.new[offset+1] = funcTakeAddr[1]
+		}
+	}
+}
+
 // sets the sequence of seasons + directions required to reach the pedestal in seasons' lost woods
 func (rom *romState) setLostWoodsPedestalSequence(sequence [8]byte) {
 	builder := new(strings.Builder)

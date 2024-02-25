@@ -16,7 +16,7 @@ type inputData struct {
     seasons              map[string]string
     hints                map[string]string
     settings             map[string]string
-//  oldManRupeeValues    map[string]int
+    oldManRupeeValues    map[string]string
 }
 
 func newInputData() *inputData {
@@ -27,7 +27,7 @@ func newInputData() *inputData {
         seasons:              make(map[string]string),
         hints:                make(map[string]string),
         settings:             make(map[string]string),
-//      oldManRupeeValues:    make(map[string]int),
+        oldManRupeeValues:    make(map[string]string),
     }
 }
 
@@ -51,6 +51,7 @@ func parseYamlInput(path string) (*routeInfo, error) {
             case "default seasons":      section = data.seasons
             case "hints":                section = data.hints
             case "settings":             section = data.settings
+            case "old man rupee values": section = data.oldManRupeeValues
             default: return nil, fmt.Errorf("unknown section: %q", name)
         }
 
@@ -61,7 +62,6 @@ func parseYamlInput(path string) (*routeInfo, error) {
 
     ri, err := makePlannedRoute(data)
     if err != nil {
-        fatal(err)
         return nil, err
     }
 
@@ -77,15 +77,16 @@ type routeInfo struct {
     requiredEssences    int
 	archipelagoSlotName string
     
-	entrances    map[string]string
-	usedItems    *list.List
-	usedSlots    *list.List
+	entrances           map[string]string
+	usedItems           *list.List
+	usedSlots           *list.List
+    oldManRupeeValues   map[string]int
 
     // Seasons-specific
-    seasons          map[string]byte
-    portals          map[string]string
-    foolsOreDamage   int
-    pedestalSequence [8]byte
+    seasons             map[string]byte
+    portals             map[string]string
+    foolsOreDamage      int
+    pedestalSequence    [8]byte
 }
 
 func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) (error) {
@@ -133,6 +134,8 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) (error) {
 }
 
 func processSettings(data *inputData, ri *routeInfo) (error) {
+    var err error
+
     // Companion deciding which Natzu region will be inside the seed
     ri.companion = COMPANION_UNDEFINED
     if val, ok := data.settings["companion"]; ok {
@@ -168,6 +171,22 @@ func processSettings(data *inputData, ri *routeInfo) (error) {
         }
     }
 
+    // Set old man rupee values
+    for key, val := range data.oldManRupeeValues {
+        ri.oldManRupeeValues[key], err = strconv.Atoi(val)
+        if err != nil {
+            return err
+        }
+
+        absValue := ri.oldManRupeeValues[key]
+        if absValue < 0 {
+            absValue *= -1
+        }
+        if _, ok := RUPEE_VALUES[absValue]; !ok {
+            return fmt.Errorf("Unsupported rupee value for old man")
+        }
+    }
+
     if ri.game == GAME_SEASONS {
         processSeasonsSpecificSettings(data, ri)
     }
@@ -178,10 +197,11 @@ func processSettings(data *inputData, ri *routeInfo) (error) {
 // like findRoute, but uses a specified configuration instead of a random one.
 func makePlannedRoute(data *inputData) (*routeInfo, error) {
     ri := &routeInfo{
-        game:             GAME_UNDEFINED,
-        entrances:        make(map[string]string),
-        usedItems:        list.New(),
-        usedSlots:        list.New(),
+        game:              GAME_UNDEFINED,
+        entrances:         make(map[string]string),
+        usedItems:         list.New(),
+        usedSlots:         list.New(),
+        oldManRupeeValues: make(map[string]int),
     }
 
     if data.settings["game"] == "seasons" {

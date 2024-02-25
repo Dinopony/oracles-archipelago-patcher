@@ -124,6 +124,7 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
     rom.setRequiredEssences(ri.requiredEssences)
     rom.setAnimal(ri.companion)
     rom.setArchipelagoSlotName(ri.archipelagoSlotName)
+	rom.setOldManRupeeValues(ri.oldManRupeeValues)
 
     warps := make(map[string]string)
 

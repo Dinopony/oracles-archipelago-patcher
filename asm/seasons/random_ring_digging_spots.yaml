@@ -1,5 +1,4 @@
 seasons:
-
   14/subrosianWildsDiggingSpotItem: db TREASURE_GASHA_SEED
   14/subrosianWildsDiggingSpotItemSubid: db 00
   
@@ -39,5 +38,3 @@ seasons:
     ld hl,handleSubrosianWildsDiggingSpot
     call interBankCall
     jp interactionDelete
-
-  # Up to 6607

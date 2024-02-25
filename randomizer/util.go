@@ -10,7 +10,7 @@ import (
 // fatal prints an error to whichever UI is used. this doesn't exit the
 // program, since that would destroy the TUI.
 func fatal(err error) {
-	fmt.Println("fatal: %v.", err)
+	fmt.Println("fatal: ", err)
 }
 
 // a quick and dirty type of logFunc.
