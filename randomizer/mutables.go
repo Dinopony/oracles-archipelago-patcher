@@ -2,6 +2,8 @@ package randomizer
 
 import (
 	"fmt"
+	"strconv"
+    "strings"
 )
 
 // an instance of ROM data that can be changed by the randomizer.
@@ -40,6 +42,81 @@ func (mut *mutableRange) check(b []byte) error {
 func (rom *romState) setTreewarp(treewarp bool) {
 	mut := rom.codeMutables["treeWarp"]
 	mut.new[5] = byte(ternary(treewarp, 0x28, 0x18).(int)) // jr z / jr
+}
+
+// sets the interval between beeps when low on hearts
+func (rom *romState) setHeartBeepInterval(heartBeepInterval int) {
+	mutable := rom.codeMutables["heartBeepInterval"]
+    switch heartBeepInterval {
+    case HEART_BEEP_HALF:     mutable.new = []byte{0x3f * 2}
+    case HEART_BEEP_QUARTER:  mutable.new = []byte{0x3f * 4}
+    case HEART_BEEP_DISABLED: mutable.new = []byte{0x00, 0xc9}  // c9 => Unconditional return
+    }
+}
+
+// sets the damage dealt by fool's ore in seasons
+func (rom *romState) setFoolsOreDamage(foolsOreDamage int) {
+	foolsOreDamage *= -1
+	rom.codeMutables["foolsOreDamage"].new = []byte{byte(foolsOreDamage)}
+}
+
+// sets the amount of required essences to get maku seed
+func (rom *romState) setRequiredEssences(requiredEssences int) {
+	if requiredEssences >= 8 {
+		return
+	}
+
+    giveMakuTreeScriptAddr := rom.codeMutables["makuStageEssence8"].new
+    for i:=7 ; i >= requiredEssences; i-- {
+        mutableName := "makuStageEssence" + strconv.Itoa(i)
+        rom.codeMutables[mutableName].new = giveMakuTreeScriptAddr
+    }
+}
+
+func (rom *romState) setArchipelagoSlotName(slotName string) {
+	slotNameAsBytes := []byte(slotName)
+    for i := 0 ; i<0x40 ; i++ {
+        if i < len(slotNameAsBytes) {
+            rom.data[0xFFFC0 + i] = slotNameAsBytes[i]
+        } else {
+            rom.data[0xFFFC0 + i] = 0x00
+        }        
+    }
+}
+
+// sets the sequence of seasons + directions required to reach the pedestal in seasons' lost woods
+func (rom *romState) setLostWoodsPedestalSequence(sequence [8]byte) {
+	builder := new(strings.Builder)
+    for i:=0 ; i<4 ; i++ {
+        seasonByte := sequence[i*2]
+		directionByte := sequence[i*2+1]
+		
+        seasonStr := ""
+        switch seasonByte {
+        case SEASON_SPRING:  seasonStr = "\x02\xde"
+        case SEASON_SUMMER:  seasonStr = "S\x04\xbc"
+        case SEASON_AUTUMN:  seasonStr = "A\x05\x25"
+        case SEASON_WINTER:  seasonStr = "\x03\x7e"
+        }
+
+        directionStr := ""
+        switch directionByte {
+        case DIRECTION_UP:    directionStr = "\x03\x01"
+        case DIRECTION_RIGHT: directionStr = " \x04\x31"
+        case DIRECTION_DOWN:  directionStr = " south"
+        case DIRECTION_LEFT:  directionStr = " \x05\x1e"
+        }
+
+        builder.WriteString(seasonStr + directionStr)
+        if(i != 3) {
+            builder.WriteString("\x01")
+        } else { 
+            builder.WriteString("\x00")
+        }
+        mutableName := "lostWoodsItemSequence" + strconv.Itoa(i+1)
+        rom.codeMutables[mutableName].new = []byte{byte(seasonByte), byte(directionByte)}
+    }
+    rom.codeMutables["lostWoodsPhonographText"].new = []byte(builder.String())
 }
 
 // sets the natzu region based on a companion number 1 to 3.

@@ -125,7 +125,7 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 		m[name] = t
 	}
 
-	if game == gameSeasons {
+	if game == GAME_SEASONS {
 		// these treasures don't exist as treasure interactions in the vanilla
 		// game, so they're missing some data.
 		m["Fool's Ore"].text = 0x36

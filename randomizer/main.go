@@ -9,13 +9,6 @@ import (
     "encoding/hex"
 )
 
-type randomizerOptions struct {
-    treewarp bool
-    dungeons bool
-    portals  bool
-    game     int
-}
-
 // attempt to write rom data to a file and print summary info.
 func writeRom(b []byte, dirName string, filename string, sum []byte) error {
     // write file
@@ -42,78 +35,30 @@ func readGivenRom(filename string) ([]byte, int, error) {
     // read file
     f, err := os.Open(filename)
     if err != nil {
-        return nil, gameNil, err
+        return nil, GAME_UNDEFINED, err
     }
     defer f.Close()
     b, err := ioutil.ReadAll(f)
     if err != nil {
-        return nil, gameNil, err
+        return nil, GAME_UNDEFINED, err
     }
 
     // check file data
     if !romIsAges(b) && !romIsSeasons(b) {
-        return nil, gameNil,
+        return nil, GAME_UNDEFINED,
             fmt.Errorf("%s is not an oracles ROM", filename)
     }
     if romIsJp(b) {
-        return nil, gameNil,
+        return nil, GAME_UNDEFINED,
             fmt.Errorf("%s is a JP ROM; only US is supported", filename)
     }
     if !romIsVanilla(b) {
-        return nil, gameNil,
+        return nil, GAME_UNDEFINED,
             fmt.Errorf("%s is an unrecognized oracles ROM", filename)
     }
 
-    game := ternary(romIsSeasons(b), gameSeasons, gameAges).(int)
+    game := ternary(romIsSeasons(b), GAME_SEASONS, GAME_AGES).(int)
     return b, game, nil
-}
-
-// mutates the rom data in-place based on the given route. this doesn't write
-// the file.
-func setRomData(rom *romState, ri *routeInfo, ropts *randomizerOptions) ([]byte, error) {
-    rom.setTreewarp(ropts.treewarp)
-
-    // place selected treasures in slots
-    checks := getChecks(ri.usedItems, ri.usedSlots)
-    for slot, item := range checks {
-        rom.itemSlots[slot].treasure = rom.treasures[item]
-    }
-
-    // set season data
-    if rom.game == gameSeasons {
-        for area, id := range ri.seasons {
-            rom.setSeason(inflictCamelCase(area+"Season"), id)
-        }
-    }
-
-    rom.setAnimal(ri.companion)
-
-    warps := make(map[string]string)
-    if ropts.dungeons {
-        for k, v := range ri.entrances {
-            warps[k] = v
-        }
-    }
-    if ropts.portals {
-        for k, v := range ri.portals {
-            holodrumV, _ := reverseLookup(subrosianPortalNames, v)
-            warps[fmt.Sprintf("%s portal", k)] =
-                fmt.Sprintf("%s portal", holodrumV)
-        }
-    }
-
-    // set slot name
-    slotNameAsBytes := []byte(ri.archipelagoSlotName)
-    for i := 0 ; i<0x40 ; i++ {
-        if i < len(slotNameAsBytes) {
-            rom.data[0xFFFC0 + i] = slotNameAsBytes[i]
-        } else {
-            rom.data[0xFFFC0 + i] = 0x00
-        }        
-    }
-
-    // do it! (but don't write anything)
-    return rom.mutate(warps, ri.archipelagoSlotName, ropts)
 }
 
 // search for a vanilla US seasons and ages roms in the executable's directory,
@@ -186,8 +131,8 @@ func getInputRomPath(game int) (dir string, filename string) {
 
     romFilename := ""
     switch game {
-    case gameSeasons: romFilename = seasons
-    case gameAges:    romFilename = ages
+    case GAME_SEASONS: romFilename = seasons
+    case GAME_AGES:    romFilename = ages
     }
 
     if romFilename == "" {
@@ -210,21 +155,14 @@ func Main() {
 
     fmt.Println("Reading input file...")
     yamlPath := os.Args[1]
-    inputData, err := parseYamlInput(yamlPath)
+    ri, err := parseYamlInput(yamlPath)
     if err != nil {
         fatal(err)
         return
     }
 
-    game := 0
-    if inputData.settings["game"] == "seasons" {
-        game = gameSeasons
-    } else if inputData.settings["game"] == "ages" {
-        game = gameAges
-    }
-
     // if rom is to be randomized, infile must be non-empty after switch
-    dirName, romFilename := getInputRomPath(game)
+    dirName, romFilename := getInputRomPath(ri.game)
     if dirName == "" {
         fmt.Println("No vanilla US ROM found.")
         return
@@ -247,18 +185,6 @@ func Main() {
     }
 
     fmt.Println("Patching '" + romFilename + "'...")
-
-    ropts := &randomizerOptions{}
-    ropts.treewarp = true
-    ropts.game     = game
-
-    route, err := makePlannedRoute(rom, inputData)
-    if err != nil {
-        fatal(err)
-        return
-    }
-    ropts.dungeons = route.entrances != nil && len(route.entrances) > 0
-    ropts.portals = route.portals != nil && len(route.portals) > 0
     
     // accumulate all treasures for reference by log functions
     treasures := make(map[string]*treasure)
@@ -269,7 +195,7 @@ func Main() {
     // write roms
     outfile := strings.Replace(yamlPath, ".yml", ".gbc", 1)
 
-    sum, err := setRomData(rom, route, ropts)
+    sum, err := rom.setData(ri)
     if err != nil {
         fatal(err)
         return

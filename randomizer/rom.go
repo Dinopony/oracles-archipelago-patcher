@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"container/list"
 )
 
 const bankSize = 0x4000
@@ -88,16 +89,77 @@ func newRomState(data []byte, game int) *romState {
 	return rom
 }
 
-// changes the contents of loaded ROM bytes in place. returns a checksum of the
-// result or an error.
-func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName string,
-	ropts *randomizerOptions) ([]byte, error) {
-	// need to set this *before* treasure map data
-	if len(warpMap) != 0 {
-		rom.setWarps(warpMap, ropts.dungeons)
+// getChecks converts a route info into a map of checks.
+func getChecks(usedItems, usedSlots *list.List) map[string]string {
+	checks := make(map[string]string)
+
+	ei, es := usedItems.Front(), usedSlots.Front()
+	for ei != nil {
+		checks[es.Value.(string)] = ei.Value.(string)
+		ei, es = ei.Next(), es.Next()
 	}
 
-	if rom.game == gameSeasons {
+	return checks
+}
+
+// mutates the rom data in-place based on the given route. this doesn't write
+// the file.
+func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
+    rom.setTreewarp(ri.warpToStart)
+
+    // place selected treasures in slots
+    checks := getChecks(ri.usedItems, ri.usedSlots)
+    for slot, item := range checks {
+        rom.itemSlots[slot].treasure = rom.treasures[item]
+    }
+
+    // set season data
+    if rom.game == GAME_SEASONS {
+        for area, id := range ri.seasons {
+            rom.setSeason(inflictCamelCase(area+"Season"), id)
+        }
+    }
+
+    rom.setHeartBeepInterval(ri.heartBeepInterval)
+    rom.setRequiredEssences(ri.requiredEssences)
+    rom.setAnimal(ri.companion)
+    rom.setArchipelagoSlotName(ri.archipelagoSlotName)
+
+    warps := make(map[string]string)
+
+    if ri.game == GAME_SEASONS {
+        rom.setFoolsOreDamage(ri.foolsOreDamage)
+        rom.setLostWoodsPedestalSequence(ri.pedestalSequence)
+
+        arePortalsShuffled := (ri.portals != nil && len(ri.portals) > 0)
+        if arePortalsShuffled {
+            for k, v := range ri.portals {
+                holodrumV, _ := reverseLookup(SUBROSIAN_PORTAL_NAMES, v)
+                warps[fmt.Sprintf("%s portal", k)] = fmt.Sprintf("%s portal", holodrumV)
+            }
+        }
+    }
+
+    areDungeonsShuffled := (ri.entrances != nil && len(ri.entrances) > 0)
+    if areDungeonsShuffled {
+        for k, v := range ri.entrances {
+            warps[k] = v
+        }
+    }
+
+    // do it! (but don't write anything)
+    return rom.mutate(warps, ri.archipelagoSlotName, areDungeonsShuffled)
+}
+
+// changes the contents of loaded ROM bytes in place. returns a checksum of the
+// result or an error.
+func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName string, areDungeonsShuffled bool) ([]byte, error) {
+	// need to set this *before* treasure map data
+	if len(warpMap) != 0 {
+		rom.setWarps(warpMap, areDungeonsShuffled)
+	}
+
+	if rom.game == GAME_SEASONS {
 		northHoronSeason :=
 			rom.codeMutables["northHoronSeason"].new[0]
 		rom.codeMutables["initialSeason"].new =
@@ -169,7 +231,7 @@ func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName strin
 
 	// explicitly set these items after their functions are written
 	rom.writeBossItems()
-	if rom.game == gameSeasons {
+	if rom.game == GAME_SEASONS {
 		rom.itemSlots["subrosia seaside"].mutate(rom.data)
 		rom.itemSlots["great furnace"].mutate(rom.data)
 		rom.itemSlots["master diver's reward"].mutate(rom.data)
@@ -269,7 +331,7 @@ func (rom *romState) setSeedData() {
 	treeName := sora(rom.game, "horon village tree", "south lynna tree").(string)
 	seedType := rom.itemSlots[treeName].treasure.id
 
-	if rom.game == gameSeasons {
+	if rom.game == GAME_SEASONS {
 		// satchel/slingshot starting seeds
 		rom.codeMutables["satchelInitialSeeds"].new[0] = 0x20 + seedType
 		rom.codeMutables["editGainLoseItemsTables"].new[1] = 0x20 + seedType
@@ -351,7 +413,7 @@ func inflictCamelCase(s string) string {
 func (rom *romState) setRoomTreasureData() {
 	rom.codeMutables["roomTreasures"].new =
 		[]byte(makeRoomTreasureTable(rom.game, rom.itemSlots))
-	if rom.game == gameSeasons {
+	if rom.game == GAME_SEASONS {
 		t := rom.itemSlots["d7 zol button"].treasure
 		rom.codeMutables["aboveD7ZolButtonId"].new = []byte{t.id}
 		rom.codeMutables["aboveD7ZolButtonSubid"].new = []byte{t.subid}
@@ -470,7 +532,7 @@ func (rom *romState) writeBossItems() {
 
 // set data to make linked playthroughs isomorphic to unlinked ones.
 func (rom *romState) setLinkedData() {
-	if rom.game == gameSeasons {
+	if rom.game == GAME_SEASONS {
 		// set linked starting / hero's cave terrace items based on which items
 		// in unlinked hero's cave aren't keys. order matters.
 		var tStart, tCave *treasure
@@ -549,7 +611,7 @@ func (rom *romState) setWarps(warpMap map[string]string, dungeons bool) {
 
 	// ages needs essence warp data to d6 present entrance, even though it
 	// doesn't exist in vanilla.
-	if rom.game == gameAges {
+	if rom.game == GAME_AGES {
 		warps["d6 present essence"] = &warpData{
 			vanillaExitData: []byte{0x81, 0x0e, 0x16, 0x01},
 		}
@@ -573,7 +635,7 @@ func (rom *romState) setWarps(warpMap map[string]string, dungeons bool) {
 		}
 	}
 
-	if rom.game == gameSeasons {
+	if rom.game == GAME_SEASONS {
 		// set treasure map data. because of d8, portals go first, then dungeon
 		// entrances.
 		dungeonNameRegexp := regexp.MustCompile(`^d[1-8]$`)

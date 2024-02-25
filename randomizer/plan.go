@@ -31,7 +31,7 @@ func newInputData() *inputData {
     }
 }
 
-func parseYamlInput(path string) (*inputData, error) {
+func parseYamlInput(path string) (*routeInfo, error) {
     fmt.Println("Processing input file " + path)
     yamlFile, err := os.ReadFile(path)
     if err != nil {
@@ -59,76 +59,145 @@ func parseYamlInput(path string) (*inputData, error) {
         }
     }
 
-    return data, nil
+    ri, err := makePlannedRoute(data)
+    if err != nil {
+        fatal(err)
+        return nil, err
+    }
+
+    return ri, nil
 }
 
+type routeInfo struct {
+    game                int
 
-func processLostWoodsItemSequence(sequence string, rom *romState) {
-    builder := new(strings.Builder)
-    lostWoodsItemSequence := strings.Split(sequence, " ")
-    for i:=0 ; i<4 ; i++ {
-        seasonByte := 0
-        seasonStr := ""
-        switch lostWoodsItemSequence[2*i] {
-        case "spring": 
-            seasonByte = 0
-            seasonStr = "\x02\xde"
-        case "summer": 
-            seasonByte = 1
-            seasonStr = "S\x04\xbc"
-        case "autumn": 
-            seasonByte = 2
-            seasonStr = "A\x05\x25"
-        case "winter": 
-            seasonByte = 3
-            seasonStr = "\x03\x7e"
-        }
+	companion           int
+    warpToStart         bool
+    heartBeepInterval   int
+    requiredEssences    int
+	archipelagoSlotName string
+    
+	entrances    map[string]string
+	usedItems    *list.List
+	usedSlots    *list.List
 
-        directionByte := 0
-        directionStr := ""
-        switch lostWoodsItemSequence[2*i+1] {
-        case "up": 
-            directionByte = 0
-            directionStr = "\x03\x01"
-        case "right": 
-            directionByte = 1
-            directionStr = " \x04\x31"
-        case "down": 
-            directionByte = 2
-            directionStr = " south"
-        case "left": 
-            directionByte = 3
-            directionStr = " \x05\x1e"
-        }
+    // Seasons-specific
+    seasons          map[string]byte
+    portals          map[string]string
+    foolsOreDamage   int
+    pedestalSequence [8]byte
+}
 
-        builder.WriteString(seasonStr + directionStr)
-        if(i != 3) {
-            builder.WriteString("\x01")
-        } else { 
-            builder.WriteString("\x00")
+func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) (error) {
+    var err error
+
+    // Set Maku Seed to be given at the specified amount of essences
+    ri.requiredEssences = 8
+    if str, ok := data.settings["required_essences"]; ok {
+        ri.requiredEssences, err = strconv.Atoi(str)
+        if err != nil {
+            return fmt.Errorf("settings.required_essences is invalid (0 to 8)")
         }
-        mutableName := "lostWoodsItemSequence" + strconv.Itoa(i+1)
-        rom.codeMutables[mutableName].new = []byte{byte(seasonByte), byte(directionByte)}
     }
-    rom.codeMutables["lostWoodsPhonographText"].new = []byte(builder.String())
+
+    // Set Fool's Ore damage if specified
+    ri.foolsOreDamage = 12
+    if str, ok := data.settings["fools_ore_damage"]; ok {
+        ri.foolsOreDamage, err = strconv.Atoi(str); 
+        if err != nil {
+            return fmt.Errorf("settings.fools_ore_damage is invalid (must be a number)")
+        }
+    }
+
+    // Set Lost Woods item sequence
+    if str, ok := data.settings["lost_woods_item_sequence"]; ok {
+        lostWoodsItemSequence := strings.Split(str, " ")
+        for i:=0 ; i<4 ; i++ {
+            switch lostWoodsItemSequence[2*i] {
+            case "spring":  ri.pedestalSequence[i*2] = SEASON_SPRING
+            case "summer":  ri.pedestalSequence[i*2] = SEASON_SUMMER
+            case "autumn":  ri.pedestalSequence[i*2] = SEASON_AUTUMN
+            case "winter":  ri.pedestalSequence[i*2] = SEASON_WINTER
+            }
+    
+            switch lostWoodsItemSequence[2*i+1] {
+            case "up":      ri.pedestalSequence[i*2+1] = DIRECTION_UP
+            case "right":   ri.pedestalSequence[i*2+1] = DIRECTION_RIGHT
+            case "down":    ri.pedestalSequence[i*2+1] = DIRECTION_DOWN
+            case "left":    ri.pedestalSequence[i*2+1] = DIRECTION_LEFT
+            }
+        }
+    }
+
+    return nil
+}
+
+func processSettings(data *inputData, ri *routeInfo) (error) {
+    // Companion deciding which Natzu region will be inside the seed
+    ri.companion = COMPANION_UNDEFINED
+    if val, ok := data.settings["companion"]; ok {
+        switch val {
+        case "Ricky":   ri.companion = COMPANION_RICKY
+        case "Dimitri": ri.companion = COMPANION_DIMITRI
+        case "Moosh":   ri.companion = COMPANION_MOOSH
+        }
+    }
+    if ri.companion == COMPANION_UNDEFINED {
+        return fmt.Errorf("settings.companion is missing or invalid ('Ricky', 'Dimitri' or 'Moosh')")
+    }
+
+    // Warp to start enabled / disabled
+    if val, ok := data.settings["warp_to_start"]; ok {
+        ri.warpToStart = (val == "true")
+    } else {
+        return fmt.Errorf("settings.warp_to_start is missing ('true' or 'false')")
+    }
+
+    // Archipelago slot name
+    if str, ok := data.settings["slot_name"]; ok {
+        ri.archipelagoSlotName = str
+    }
+
+    // Set heart beep interval if specified
+    ri.heartBeepInterval = HEART_BEEP_DEFAULT
+    if str, ok := data.settings["heart_beep_interval"]; ok {
+        switch str {
+        case "half":     ri.heartBeepInterval = HEART_BEEP_HALF
+        case "quarter":  ri.heartBeepInterval = HEART_BEEP_QUARTER
+        case "disabled": ri.heartBeepInterval = HEART_BEEP_DISABLED
+        }
+    }
+
+    if ri.game == GAME_SEASONS {
+        processSeasonsSpecificSettings(data, ri)
+    }
+
+    return nil
 }
 
 // like findRoute, but uses a specified configuration instead of a random one.
-func makePlannedRoute(rom *romState, data *inputData) (*routeInfo, error) {
+func makePlannedRoute(data *inputData) (*routeInfo, error) {
     ri := &routeInfo{
-        entrances: make(map[string]string),
-        usedItems: list.New(),
-        usedSlots: list.New(),
+        game:             GAME_UNDEFINED,
+        entrances:        make(map[string]string),
+        usedItems:        list.New(),
+        usedSlots:        list.New(),
     }
 
-    switch data.settings["companion"] {
-    case "Ricky":   ri.companion = COMPANION_RICKY
-    case "Dimitri": ri.companion = COMPANION_DIMITRI
-    case "Moosh":   ri.companion = COMPANION_MOOSH
-    default:        ri.companion = sora(rom.game, COMPANION_MOOSH, COMPANION_DIMITRI).(int)
+    if data.settings["game"] == "seasons" {
+        ri.game = GAME_SEASONS
+    } else if data.settings["game"] == "ages" {
+        ri.game = GAME_AGES
+    } else {
+        return nil, fmt.Errorf("Invalid game")
     }
-    
-    // item slots
+
+    err := processSettings(data, ri)
+    if err != nil {
+        return nil, err
+    }
+
+    // Locations
     for slot, item := range data.items {
         if !itemFitsInSlot(item, slot) {
             return nil, fmt.Errorf("%s doesn't fit in %s", item, slot)
@@ -138,91 +207,70 @@ func makePlannedRoute(rom *romState, data *inputData) (*routeInfo, error) {
         ri.usedSlots.PushBack(slot)
     }
 
-    // seasons
-    if rom.game == gameSeasons {
-        // Set Maku Seed to be given at the specified amount of essences
-        if str, ok := data.settings["required_essences"]; ok {
-            requiredEssences, err := strconv.Atoi(str)
-            if err == nil {
-                giveMakuTreeScriptAddr := rom.codeMutables["makuStageEssence8"].new
-                for i:=7 ; i >= requiredEssences; i-- {
-                    mutableName := "makuStageEssence" + strconv.Itoa(i)
-                    rom.codeMutables[mutableName].new = giveMakuTreeScriptAddr
-                }
-            }
-        }
-
-        // Set Fool's Ore damage if specified
-        if str, ok := data.settings["fools_ore_damage"]; ok {
-            foolsOreDamage, err := strconv.Atoi(str); 
-            if err == nil {
-                foolsOreDamage *= -1
-                rom.codeMutables["foolsOreDamage"].new = []byte{byte(foolsOreDamage)}
-            }
-        }
-
-        if str, ok := data.settings["slot_name"]; ok {
-            ri.archipelagoSlotName = str
-        }
-
-        // Set heart beep interval if specified
-        if str, ok := data.settings["heart_beep_interval"]; ok {
-            mutable := rom.codeMutables["heartBeepInterval"]
-            switch str {
-            case "half":       mutable.new = []byte{0x3f * 2}
-            case "quarter":      mutable.new = []byte{0x3f * 4}
-            case "disabled":  mutable.new = []byte{0x00, 0xc9}
-                                    // c9 => Unconditional return
-            }
-        }
-        
-        if str, ok := data.settings["lost_woods_item_sequence"]; ok {
-            processLostWoodsItemSequence(str, rom)
-        }
-
-        ri.seasons = make(map[string]byte, len(data.seasons))
-        for area, season := range data.seasons {
-            id := getStringIndex(seasonsById, season)
-            if id == -1 {
-                return nil, fmt.Errorf("invalid default season: %s", season)
-            }
-            if getStringIndex(seasonAreas, area) == -1 {
-                return nil, fmt.Errorf("invalid season area: %s", area)
-            }
-            ri.seasons[area] = byte(id)
-        }
-    } else if len(data.seasons) != 0 {
-        return nil, fmt.Errorf("ages doesn't have default seasons")
-    }
-
-    // dungeon entrances
+    // Dungeon entrances
     for entrance, dungeon := range data.dungeons {
         entrance = strings.Replace(entrance, " entrance", "", 1)
         for _, s := range []string{entrance, dungeon} {
-            if s == "d0" || getStringIndex(dungeonNames[rom.game], s) == -1 {
+            if s == "d0" || getStringIndex(DUNGEON_NAMES[ri.game], s) == -1 {
                 return nil, fmt.Errorf("no such dungeon: %s", s)
             }
         }
         ri.entrances[entrance] = dungeon
     }
 
-    // portals
-    if rom.game == gameSeasons {
+    if ri.game == GAME_SEASONS {
+        // Default seasons
+        ri.seasons = make(map[string]byte, len(data.seasons))
+        for area, season := range data.seasons {
+            id := getStringIndex(SEASONS_BY_ID, season)
+            if id == -1 {
+                return nil, fmt.Errorf("invalid default season: %s", season)
+            }
+            if getStringIndex(SEASON_AREAS, area) == -1 {
+                return nil, fmt.Errorf("invalid season area: %s", area)
+            }
+            ri.seasons[area] = byte(id)
+        }
+
+        // Subrosia portals
         ri.portals = make(map[string]string, len(data.portals))
         for portal, connect := range data.portals {
-            if _, ok := subrosianPortalNames[portal]; !ok {
+            if _, ok := SUBROSIAN_PORTAL_NAMES[portal]; !ok {
                 return nil, fmt.Errorf("invalid holodrum portal: %s", portal)
             }
-            if _, ok := reverseLookup(subrosianPortalNames, connect); !ok {
+            if _, ok := reverseLookup(SUBROSIAN_PORTAL_NAMES, connect); !ok {
                 return nil, fmt.Errorf("invalid subrosia portal: %s", connect)
             }
             ri.portals[portal] = connect
         }
-    } else if len(data.portals) != 0 {
-        return nil, fmt.Errorf("ages doesn't have subrosia portals")
     }
 
     return ri, nil
+}
+
+// checks whether the item fits in the slot due to things like seeds only going
+// in trees, certain item slots not accomodating sub IDs. this doesn't check
+// for softlocks or the availability of the slot and item.
+func itemFitsInSlot(item string, slot string) bool {
+	// bomb flower has special graphics something. this could probably be
+	// worked around like with the temple of seasons, but i'm not super
+	// interested in doing that.
+	if item == "bomb flower" {
+		switch slot {
+		case "cheval's test", "cheval's invention", "wild tokay game",
+			"hidden tokay cave", "library present", "library past":
+			return false
+		}
+	}
+
+	// and only seeds can be slotted in seed trees, of course
+	switch item {
+	case "Ember Seeds", "Mystery Seeds", "Scent Seeds",
+		"Pegasus Seeds", "Gale Seeds":
+		return SEED_TREE_NAMES[slot]
+	default:
+		return !SEED_TREE_NAMES[slot]
+	}
 }
 
 // overwrites regular owl hints with planned ones.

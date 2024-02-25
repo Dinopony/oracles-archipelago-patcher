@@ -3,19 +3,83 @@ package randomizer
 const VERSION = "0.9a"
 
 const (
-	gameNil = iota
-	gameAges = 1
-	gameSeasons = 2
+	GAME_UNDEFINED = iota
+	GAME_AGES = 1
+	GAME_SEASONS = 2
 )
 
 var gameNames = map[int]string{
-	gameNil:     "nil",
-	gameAges:    "ages",
-	gameSeasons: "seasons",
+	GAME_UNDEFINED: "nil",
+	GAME_AGES:    	"ages",
+	GAME_SEASONS: 	"seasons",
 }
 
 const (
-	COMPANION_RICKY   = 1
-	COMPANION_DIMITRI = 2
-	COMPANION_MOOSH   = 3
+	COMPANION_UNDEFINED = 0
+	COMPANION_RICKY     = 1
+	COMPANION_DIMITRI   = 2
+	COMPANION_MOOSH     = 3
 )
+
+const (
+	HEART_BEEP_DISABLED = 0
+	HEART_BEEP_DEFAULT  = 1
+	HEART_BEEP_HALF     = 2
+	HEART_BEEP_QUARTER  = 3
+)
+
+const (
+	DIRECTION_UP 	= 0
+	DIRECTION_RIGHT = 1
+	DIRECTION_DOWN  = 2
+	DIRECTION_LEFT  = 3
+)
+
+const (
+	SEASON_SPRING  = 0
+	SEASON_SUMMER  = 1
+	SEASON_AUTUMN  = 2
+	SEASON_WINTER  = 3
+)
+
+var SEED_TREE_NAMES = map[string]bool{
+	"horon village tree":      true,
+	"woods of winter tree":    true,
+	"north horon tree":        true,
+	"spool swamp tree":        true,
+	"sunken city tree":        true,
+	"tarm ruins tree":         true,
+	"south lynna tree":        true,
+	"deku forest tree":        true,
+	"crescent island tree":    true,
+	"symmetry city tree":      true,
+	"rolling ridge west tree": true,
+	"rolling ridge east tree": true,
+	"ambi's palace tree":      true,
+	"zora village tree":       true,
+}
+
+// names of portals from the subrosia side.
+var SUBROSIAN_PORTAL_NAMES = map[string]string{
+	"eastern suburbs":      "volcanoes east",
+	"spool swamp":          "subrosia market",
+	"mt. cucco":            "strange brothers",
+	"eyeglass lake":        "great furnace",
+	"horon village":        "house of pirates",
+	"temple remains lower": "volcanoes west",
+	"temple remains upper": "d8 entrance",
+}
+
+var DUNGEON_NAMES = map[int][]string{
+	GAME_SEASONS: []string{
+		"d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8"},
+	GAME_AGES: []string{
+		"d1", "d2", "d3", "d4", "d5", "d6 present", "d6 past", "d7", "d8"},
+}
+
+var SEASONS_BY_ID = []string{"spring", "summer", "autumn", "winter"}
+var SEASON_AREAS = []string{
+	"north horon", "eastern suburbs", "woods of winter", "spool swamp",
+	"holodrum plain", "sunken city", "lost woods", "tarm ruins",
+	"western coast", "temple remains",
+}

@@ -93,7 +93,7 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 	}
 
 	// linked hero's cave
-	if game == gameSeasons {
+	if game == GAME_SEASONS {
 		// don't play linked multiworld please
 		if _, err := b.Write([]byte{0x05, 0x2c, collectModes["chest"], byte(player)}); err != nil {
 			panic(err)
@@ -138,7 +138,7 @@ func makeRoomTreasureTable(game int, itemSlots map[string]*itemSlot) string {
 
 		if key != "maku path basement" &&
 			slot.collectMode != collectModes["drop"] &&
-			(game == gameAges || slot.collectMode != collectModes["d4 pool"]) {
+			(game == GAME_AGES || slot.collectMode != collectModes["d4 pool"]) {
 			continue
 		}
 
@@ -175,7 +175,7 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 	// preprocess map slices (keys = labels, values = asm blocks)
 	slices := make([]yaml.MapSlice, 0)
 	for _, asmFile := range asmFiles {
-		if rom.game == gameSeasons {
+		if rom.game == GAME_SEASONS {
 			slices = append(slices, asmFile.Common, asmFile.Seasons)
 		} else {
 			slices = append(slices, asmFile.Common, asmFile.Ages)
@@ -383,7 +383,7 @@ func (rom *romState) attachText() {
 	shopMap := map[string]string{
 		"shopFluteText": "shop, 150 rupees",
 	}
-	if rom.game == gameSeasons {
+	if rom.game == GAME_SEASONS {
 		shopMap["membersShopSatchelText"] = "member's shop 1"
 		shopMap["membersShopGashaText"] = "member's shop 2"
 		shopMap["membersShopMapText"] = "member's shop 3"

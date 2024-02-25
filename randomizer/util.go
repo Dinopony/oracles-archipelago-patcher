@@ -55,9 +55,9 @@ func orderedKeys(m interface{}) []string {
 // the second if the game is ages. panics if the game is neither.
 func sora(game int, sOption, aOption interface{}) interface{} {
 	switch game {
-	case gameSeasons:
+	case GAME_SEASONS:
 		return sOption
-	case gameAges:
+	case GAME_AGES:
 		return aOption
 	}
 	panic("invalid game provided to sora()")
