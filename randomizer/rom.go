@@ -127,6 +127,10 @@ func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName strin
 		wildsDigSpotSlot.idAddrs[0].offset = rom.codeMutables["subrosianWildsDiggingSpotItem"].addr.offset
 		wildsDigSpotSlot.subidAddrs[0].offset = rom.codeMutables["subrosianWildsDiggingSpotItemSubid"].addr.offset
 
+		spoolDigSpotSlot := rom.itemSlots["spool swamp digging spot"]
+		spoolDigSpotSlot.idAddrs[0].offset = rom.codeMutables["vasuSignDiggingSpotItem"].addr.offset
+		spoolDigSpotSlot.subidAddrs[0].offset = rom.codeMutables["vasuSignDiggingSpotItemSubid"].addr.offset
+
 		// prepare static items addresses
 		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
 		var i uint16 = 0
@@ -170,6 +174,7 @@ func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName strin
 		rom.itemSlots["great furnace"].mutate(rom.data)
 		rom.itemSlots["master diver's reward"].mutate(rom.data)
 		rom.itemSlots["subrosian wilds digging spot"].mutate(rom.data)
+		rom.itemSlots["spool swamp digging spot"].mutate(rom.data)
 
 		codeAddr := rom.codeMutables["vasuGiveItem"].addr
 		slotToMutate := rom.itemSlots["vasu's gift"]

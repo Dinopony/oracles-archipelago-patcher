@@ -36,6 +36,11 @@ blaino prize:
   addr: {bank: 0x0b, addr: 0x64cc}
   collect: touch
   local: true
+spool swamp digging spot:
+  treasure: Gasha Seed
+  room: 0x0082
+  collect: dig
+  addr: {bank: 0x14} # addr set at EOB
 floodgate keeper's house:
   treasure: Floodgate Key
   room: 0x03b5
