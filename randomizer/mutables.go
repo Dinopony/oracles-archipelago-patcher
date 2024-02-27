@@ -100,7 +100,7 @@ func (rom *romState) setOldManRupeeValues(values map[string]int) {
 			"old man near d1": 2,
 			"old man near western coast house": 3,
 			"old man in horon": 4,
-			"old man in treehouse": 5,
+			"old man near d6": 5,
 			"old man near holly's house": 6,
 			"old man near mrs. ruul": 7,
 		}
