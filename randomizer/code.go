@@ -476,33 +476,3 @@ func (rom *romState) initBanks() {
 	// load all asm files in the asm/ directory.
 	rom.applyAsmFiles()
 }
-
-// apply user-included asm files.
-func (rom *romState) addIncludes() error {
-	asmFiles := make([]*asmData, len(rom.includes))
-
-	// read from filesystem
-	for i, path := range rom.includes {
-		asmFiles[i] = new(asmData)
-		asmFiles[i].filename = path
-
-		f, err := os.Open(path)
-		if err != nil {
-			return err
-		}
-		defer f.Close()
-
-		if err := yaml.NewDecoder(f).Decode(asmFiles[i]); err != nil {
-			return err
-		}
-	}
-
-	// apply immediately
-	labels := rom.applyAsmData(asmFiles)
-	sort.Strings(labels)
-	for _, label := range labels {
-		rom.codeMutables[label].mutate(rom.data)
-	}
-
-	return nil
-}
