@@ -151,12 +151,14 @@ func Main() {
 
     if len(os.Args) < 2 {
         printErrf("You must supply the path to your input file\n")
+        pause()
         return
     }
 
     yamlPath := os.Args[1]
     if !strings.HasSuffix(yamlPath, INPUT_FILE_EXTENSION) {
         fmt.Println("Input file must be a " + INPUT_FILE_EXTENSION + " file.")
+        pause()
         return
     }
 
@@ -171,6 +173,7 @@ func Main() {
     dirName, romFilename := getInputRomPath(ri.game)
     if dirName == "" {
         fmt.Println("No vanilla US ROM found.")
+        pause()
         return
     }
 
@@ -210,4 +213,6 @@ func Main() {
         fatal(err)
         return
     }
+
+    pause()
 }

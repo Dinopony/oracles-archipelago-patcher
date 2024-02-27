@@ -11,6 +11,12 @@ import (
 // program, since that would destroy the TUI.
 func fatal(err error) {
 	fmt.Println("fatal: ", err)
+	pause()
+}
+
+func pause() {
+	fmt.Println("Press any key to close...")
+	fmt.Scanln()
 }
 
 // a quick and dirty type of logFunc.
