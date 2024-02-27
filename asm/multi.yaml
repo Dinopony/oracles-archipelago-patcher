@@ -95,7 +95,7 @@ common:
   00/checkIsFileMultiworld: |
       push bc
       ld b,a
-      ld a,(multiPlayerNumber)
+      ld a,1
       and a
       ld a,b
       pop bc
