@@ -36,6 +36,11 @@ blaino prize:
   addr: {bank: 0x0b, addr: 0x64cc}
   collect: touch
   local: true
+underwater item below natzu bridge:
+  treasure: Gasha Seed
+  room: 0x0066
+  reverseaddr: {bank: 0x09, addr: 0x660f}
+  collect: dive
 spool swamp digging spot:
   treasure: Gasha Seed
   room: 0x0082
@@ -331,15 +336,19 @@ subrosian smithy ore:
 d0 key chest:
   treasure: Small Key (Hero's Cave)
   room: 0x0403
+d0 hidden 2d section:
+  treasure: Gasha Seed
+  room: 0x0401
+  collect: touch
+d0 rupee chest:
+  treasure: Rupees (30)
+  room: 0x0405
 d0 sword chest:
   treasure: Progressive Sword
   room: 0x0404
   ids: [{bank: 0x0a, addr: 0x7b90}] # not a real chest!
   subids: [{bank: 0x0a, addr: 0x7b92}]
   local: true
-d0 rupee chest:
-  treasure: Rupees (30)
-  room: 0x0405
 
 # d1
 d1 stalfos drop:

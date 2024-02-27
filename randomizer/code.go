@@ -113,6 +113,7 @@ var STATIC_SLOTS = [...]string {
 	"spool swamp heart piece",
 	"temple remains heart piece",
 	"mayor's house secret room",
+	"d0 hidden 2d section",
 	"subrosian house",
 	"subrosian 2d cave",
 }
