@@ -170,6 +170,7 @@ seasons:
   # confusion.
   0b/script_diverGiveItem: |
       db giveitem; db TREASURE_FLIPPERS; db 00
+      db orroomflag; db 80
       db ormemory; dw c694; db 02 # in wObtainedTreasureFlags
       db asm15; dw loseMastersPlaque
       db retscript
