@@ -1,6 +1,7 @@
 package randomizer
 
 const VERSION = "0.9a"
+const INPUT_FILE_EXTENSION = ".patcherdata"
 
 const (
 	GAME_UNDEFINED = iota

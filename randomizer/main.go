@@ -151,10 +151,16 @@ func Main() {
 
     if len(os.Args) < 2 {
         printErrf("You must supply the path to your input file\n")
+        return
+    }
+
+    yamlPath := os.Args[1]
+    if !strings.HasSuffix(yamlPath, INPUT_FILE_EXTENSION) {
+        fmt.Println("Input file must be a " + INPUT_FILE_EXTENSION + " file.")
+        return
     }
 
     fmt.Println("Reading input file...")
-    yamlPath := os.Args[1]
     ri, err := parseYamlInput(yamlPath)
     if err != nil {
         fatal(err)
@@ -199,13 +205,7 @@ func Main() {
         return
     }
 
-    var outPath string
-    if strings.Contains(yamlPath, ".apseasons") {
-        outPath = strings.Replace(yamlPath, ".apseasons", ".gbc", 1)
-    } else {
-        outPath = yamlPath + ".gbc"
-    }
-    
+    var outPath = strings.Replace(yamlPath, INPUT_FILE_EXTENSION, ".gbc", 1)
     if writeRom(rom.data, outPath, sum); err != nil {
         fatal(err)
         return
