@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
+	"path/filepath"
 	"gopkg.in/yaml.v2"
 )
 
@@ -276,38 +276,46 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 func (rom *romState) applyAsmFiles() {
 	filePaths := []string{}
 
-	infos, err := os.ReadDir("asm/")
+    exe, err := os.Executable()
+    if err != nil {
+        return
+    }
+    dirName := filepath.Dir(exe)
+
+	asmBaseDir := filepath.Join(dirName, "asm")
+	infos, err := os.ReadDir(asmBaseDir)
 	if err != nil { panic(err) }
 	for _, info := range infos {
-		filePaths = append(filePaths, info.Name())
+		filePaths = append(filePaths, filepath.Join(asmBaseDir, info.Name()))
 	}
 
-	infosSeasons, err := os.ReadDir("asm/seasons/")
+	seasonsDir := filepath.Join(asmBaseDir, "seasons")
+	infosSeasons, err := os.ReadDir(seasonsDir)
 	if err != nil { panic(err) }
 	for _, info := range infosSeasons {
-		filePaths = append(filePaths, "seasons/" + info.Name())
+		filePaths = append(filePaths, filepath.Join(seasonsDir, info.Name()))
 	}
 
-	infosAges, err := os.ReadDir("asm/ages/")
+	agesDir := filepath.Join(asmBaseDir, "ages")
+	infosAges, err := os.ReadDir(agesDir)
 	if err != nil { panic(err) }
 	for _, info := range infosAges {
-		filePaths = append(filePaths, "ages/" + info.Name())
+		filePaths = append(filePaths, filepath.Join(agesDir, info.Name()))
 	}
 
 	asmFiles := make([]*asmData, len(filePaths))
 
 	// standard files are embedded
-	for i, relPath := range filePaths {
+	for i, absPath := range filePaths {
 		asmFiles[i] = new(asmData)
-		asmFiles[i].filename = relPath
+		asmFiles[i].filename = absPath
 
 		// readme etc
-		if !strings.HasSuffix(relPath, ".yaml") {
+		if !strings.HasSuffix(absPath, ".yaml") {
 			continue
 		}
 
-		path := "asm/" + relPath
-		b, err := os.ReadFile(path)
+		b, err := os.ReadFile(absPath)
 		if err != nil {
 			panic(err)
 		}
