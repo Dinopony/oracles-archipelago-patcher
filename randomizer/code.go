@@ -423,7 +423,7 @@ func processText(s string) []byte {
 	return []byte(s)
 }
 
-var articleRegexp = regexp.MustCompile("^(an?|the) ")
+var articleRegexp = regexp.MustCompile("^(an?|the|some) ")
 
 // return a map of internal item names to text that should be displayed for the
 // item in shops.
