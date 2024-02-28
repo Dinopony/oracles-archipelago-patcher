@@ -75,6 +75,7 @@ type routeInfo struct {
     warpToStart         bool
     heartBeepInterval   int
     requiredEssences    int
+    goldenBeastsRequirement int
 	archipelagoSlotName string
     
 	entrances           map[string]string
@@ -98,6 +99,15 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) (error) {
         ri.requiredEssences, err = strconv.Atoi(str)
         if err != nil {
             return fmt.Errorf("settings.required_essences is invalid (0 to 8)")
+        }
+    }
+
+    // Set golden beasts requirement for golden old man check
+    ri.goldenBeastsRequirement = 4
+    if str, ok := data.settings["golden_beasts_requirement"]; ok {
+        ri.goldenBeastsRequirement, err = strconv.Atoi(str)
+        if err != nil || ri.goldenBeastsRequirement < 0 || ri.goldenBeastsRequirement > 4 {
+            return fmt.Errorf("settings.golden_beasts_requirement is invalid (0 to 4)")
         }
     }
 

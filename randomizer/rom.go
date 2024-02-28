@@ -147,12 +147,12 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
     }
 
     // do it! (but don't write anything)
-    return rom.mutate(warps, ri.archipelagoSlotName, areDungeonsShuffled)
+    return rom.mutate(warps, ri, areDungeonsShuffled)
 }
 
 // changes the contents of loaded ROM bytes in place. returns a checksum of the
 // result or an error.
-func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName string, areDungeonsShuffled bool) ([]byte, error) {
+func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeonsShuffled bool) ([]byte, error) {
 	// need to set this *before* treasure map data
 	if len(warpMap) != 0 {
 		rom.setWarps(warpMap, areDungeonsShuffled)
@@ -174,12 +174,15 @@ func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName strin
 		codeAddr := rom.codeMutables["setStarOreIds"].addr
 		rom.itemSlots["subrosia seaside"].idAddrs[0].offset = codeAddr.offset + 2
 		rom.itemSlots["subrosia seaside"].subidAddrs[0].offset = codeAddr.offset + 5
+
 		codeAddr = rom.codeMutables["setHardOreIds"].addr
 		rom.itemSlots["great furnace"].idAddrs[0].offset = codeAddr.offset + 2
 		rom.itemSlots["great furnace"].subidAddrs[0].offset = codeAddr.offset + 5
+
 		codeAddr = rom.codeMutables["script_diverGiveItem"].addr
 		rom.itemSlots["master diver's reward"].idAddrs[0].offset = codeAddr.offset + 1
 		rom.itemSlots["master diver's reward"].subidAddrs[0].offset = codeAddr.offset + 2
+
 		codeAddr = rom.codeMutables["createMtCuccoItem"].addr
 		rom.itemSlots["mt. cucco, platform cave"].idAddrs[0].offset = codeAddr.offset + 2
 		rom.itemSlots["mt. cucco, platform cave"].subidAddrs[0].offset = codeAddr.offset + 1
@@ -191,6 +194,10 @@ func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName strin
 		spoolDigSpotSlot := rom.itemSlots["spool swamp digging spot"]
 		spoolDigSpotSlot.idAddrs[0].offset = rom.codeMutables["vasuSignDiggingSpotItem"].addr.offset
 		spoolDigSpotSlot.subidAddrs[0].offset = rom.codeMutables["vasuSignDiggingSpotItemSubid"].addr.offset
+
+		rom.codeMutables["goldenBeastsRequirement"].new[0] = byte(ri.goldenBeastsRequirement);
+		rom.codeMutables["goldenBeastsText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement);
+		rom.codeMutables["goldenBeastsRewardText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement);
 
 		// prepare static items addresses
 		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
@@ -215,7 +222,7 @@ func (rom *romState) mutate(warpMap map[string]string, archipelagoSlotName strin
 	rom.setBossItemAddrs()
 	rom.setSeedData()
 	rom.setRoomTreasureData()
-	rom.setFileSelectText(archipelagoSlotName)
+	rom.setFileSelectText(ri.archipelagoSlotName)
 	rom.attachText()
 	rom.codeMutables["multiPlayerNumber"].new[0] = byte(rom.player)
 
@@ -298,7 +305,8 @@ func (rom *romState) verify() []error {
 			"mt. cucco, platform cave", "diving spot outside D4", "vasu's gift",
 			"goron's gift", "dr. left reward", "malon trade", "mrs. ruul trade",
 			"subrosian chef trade", "biggoron trade", "ingo trade", "old man trade",
-			"talon trade", "syrup trade", "tick tock trade", "guru-guru trade":
+			"talon trade", "syrup trade", "tick tock trade", "guru-guru trade",
+			"golden beasts old man":
 		// ages progressive w/ different item IDs
 		case "nayru's house", "tokkey's composition", "rescue nayru",
 			"d6 present vire chest":

@@ -250,6 +250,22 @@ seasons:
       ret
   3f/452b/: call activateFlute
 
+  # Make the golden beasts old man give a treasure instead of a ring
+  15/giveGoldenBeastsReward: |
+    call createTreasure
+    ret nz
+    push de
+    ld de,w1Link.yh
+    call objectCopyPosition_rawAddress
+    pop de
+    xor a
+    ret
+  15/6adc/: jp giveGoldenBeastsReward
+  # Change the golden beasts old man requirement (both checked value and text)
+  15/6acf/goldenBeastsRequirement: db 04
+  1f/3247/goldenBeastsText: db 34,20,05,8e,20
+  1f/3295/goldenBeastsRewardText: db 34,20,05,8e,20
+
 ages:
   # set treasure ID 07 (rod of seasons) when buying the 150 rupee shop item, so
   # that the shop can check this specific ID.
