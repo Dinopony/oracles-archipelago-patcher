@@ -338,7 +338,7 @@ d0 key chest:
   room: 0x0403
 d0 hidden 2d section:
   treasure: Gasha Seed
-  room: 0x0401
+  room: 0x0601
   collect: touch
 d0 rupee chest:
   treasure: Rupees (30)
