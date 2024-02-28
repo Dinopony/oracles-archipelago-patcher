@@ -95,11 +95,35 @@ var SUBROSIAN_PORTAL_NAMES = map[string]string{
 	"temple remains upper": "d8 entrance",
 }
 
-var DUNGEON_NAMES = map[int][]string{
+var DUNGEON_CODES = map[int][]string{
 	GAME_SEASONS: []string{
 		"d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8"},
 	GAME_AGES: []string{
 		"d1", "d2", "d3", "d4", "d5", "d6 present", "d6 past", "d7", "d8"},
+}
+
+var DUNGEON_NAMES = map[int][]string{
+	GAME_SEASONS: []string{
+		"Hero's Cave", 
+		"Gnarled Root Dungeon", 
+		"Snake's Remains", 
+		"Poison Moth's Lair", 
+		"Dancing Dragon Dungeon", 
+		"Unicorn's Cave", 
+		"Ancient Ruins", 
+		"Explorer's Crypt", 
+		"Sword & Shield Maze"},
+	GAME_AGES: []string{
+		"d0", 
+		"d1", 
+		"d2", 
+		"d3", 
+		"d4", 
+		"d5", 
+		"d6 present", 
+		"d6 past",
+		"d7", 
+		"d8"},
 }
 
 var SEASONS_BY_ID = []string{"spring", "summer", "autumn", "winter"}

@@ -231,7 +231,7 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
     for entrance, dungeon := range data.dungeons {
         entrance = strings.Replace(entrance, " entrance", "", 1)
         for _, s := range []string{entrance, dungeon} {
-            if s == "d0" || getStringIndex(DUNGEON_NAMES[ri.game], s) == -1 {
+            if s == "d0" || getStringIndex(DUNGEON_CODES[ri.game], s) == -1 {
                 return nil, fmt.Errorf("no such dungeon: %s", s)
             }
         }

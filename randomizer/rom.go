@@ -437,44 +437,40 @@ func (rom *romState) setTreasureMapData() {
 // set dungeon properties so that the compass beeps in the rooms actually
 // containing small keys and boss keys.
 func (rom *romState) setCompassData() {
-	prefixes := sora(rom.game,
-		[]string{"d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8"},
-		[]string{"d0", "d1", "d2", "d3", "d4", "d5", "d6 present", "d6 past",
-			"d7", "d8"}).([]string)
+	dungeonCodes := sora(rom.game, DUNGEON_CODES[GAME_SEASONS], DUNGEON_CODES[GAME_AGES]).([]string)
+	dungeonNames := sora(rom.game, DUNGEON_NAMES[GAME_SEASONS], DUNGEON_NAMES[GAME_AGES]).([]string)
 
 	// clear key flags
-	for _, prefix := range prefixes {
+	for _, code := range dungeonCodes {
 		for name, slot := range rom.itemSlots {
-			if strings.HasPrefix(name, prefix+" ") {
-				offset := getDungeonPropertiesAddr(
-					rom.game, slot.group, slot.room).fullOffset()
+			if strings.HasPrefix(name, code+" ") {
+				offset := getDungeonPropertiesAddr(rom.game, slot.group, slot.room).fullOffset()
 				rom.data[offset] = rom.data[offset] & 0xed // reset bit 4
 			}
 		}
 	}
 
 	// set key flags
-	for _, prefix := range prefixes {
-		slots := rom.lookupAllItemSlots(fmt.Sprintf("%s small key", prefix))
+	for _, dungeonName := range dungeonNames {
+		slots := rom.lookupAllItemSlots(fmt.Sprintf("Small Key (%s)", dungeonName))
 
 		// boss keys can be absent in plando, so handle the nil case
-		switch prefix {
-		case "d0", "d6 present":
+		switch dungeonName {
+		case "Hero's Cave", "d6 present":
 			break
 		case "d6 past":
 			if slot := rom.lookupItemSlot("Boss Key (Ancient Ruins)"); slot != nil {
 				slots = append(slots, slot)
 			}
 		default:
-			keyName := fmt.Sprintf("%s boss key", prefix)
+			keyName := fmt.Sprintf("Boss Key (%s)", dungeonName)
 			if slot := rom.lookupItemSlot(keyName); slot != nil {
 				slots = append(slots, slot)
 			}
 		}
 
 		for _, slot := range slots {
-			offset := getDungeonPropertiesAddr(
-				rom.game, slot.group, slot.room).fullOffset()
+			offset := getDungeonPropertiesAddr(rom.game, slot.group, slot.room).fullOffset()
 			rom.data[offset] = (rom.data[offset] & 0xbf) | 0x10 // set bit 4, reset bit 6
 		}
 	}
