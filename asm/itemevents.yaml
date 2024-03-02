@@ -263,7 +263,11 @@ seasons:
   15/6adc/: jp giveGoldenBeastsReward
   # Change the golden beasts old man requirement (both checked value and text)
   15/6acf/goldenBeastsRequirement: db 04
+  # Change the "jr z" into a "jr nc" to allow having more beasts killed than needed
+  15/6ad2/: db 30
+  # Change not yet completed text value
   1f/3247/goldenBeastsText: db 34,20,05,8e,20
+  # Change completion text value
   1f/3295/goldenBeastsRewardText: db 34,20,05,8e,20
 
 ages:
