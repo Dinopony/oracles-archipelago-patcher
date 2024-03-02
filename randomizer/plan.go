@@ -76,6 +76,7 @@ type routeInfo struct {
     heartBeepInterval   int
     requiredEssences    int
     goldenBeastsRequirement int
+    treehouseOldManRequirement int
 	archipelagoSlotName string
     
 	entrances           map[string]string
@@ -108,6 +109,14 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) (error) {
         ri.goldenBeastsRequirement, err = strconv.Atoi(str)
         if err != nil || ri.goldenBeastsRequirement < 0 || ri.goldenBeastsRequirement > 4 {
             return fmt.Errorf("settings.golden_beasts_requirement is invalid (0 to 4)")
+        }
+    }
+
+    ri.treehouseOldManRequirement = 5
+    if str, ok := data.settings["treehouse_old_man_requirement"]; ok {
+        ri.treehouseOldManRequirement, err = strconv.Atoi(str)
+        if err != nil || ri.treehouseOldManRequirement < 0 || ri.treehouseOldManRequirement > 8 {
+            return fmt.Errorf("settings.treehouse_old_man_requirement is invalid (0 to 8)")
         }
     }
 

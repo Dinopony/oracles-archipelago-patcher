@@ -199,6 +199,9 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		rom.codeMutables["goldenBeastsText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement);
 		rom.codeMutables["goldenBeastsRewardText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement);
 
+		rom.codeMutables["treehouseOldManRequirement"].new[0] = byte(ri.treehouseOldManRequirement);
+		rom.codeMutables["treehouseOldManText"].new[4] = 0x30 + byte(ri.treehouseOldManRequirement);
+
 		// prepare static items addresses
 		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
 		var i uint16 = 0
