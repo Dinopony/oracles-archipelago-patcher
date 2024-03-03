@@ -82,8 +82,6 @@ func newRomState(data []byte, game int) *romState {
 		data:      data,
 		treasures: loadTreasures(data, game),
 	}
-	rom.itemSlots = rom.loadSlots()
-	rom.initBanks()
 	return rom
 }
 
@@ -146,6 +144,12 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
         }
     }
 
+	// need to set this *before* treasure map data
+	if len(warps) != 0 {
+		rom.setWarps(warps, areDungeonsShuffled)
+	}
+
+
     // do it! (but don't write anything)
     return rom.mutate(warps, ri, areDungeonsShuffled)
 }
@@ -153,20 +157,13 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 // changes the contents of loaded ROM bytes in place. returns a checksum of the
 // result or an error.
 func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeonsShuffled bool) ([]byte, error) {
-	// need to set this *before* treasure map data
-	if len(warpMap) != 0 {
-		rom.setWarps(warpMap, areDungeonsShuffled)
-	}
 
 	if rom.game == GAME_SEASONS {
-		northHoronSeason :=
-			rom.codeMutables["northHoronSeason"].new[0]
-		rom.codeMutables["initialSeason"].new =
-			[]byte{0x2d, northHoronSeason}
-		westernCoastSeason :=
-			rom.codeMutables["westernCoastSeason"].new[0]
-		rom.codeMutables["seasonAfterPirateCutscene"].new =
-			[]byte{westernCoastSeason}
+		northHoronSeason := rom.codeMutables["northHoronSeason"].new[0]
+		rom.codeMutables["initialSeason"].new = []byte{0x2d, northHoronSeason}
+
+		westernCoastSeason := rom.codeMutables["westernCoastSeason"].new[0]
+		rom.codeMutables["seasonAfterPirateCutscene"].new = []byte{westernCoastSeason}
 
 		rom.setTreasureMapData()
 
@@ -239,7 +236,10 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 	}
 
 	// explicitly set these items after their functions are written
-	rom.writeBossItems()
+	for i := 1; i <= 8; i++ {
+		rom.itemSlots[fmt.Sprintf("d%d boss", i)].mutate(rom.data)
+	}
+	
 	if rom.game == GAME_SEASONS {
 		rom.itemSlots["subrosia seaside"].mutate(rom.data)
 		rom.itemSlots["great furnace"].mutate(rom.data)
@@ -286,49 +286,6 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 
 	outSum := sha1.Sum(rom.data)
 	return outSum[:], nil
-}
-
-// checks all the package's data against the ROM to see if it matches. It
-// returns a slice of errors describing each mismatch.
-func (rom *romState) verify() []error {
-	errors := make([]error, 0)
-	for k, m := range rom.getAllMutables() {
-		// ignore special cases that would error even when correct
-		switch k {
-		// seasons shop items
-		case "zero shop text", "Member's Card", "Treasure Map",
-			"Rare Peach Stone", "Ribbon":
-		// flutes
-		case "Ricky's Flute", "Dimitri's Flute", "Moosh's Flute":
-		// seasons linked chests
-		case "spool swamp cave", "woods of winter, 2nd cave",
-			"dry eyeglass lake, west cave":
-		// seasons misc.
-		case "Bracelet", "temple of seasons", "Fool's Ore", "blaino prize",
-			"mt. cucco, platform cave", "diving spot outside D4", "vasu's gift",
-			"goron's gift", "dr. left reward", "malon trade", "mrs. ruul trade",
-			"subrosian chef trade", "biggoron trade", "ingo trade", "old man trade",
-			"talon trade", "syrup trade", "tick tock trade", "guru-guru trade",
-			"golden beasts old man":
-		// ages progressive w/ different item IDs
-		case "nayru's house", "tokkey's composition", "rescue nayru",
-			"d6 present vire chest":
-		// ages misc.
-		case "south shore dirt", "target carts 2", "sea of storms past",
-			"starting chest", "graveyard poe":
-		// additional misc.
-		case "Archipelago Item":
-		default:
-			if err := m.check(rom.data); err != nil {
-				errors = append(errors, fmt.Errorf("%s: %v", k, err))
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return errors
-	}
-	return nil
 }
 
 // set the initial satchel and slingshot seeds (and selections) based on what
@@ -524,12 +481,6 @@ func (rom *romState) setBossItemAddrs() {
 		slot := rom.itemSlots[fmt.Sprintf("d%d boss", i)]
 		slot.idAddrs[0].offset = table.addr.offset + i*2
 		slot.subidAddrs[0].offset = table.addr.offset + i*2 + 1
-	}
-}
-
-func (rom *romState) writeBossItems() {
-	for i := 1; i <= 8; i++ {
-		rom.itemSlots[fmt.Sprintf("d%d boss", i)].mutate(rom.data)
 	}
 }
 

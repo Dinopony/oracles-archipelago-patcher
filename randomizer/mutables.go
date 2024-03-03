@@ -9,7 +9,6 @@ import (
 // an instance of ROM data that can be changed by the randomizer.
 type mutable interface {
 	mutate([]byte)      // change ROM bytes
-	check([]byte) error // verify that the mutable matches the ROM
 }
 
 // a length of mutable bytes starting at a given address.
@@ -24,18 +23,6 @@ func (mut *mutableRange) mutate(b []byte) {
 	for i, value := range mut.new {
 		b[offset+i] = value
 	}
-}
-
-// implements `check()` from the `mutable` interface.
-func (mut *mutableRange) check(b []byte) error {
-	offset := mut.addr.fullOffset()
-	for i, value := range mut.old {
-		if b[offset+i] != value {
-			return fmt.Errorf("expected %x at %x; found %x",
-				mut.old[i], offset+i, b[offset+i])
-		}
-	}
-	return nil
 }
 
 // sets treewarp on or off in the modified ROM. By default, it is on.

@@ -2,7 +2,6 @@ package randomizer
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"regexp"
 	"sort"
@@ -329,23 +328,6 @@ func (rom *romState) applyAsmFiles() {
 	rom.applyAsmData(asmFiles)
 }
 
-// showAsm writes the disassembly of the specified symbol to the given
-// io.Writer.
-func (rom *romState) showAsm(symbol string, w io.Writer) error {
-	mut := rom.codeMutables[symbol]
-	if mut == nil {
-		return fmt.Errorf("no such label: %s", symbol)
-	}
-	s, err := rom.assembler.decompile(string(mut.new))
-	if err != nil {
-		return err
-	}
-	fmt.Fprintf(os.Stderr, "%02x:%04x: %s\n",
-		mut.addr.bank, mut.addr.offset, symbol)
-	_, err = fmt.Fprintln(w, s)
-	return err
-}
-
 // returns the address and label components of a meta-label such as
 // "02/openRingList" or "02/56a1/". see asm/README.md for details.
 func parseMetalabel(ml string) (addr address, label string) {
@@ -462,14 +444,17 @@ func (rom *romState) initBanks() {
 
 	// do this before loading asm files, since the sizes of the tables vary
 	// with the number of checks.
-	roomTreasureBank := byte(sora(rom.game, 0x3f, 0x38).(int))
-	numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
 	rom.replaceRaw(address{0x06, 0}, "collectPropertiesTable",
 		makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
+
+	roomTreasureBank := byte(sora(rom.game, 0x3f, 0x38).(int))
 	rom.replaceRaw(address{roomTreasureBank, 0}, "roomTreasures",
 		makeRoomTreasureTable(rom.game, rom.itemSlots))
+
+	numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
 	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets",
 		string(make([]byte, numOwlIds*2)))
+	
 	rom.replaceRaw(address{0x0a, 0}, "staticItemsReplacementsTable",
 		makeStaticItemsReplacementTable(rom.game, rom.player, rom.itemSlots))
 

@@ -1,10 +1,5 @@
 package randomizer
 
-import (
-	"bytes"
-	"fmt"
-)
-
 // treasure interaction spawn + collect modes. bits 0-2 are for collect
 // animation; bit 3 sets room flag on collection; bits 4-6 determine how the
 // treasure appears; bit 7 is used as the randomizer as a jump table index for
@@ -17,12 +12,14 @@ var collectModes = map[string]byte{
 	"dive":                0x49, // SK and BK in seasons D4
 	"dig":                 0x5a, // star ore, ricky's gloves (ages)
 	"delay":               0x68, // map and compass chests
+	
 	"diver room":          0x80,
 	"poe skip room":       0x81,
 	"maku tree (seasons)": 0x82,
 	"d4 pool":             0x83,
 	"d5 armos":            0x84,
 	"talon cave":          0x85,
+
 	"maku tree (ages)":    0x80,
 	"target carts":        0x81,
 	"big bang game":       0x82,
@@ -59,21 +56,6 @@ func (t treasure) mutate(b []byte) {
 	for i := 0; i < 4; i++ {
 		b[addr+i] = data[i]
 	}
-}
-
-// implements `check()` from the `mutable` interface.
-func (t treasure) check(b []byte) error {
-	// fake treasure
-	if t.addr.offset == 0 {
-		return nil
-	}
-
-	addr, data := t.addr.fullOffset(), t.bytes()
-	if bytes.Compare(b[addr:addr+4], data) != 0 {
-		return fmt.Errorf("expected %x at %x; found %x",
-			data, addr, b[addr:addr+4])
-	}
-	return nil
 }
 
 // returns the full offset of the treasure's four-byte entry in the rom.

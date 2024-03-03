@@ -25,33 +25,6 @@ func (mut *itemSlot) mutate(b []byte) {
 	mut.treasure.mutate(b)
 }
 
-// helper function for itemSlot.check()
-func checkByte(b []byte, addr address, value byte) error {
-	if b[addr.fullOffset()] != value {
-		return fmt.Errorf("expected %x at %x; found %x",
-			value, addr.fullOffset(), b[addr.fullOffset()])
-	}
-	return nil
-}
-
-// implements `check()` from the `mutable` interface.
-func (mut *itemSlot) check(b []byte) error {
-	// skip zero addresses
-	if len(mut.idAddrs) == 0 || mut.idAddrs[0].offset == 0 {
-		return nil
-	}
-
-	// only check ID addresses, since situational variants and progressive
-	// items mess with everything else.
-	for _, addr := range mut.idAddrs {
-		if err := checkByte(b, addr, mut.treasure.id); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 // raw slot data loaded from yaml.
 type rawSlot struct {
 	// required

@@ -185,22 +185,11 @@ func Main() {
     }
     
     rom := newRomState(b, game)
-
-    // sanity check beforehand
-    if errs := rom.verify(); errs != nil {
-        fmt.Println(err.Error())
-        fatal(errs[0])
-        return
-    }
-
+	rom.itemSlots = rom.loadSlots()
+	rom.initBanks()
+    
     fmt.Println("Patching '" + romFilename + "'...")
     
-    // accumulate all treasures for reference by log functions
-    treasures := make(map[string]*treasure)
-    for k, v := range rom.treasures {
-        treasures[k] = v
-    }
-
     // write roms
     sum, err := rom.setData(ri)
     if err != nil {
