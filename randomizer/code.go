@@ -3,11 +3,12 @@ package randomizer
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
-	"path/filepath"
+
 	"gopkg.in/yaml.v2"
 )
 
@@ -103,7 +104,7 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 	return b.String()
 }
 
-var STATIC_SLOTS = [...]string {
+var STATIC_SLOTS = [...]string{
 	"horon heart piece",
 	"woods of winter heart piece",
 	"mt. cucco heart piece",
@@ -117,7 +118,7 @@ var STATIC_SLOTS = [...]string {
 	"subrosian 2d cave",
 }
 
-func makeStaticItemsReplacementTable(game, player int, itemSlots map[string]*itemSlot) string {
+func makeStaticItemsReplacementTable(itemSlots map[string]*itemSlot) string {
 	b := new(strings.Builder)
 	for _, key := range STATIC_SLOTS {
 		slot := itemSlots[key]
@@ -276,29 +277,35 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 func (rom *romState) applyAsmFiles() {
 	filePaths := []string{}
 
-    exe, err := os.Executable()
-    if err != nil {
-        return
-    }
-    dirName := filepath.Dir(exe)
+	exe, err := os.Executable()
+	if err != nil {
+		return
+	}
+	dirName := filepath.Dir(exe)
 
 	asmBaseDir := filepath.Join(dirName, "asm")
 	infos, err := os.ReadDir(asmBaseDir)
-	if err != nil { panic(err) }
+	if err != nil {
+		panic(err)
+	}
 	for _, info := range infos {
 		filePaths = append(filePaths, filepath.Join(asmBaseDir, info.Name()))
 	}
 
 	seasonsDir := filepath.Join(asmBaseDir, "seasons")
 	infosSeasons, err := os.ReadDir(seasonsDir)
-	if err != nil { panic(err) }
+	if err != nil {
+		panic(err)
+	}
 	for _, info := range infosSeasons {
 		filePaths = append(filePaths, filepath.Join(seasonsDir, info.Name()))
 	}
 
 	agesDir := filepath.Join(asmBaseDir, "ages")
 	infosAges, err := os.ReadDir(agesDir)
-	if err != nil { panic(err) }
+	if err != nil {
+		panic(err)
+	}
 	for _, info := range infosAges {
 		filePaths = append(filePaths, filepath.Join(agesDir, info.Name()))
 	}
@@ -319,7 +326,7 @@ func (rom *romState) applyAsmFiles() {
 		if err != nil {
 			panic(err)
 		}
-	
+
 		if err := yaml.Unmarshal(b, asmFiles[i]); err != nil {
 			panic(err)
 		}
@@ -444,19 +451,15 @@ func (rom *romState) initBanks() {
 
 	// do this before loading asm files, since the sizes of the tables vary
 	// with the number of checks.
-	rom.replaceRaw(address{0x06, 0}, "collectPropertiesTable",
-		makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
+	rom.replaceRaw(address{0x06, 0}, "collectPropertiesTable", makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
 
 	roomTreasureBank := byte(sora(rom.game, 0x3f, 0x38).(int))
-	rom.replaceRaw(address{roomTreasureBank, 0}, "roomTreasures",
-		makeRoomTreasureTable(rom.game, rom.itemSlots))
+	rom.replaceRaw(address{roomTreasureBank, 0}, "roomTreasures", makeRoomTreasureTable(rom.game, rom.itemSlots))
 
 	numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
-	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets",
-		string(make([]byte, numOwlIds*2)))
-	
-	rom.replaceRaw(address{0x0a, 0}, "staticItemsReplacementsTable",
-		makeStaticItemsReplacementTable(rom.game, rom.player, rom.itemSlots))
+	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets", string(make([]byte, numOwlIds*2)))
+
+	rom.replaceRaw(address{0x0a, 0}, "staticItemsReplacementsTable", makeStaticItemsReplacementTable(rom.itemSlots))
 
 	// load all asm files in the asm/ directory.
 	rom.applyAsmFiles()

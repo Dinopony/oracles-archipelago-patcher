@@ -5,14 +5,14 @@ package randomizer
 // treasure appears; bit 7 is used as the randomizer as a jump table index for
 // special cases (it can't appear in the vanilla table).
 var collectModes = map[string]byte{
-	"touch":               0x0a, // standing and given items
-	"poof":                0x1a, // boss HCs
-	"drop":                0x29, // SK drops, maku tree, graveyard key
-	"chest":               0x38, // most chests, rising animation
-	"dive":                0x49, // SK and BK in seasons D4
-	"dig":                 0x5a, // star ore, ricky's gloves (ages)
-	"delay":               0x68, // map and compass chests
-	
+	"touch": 0x0a, // standing and given items
+	"poof":  0x1a, // boss HCs
+	"drop":  0x29, // SK drops, maku tree, graveyard key
+	"chest": 0x38, // most chests, rising animation
+	"dive":  0x49, // SK and BK in seasons D4
+	"dig":   0x5a, // star ore, ricky's gloves (ages)
+	"delay": 0x68, // map and compass chests
+
 	"diver room":          0x80,
 	"poe skip room":       0x81,
 	"maku tree (seasons)": 0x82,
@@ -20,10 +20,10 @@ var collectModes = map[string]byte{
 	"d5 armos":            0x84,
 	"talon cave":          0x85,
 
-	"maku tree (ages)":    0x80,
-	"target carts":        0x81,
-	"big bang game":       0x82,
-	"lava juice room":     0x83,
+	"maku tree (ages)": 0x80,
+	"target carts":     0x81,
+	"big bang game":    0x82,
+	"lava juice room":  0x83,
 }
 
 // data associated with a particular item ID and sub ID.

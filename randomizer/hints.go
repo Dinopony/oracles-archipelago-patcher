@@ -1,5 +1,7 @@
 package randomizer
 
+/*
+
 import (
 	"fmt"
 	"strings"
@@ -113,3 +115,5 @@ func isValidGameText(s string) bool {
 	}
 	return true
 }
+
+*/

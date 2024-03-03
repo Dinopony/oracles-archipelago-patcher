@@ -2,11 +2,11 @@ package randomizer
 
 import (
 	"bytes"
+	"container/list"
 	"crypto/sha1"
 	"fmt"
 	"regexp"
 	"strings"
-	"container/list"
 )
 
 const bankSize = 0x4000
@@ -101,57 +101,56 @@ func getChecks(usedItems, usedSlots *list.List) map[string]string {
 // mutates the rom data in-place based on the given route. this doesn't write
 // the file.
 func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
-    rom.setTreewarp(ri.warpToStart)
+	rom.setTreewarp(ri.warpToStart)
 
-    // place selected treasures in slots
-    checks := getChecks(ri.usedItems, ri.usedSlots)
-    for slot, item := range checks {
-        rom.itemSlots[slot].treasure = rom.treasures[item]
-    }
+	// place selected treasures in slots
+	checks := getChecks(ri.usedItems, ri.usedSlots)
+	for slot, item := range checks {
+		rom.itemSlots[slot].treasure = rom.treasures[item]
+	}
 
-    // set season data
-    if rom.game == GAME_SEASONS {
-        for area, id := range ri.seasons {
-            rom.setSeason(inflictCamelCase(area+"Season"), id)
-        }
-    }
+	// set season data
+	if rom.game == GAME_SEASONS {
+		for area, id := range ri.seasons {
+			rom.setSeason(inflictCamelCase(area+"Season"), id)
+		}
+	}
 
-    rom.setHeartBeepInterval(ri.heartBeepInterval)
-    rom.setRequiredEssences(ri.requiredEssences)
-    rom.setAnimal(ri.companion)
-    rom.setArchipelagoSlotName(ri.archipelagoSlotName)
+	rom.setHeartBeepInterval(ri.heartBeepInterval)
+	rom.setRequiredEssences(ri.requiredEssences)
+	rom.setAnimal(ri.companion)
+	rom.setArchipelagoSlotName(ri.archipelagoSlotName)
 	rom.setOldManRupeeValues(ri.oldManRupeeValues)
 
-    warps := make(map[string]string)
+	warps := make(map[string]string)
 
-    if ri.game == GAME_SEASONS {
-        rom.setFoolsOreDamage(ri.foolsOreDamage)
-        rom.setLostWoodsPedestalSequence(ri.pedestalSequence)
+	if ri.game == GAME_SEASONS {
+		rom.setFoolsOreDamage(ri.foolsOreDamage)
+		rom.setLostWoodsPedestalSequence(ri.pedestalSequence)
 
-        arePortalsShuffled := (ri.portals != nil && len(ri.portals) > 0)
-        if arePortalsShuffled {
-            for k, v := range ri.portals {
-                holodrumV, _ := reverseLookup(SUBROSIAN_PORTAL_NAMES, v)
-                warps[fmt.Sprintf("%s portal", k)] = fmt.Sprintf("%s portal", holodrumV)
-            }
-        }
-    }
+		arePortalsShuffled := (ri.portals != nil && len(ri.portals) > 0)
+		if arePortalsShuffled {
+			for k, v := range ri.portals {
+				holodrumV, _ := reverseLookup(SUBROSIAN_PORTAL_NAMES, v)
+				warps[fmt.Sprintf("%s portal", k)] = fmt.Sprintf("%s portal", holodrumV)
+			}
+		}
+	}
 
-    areDungeonsShuffled := (ri.entrances != nil && len(ri.entrances) > 0)
-    if areDungeonsShuffled {
-        for k, v := range ri.entrances {
-            warps[k] = v
-        }
-    }
+	areDungeonsShuffled := (ri.entrances != nil && len(ri.entrances) > 0)
+	if areDungeonsShuffled {
+		for k, v := range ri.entrances {
+			warps[k] = v
+		}
+	}
 
 	// need to set this *before* treasure map data
 	if len(warps) != 0 {
 		rom.setWarps(warps, areDungeonsShuffled)
 	}
 
-
-    // do it! (but don't write anything)
-    return rom.mutate(warps, ri, areDungeonsShuffled)
+	// do it! (but don't write anything)
+	return rom.mutate(warps, ri, areDungeonsShuffled)
 }
 
 // changes the contents of loaded ROM bytes in place. returns a checksum of the
@@ -192,19 +191,19 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		spoolDigSpotSlot.idAddrs[0].offset = rom.codeMutables["vasuSignDiggingSpotItem"].addr.offset
 		spoolDigSpotSlot.subidAddrs[0].offset = rom.codeMutables["vasuSignDiggingSpotItemSubid"].addr.offset
 
-		rom.codeMutables["goldenBeastsRequirement"].new[0] = byte(ri.goldenBeastsRequirement);
-		rom.codeMutables["goldenBeastsText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement);
-		rom.codeMutables["goldenBeastsRewardText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement);
+		rom.codeMutables["goldenBeastsRequirement"].new[0] = byte(ri.goldenBeastsRequirement)
+		rom.codeMutables["goldenBeastsText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement)
+		rom.codeMutables["goldenBeastsRewardText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement)
 
-		rom.codeMutables["treehouseOldManRequirement"].new[0] = byte(ri.treehouseOldManRequirement);
-		rom.codeMutables["treehouseOldManText"].new[4] = 0x30 + byte(ri.treehouseOldManRequirement);
+		rom.codeMutables["treehouseOldManRequirement"].new[0] = byte(ri.treehouseOldManRequirement)
+		rom.codeMutables["treehouseOldManText"].new[4] = 0x30 + byte(ri.treehouseOldManRequirement)
 
 		// prepare static items addresses
 		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
 		var i uint16 = 0
 		for _, key := range STATIC_SLOTS {
-			rom.itemSlots[key].idAddrs = []address{{codeAddr.bank, codeAddr.offset + (i*3) + 1}}
-			rom.itemSlots[key].subidAddrs = []address{{codeAddr.bank, codeAddr.offset + (i*3) + 2}}
+			rom.itemSlots[key].idAddrs = []address{{codeAddr.bank, codeAddr.offset + (i * 3) + 1}}
+			rom.itemSlots[key].subidAddrs = []address{{codeAddr.bank, codeAddr.offset + (i * 3) + 2}}
 			i++
 		}
 	} else {
@@ -239,7 +238,7 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 	for i := 1; i <= 8; i++ {
 		rom.itemSlots[fmt.Sprintf("d%d boss", i)].mutate(rom.data)
 	}
-	
+
 	if rom.game == GAME_SEASONS {
 		rom.itemSlots["subrosia seaside"].mutate(rom.data)
 		rom.itemSlots["great furnace"].mutate(rom.data)
@@ -263,7 +262,7 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		for _, key := range STATIC_SLOTS {
 			rom.itemSlots[key].mutate(rom.data)
 		}
-		
+
 	} else {
 		rom.itemSlots["nayru's house"].mutate(rom.data)
 		rom.itemSlots["deku forest soldier"].mutate(rom.data)
@@ -425,7 +424,7 @@ func (rom *romState) setCompassData() {
 		// boss keys can be absent in plando, so handle the nil case
 		switch dungeonName {
 		case "Hero's Cave", "d6 present":
-			break
+			// do nothing
 		case "d6 past":
 			if slot := rom.lookupItemSlot("Boss Key (Ancient Ruins)"); slot != nil {
 				slots = append(slots, slot)

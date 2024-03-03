@@ -5,14 +5,14 @@ const INPUT_FILE_EXTENSION = ".patcherdata"
 
 const (
 	GAME_UNDEFINED = iota
-	GAME_AGES = 1
-	GAME_SEASONS = 2
+	GAME_AGES      = 1
+	GAME_SEASONS   = 2
 )
 
 var gameNames = map[int]string{
 	GAME_UNDEFINED: "nil",
-	GAME_AGES:    	"ages",
-	GAME_SEASONS: 	"seasons",
+	GAME_AGES:      "ages",
+	GAME_SEASONS:   "seasons",
 }
 
 const (
@@ -30,41 +30,41 @@ const (
 )
 
 const (
-	DIRECTION_UP 	= 0
+	DIRECTION_UP    = 0
 	DIRECTION_RIGHT = 1
 	DIRECTION_DOWN  = 2
 	DIRECTION_LEFT  = 3
 )
 
 const (
-	SEASON_SPRING  = 0
-	SEASON_SUMMER  = 1
-	SEASON_AUTUMN  = 2
-	SEASON_WINTER  = 3
+	SEASON_SPRING = 0
+	SEASON_SUMMER = 1
+	SEASON_AUTUMN = 2
+	SEASON_WINTER = 3
 )
 
 var RUPEE_VALUES = map[int]byte{
-	0: 		0x00,
-	1: 		0x01,
-	2: 		0x02,
-	5: 		0x03,
-	10: 	0x04,
-	20: 	0x05,
-	40: 	0x06,
-	30: 	0x07,
-	60: 	0x08,
-	70: 	0x09,
-	25: 	0x0a,
-	50: 	0x0b,
-	100: 	0x0c,
-	200: 	0x0d,
-	400: 	0x0e,
-	150: 	0x0f,
-	300: 	0x10,
-	500: 	0x11,
-	900: 	0x12,
-	80: 	0x13,
-	999: 	0x14,
+	0:   0x00,
+	1:   0x01,
+	2:   0x02,
+	5:   0x03,
+	10:  0x04,
+	20:  0x05,
+	40:  0x06,
+	30:  0x07,
+	60:  0x08,
+	70:  0x09,
+	25:  0x0a,
+	50:  0x0b,
+	100: 0x0c,
+	200: 0x0d,
+	400: 0x0e,
+	150: 0x0f,
+	300: 0x10,
+	500: 0x11,
+	900: 0x12,
+	80:  0x13,
+	999: 0x14,
 }
 
 var SEED_TREE_NAMES = map[string]bool{
@@ -96,33 +96,33 @@ var SUBROSIAN_PORTAL_NAMES = map[string]string{
 }
 
 var DUNGEON_CODES = map[int][]string{
-	GAME_SEASONS: []string{
+	GAME_SEASONS: {
 		"d0", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8"},
-	GAME_AGES: []string{
+	GAME_AGES: {
 		"d1", "d2", "d3", "d4", "d5", "d6 present", "d6 past", "d7", "d8"},
 }
 
 var DUNGEON_NAMES = map[int][]string{
-	GAME_SEASONS: []string{
-		"Hero's Cave", 
-		"Gnarled Root Dungeon", 
-		"Snake's Remains", 
-		"Poison Moth's Lair", 
-		"Dancing Dragon Dungeon", 
-		"Unicorn's Cave", 
-		"Ancient Ruins", 
-		"Explorer's Crypt", 
+	GAME_SEASONS: {
+		"Hero's Cave",
+		"Gnarled Root Dungeon",
+		"Snake's Remains",
+		"Poison Moth's Lair",
+		"Dancing Dragon Dungeon",
+		"Unicorn's Cave",
+		"Ancient Ruins",
+		"Explorer's Crypt",
 		"Sword & Shield Maze"},
-	GAME_AGES: []string{
-		"d0", 
-		"d1", 
-		"d2", 
-		"d3", 
-		"d4", 
-		"d5", 
-		"d6 present", 
+	GAME_AGES: {
+		"d0",
+		"d1",
+		"d2",
+		"d3",
+		"d4",
+		"d5",
+		"d6 present",
 		"d6 past",
-		"d7", 
+		"d7",
 		"d8"},
 }
 

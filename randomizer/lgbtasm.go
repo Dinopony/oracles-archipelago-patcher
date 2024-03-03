@@ -3,7 +3,8 @@ package randomizer
 import (
 	"os"
 	"path/filepath"
-	"github.com/yuin/gopher-lua"
+
+	lua "github.com/yuin/gopher-lua"
 )
 
 // wraps a lua state used for converting gb assembly code to machine code.
@@ -20,16 +21,16 @@ type assembler struct {
 func newAssembler() (*assembler, error) {
 	ls := lua.NewState()
 
-    exe, err := os.Executable()
-    if err != nil {
-        return nil, err
-    }
-    dirName := filepath.Dir(exe)
+	exe, err := os.Executable()
+	if err != nil {
+		return nil, err
+	}
+	dirName := filepath.Dir(exe)
 
-    b, err := os.ReadFile(filepath.Join(dirName, "lgbtasm", "lgbtasm.lua"))
-    if err != nil {
-        return nil, err
-    }
+	b, err := os.ReadFile(filepath.Join(dirName, "lgbtasm", "lgbtasm.lua"))
+	if err != nil {
+		return nil, err
+	}
 
 	mod, err := ls.LoadString(string(b))
 	if err != nil {
@@ -73,6 +74,7 @@ func (asm *assembler) compile(s string) (string, error) {
 }
 
 // decompile wraps `lgbtasm.decompile()`.
+/*
 func (asm *assembler) decompile(s string) (string, error) {
 	if err := asm.ls.CallByParam(lua.P{
 		Fn:      asm.lgbtasm.RawGetString("decompile"),
@@ -86,6 +88,7 @@ func (asm *assembler) decompile(s string) (string, error) {
 
 	return ret.(lua.LString).String(), nil
 }
+*/
 
 // add a constant def as if `define symbol,string` were run.
 func (asm *assembler) define(symbol string, value uint16) {

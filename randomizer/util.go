@@ -37,15 +37,6 @@ func reverseLookup(m, match interface{}) (interface{}, bool) {
 	return nil, false
 }
 
-// guess what this does.
-func reverseLookupOrPanic(m, match interface{}) interface{} {
-	i, ok := reverseLookup(m, match)
-	if !ok {
-		panic(fmt.Sprintf("reverse lookup failed for value %v", match))
-	}
-	return i
-}
-
 // returns a sorted slice of string keys from a map.
 func orderedKeys(m interface{}) []string {
 	v := reflect.ValueOf(m)
