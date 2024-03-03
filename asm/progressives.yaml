@@ -155,6 +155,7 @@ seasons:
 
   # progressive item upgrade data (old ID, old related var, new ID, new addr)
   15/progressiveUpgrades: |
+      db 01,01,01; dw 52c1 # iron shield
       db 01,02,01; dw 52c5 # mirror shield
       db 05,01,05; dw 52dd # noble sword
       db 05,02,05; dw 52e1 # master sword

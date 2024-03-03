@@ -194,7 +194,7 @@ shop, 20 rupees:
   maptile: 0xe6
   dummy: true # not randomized
 shop, 30 rupees:
-  treasure: Wooden Shield
+  treasure: Progressive Shield
   room: 0x03a6
   maptile: 0xe6
   dummy: true # not randomized
@@ -325,7 +325,7 @@ great furnace:
   ids: [{bank: 0x15}, {bank: 0x09, addr: 0x66eb}] # addr set at EOB
   subids: [{bank: 0x15}, {bank: 0x09, addr: 0x66ea}] # addr set at EOB
 subrosian smithy ore:
-  treasure: Iron Shield
+  treasure: Progressive Shield
   room: 0x0397
   maptile: 0x1e
   ids: [{bank: 0x15, addr: 0x62be}]

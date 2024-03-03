@@ -233,7 +233,7 @@ wild tokay game:
   maptile: 0xdb
   addr: {bank: 0x15, addr: 0x5bbb}
 hidden tokay cave:
-  treasure: Iron Shield
+  treasure: Progressive Shield
   room: 0x05e9
   maptile: 0xd9
   addr: {bank: 0x15, addr: 0x5b36}
@@ -721,5 +721,5 @@ deku forest tree:
   dummy: true
 
 shop, 30 rupees:
-  treasure: Wooden Shield
+  treasure: Progressive Shield
   dummy: true

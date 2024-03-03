@@ -4,8 +4,7 @@
 
 common:
   # equip items
-  Wooden Shield: 0x0100
-  Iron Shield: 0x0101
+  Progressive Shield: 0x0100
   Bombs (10): 0x0300
   Progressive Sword: 0x0500
   Progressive Boomerang: 0x0600
