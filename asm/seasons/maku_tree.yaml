@@ -64,3 +64,7 @@ seasons:
   0c/3123/makuStageEssence6: dw 71a2
   0c/3125/makuStageEssence7: dw 71a2
   0c/3127/makuStageEssence8: dw 71c8
+
+  # Change the sign text to tell how many essences are required to get the Maku seed
+  1f/502a/makuSignText: db 05,b0,20,35,20,02,35,01,05,79,05,0f,03,94,05,59,21,00
+  

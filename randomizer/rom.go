@@ -198,6 +198,8 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		rom.codeMutables["treehouseOldManRequirement"].new[0] = byte(ri.treehouseOldManRequirement)
 		rom.codeMutables["treehouseOldManText"].new[4] = 0x30 + byte(ri.treehouseOldManRequirement)
 
+		rom.codeMutables["makuSignText"].new[3] = 0x30 + byte(ri.requiredEssences)
+
 		// prepare static items addresses
 		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
 		var i uint16 = 0
