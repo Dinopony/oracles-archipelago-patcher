@@ -112,7 +112,16 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 	// set season data
 	if rom.game == GAME_SEASONS {
 		for area, id := range ri.seasons {
-			rom.setSeason(inflictCamelCase(area+"Season"), id)
+			if id != 4 {
+				// Exclude season 4 ("chaotic") which is meant to represent vanilla Horon behavior and is not a real season... for now
+				rom.setSeason(inflictCamelCase(area+"Season"), id)
+			}
+		}
+
+		rom.codeMutables["bank04_templeRemainsDefaultSeason"].new[0] = ri.seasons["temple remains"]
+
+		if ri.seasons["horon village"] != 4 {
+			rom.codeMutables["fixedHoronSeason"].new[0] = ri.seasons["horon village"]
 		}
 	}
 

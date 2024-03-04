@@ -7,6 +7,7 @@ seasons:
   # spring after you beat the game). note that these names don't correspond 1:1
   # with the names used on the overworld map, which aren't delineated based on
   # season boundaries.
+  01/7e50/horonVillageSeason: db SEASON_SPRING
   01/7e60/northHoronSeason: db SEASON_WINTER
   01/7e61/easternSuburbsSeason: db SEASON_AUTUMN
   01/7e62/woodsOfWinterSeason: db SEASON_SUMMER

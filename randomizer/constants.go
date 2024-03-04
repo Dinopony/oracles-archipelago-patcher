@@ -126,9 +126,9 @@ var DUNGEON_NAMES = map[int][]string{
 		"d8"},
 }
 
-var SEASONS_BY_ID = []string{"spring", "summer", "autumn", "winter"}
+var SEASONS_BY_ID = []string{"spring", "summer", "autumn", "winter", "chaotic"}
 var SEASON_AREAS = []string{
 	"north horon", "eastern suburbs", "woods of winter", "spool swamp",
 	"holodrum plain", "sunken city", "lost woods", "tarm ruins",
-	"western coast", "temple remains",
+	"western coast", "temple remains", "horon village",
 }

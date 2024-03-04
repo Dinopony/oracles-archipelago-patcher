@@ -1,0 +1,44 @@
+seasons:
+  00/fixedHoronSeason: db ff
+  04/bank04_templeRemainsDefaultSeason: db 02
+
+  # This function aims to fix season handling for Subrosia -> interior map warps
+  # There are two occurences of this in the game
+  # 1) Subrosia -> Horon warp (mainly for Fixed Horon Season setting)
+  # 2) Subrosia -> Upper Temple Remains warp (to put back default Temple Remains season when coming from that portal)
+  04/checkSpecificWarps: |
+    ld a,(wWarpDestGroup)
+    cp a,03
+    jr nz,.continue
+    ld a,(wWarpDestIndex)
+
+    cp a,ab
+    jr nz,.notSubrosiaToHoron
+
+    ld a,(fixedHoronSeason)
+    cp a,ff
+    jr z,.continue
+    ld (wRoomStateModifier),a
+    jr .continue
+
+    .notSubrosiaToHoron
+    cp a,a8
+    jr nz,.continue
+
+    ld a,(bank04_templeRemainsDefaultSeason)
+    ld (wRoomStateModifier),a
+
+    .continue
+    jp loadScreenMusicAndSetRoomPack
+  
+  04/465f/: jp checkSpecificWarps
+
+  # Change setHoronVillageSeason to remove the random component if fixedHoronSeason != 0xff
+  02/3e2c/: |
+    ld a,(fixedHoronSeason)
+    cp a,ff
+    nop
+    nop
+
+  # Change checkRoomPackAfterWarp_body to remove the specific case for Horon Village (useful for tree warp & maku exit)
+  02/3e7e/: nop; nop

@@ -272,6 +272,7 @@ seasons:
     define getFreeInteractionSlot,3ac6
     define interactionDelete,3ad9
     define getFreePartSlot,3ea7
+    define loadScreenMusicAndSetRoomPack,32dc
 
     # rom 02
     define _closeMenu,4f7b
