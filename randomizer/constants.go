@@ -112,7 +112,7 @@ var DUNGEON_NAMES = map[int][]string{
 		"Unicorn's Cave",
 		"Ancient Ruins",
 		"Explorer's Crypt",
-		"Sword & Shield Maze"},
+		"Sword & Shield Dungeon"},
 	GAME_AGES: {
 		"d0",
 		"d1",

@@ -273,7 +273,7 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 
 		// other special case to prevent text on key drop
 		mut := rom.itemSlots["d8 stalfos"]
-		if mut.treasure.id == rom.treasures["Small Key (Sword & Shield Maze)"].id {
+		if mut.treasure.id == rom.treasures["Small Key (Sword & Shield Dungeon)"].id {
 			rom.data[mut.subidAddrs[0].fullOffset()] = 0x00
 		}
 	}

@@ -631,10 +631,10 @@ d7 boss:
 
 # d8
 d8 B3F chest:
-  treasure: Boss Key (Sword & Shield Maze)
+  treasure: Boss Key (Sword & Shield Dungeon)
   room: 0x0579
 d8 maze chest:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x057b
 d8 NW slate chest:
   treasure: slate
@@ -643,7 +643,7 @@ d8 NE slate chest:
   treasure: slate
   room: 0x057e
 d8 ghini chest:
-  treasure: Dungeon Map (Sword & Shield Maze)
+  treasure: Dungeon Map (Sword & Shield Dungeon)
   room: 0x0585
 d8 SE slate chest:
   treasure: slate
@@ -652,19 +652,19 @@ d8 SW slate chest:
   treasure: slate
   room: 0x0594
 d8 B1F NW chest:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x0597
 d8 sarcophagus chest:
   treasure: Gasha Seed
   room: 0x059f
 d8 blade trap chest:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x05a3
 d8 blue peg chest:
-  treasure: Compass (Sword & Shield Maze)
+  treasure: Compass (Sword & Shield Dungeon)
   room: 0x05a4
 d8 1F chest:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x05a7
 d8 floor puzzle:
   treasure: Bracelet
@@ -674,7 +674,7 @@ d8 tile room:
   treasure: Gasha Seed
   room: 0x0591
 d8 stalfos:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x0598
   reverseaddr: {bank: 0x0a, addr: 0x6077}
   collect: poof

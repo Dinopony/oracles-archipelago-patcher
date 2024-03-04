@@ -622,7 +622,7 @@ d7 boss:
 
 # d8
 d8 eye drop:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x0582
   keydrop: true
 d8 armos chest:
@@ -636,33 +636,33 @@ d8 three eyes chest:
   collect: chest
   room: 0x057d
 d8 hardhat drop:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x0575
   keydrop: true
 d8 spike room:
-  treasure: Compass (Sword & Shield Maze)
+  treasure: Compass (Sword & Shield Dungeon)
   room: 0x058b
 d8 spinner chest:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x0570
 d8 magnet ball room:
-  treasure: Dungeon Map (Sword & Shield Maze)
+  treasure: Dungeon Map (Sword & Shield Dungeon)
   room: 0x058e
 d8 darknut chest:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x058c
 d8 ghost armos drop:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x057f
   keydrop: true
 d8 pols voice chest:
-  treasure: Boss Key (Sword & Shield Maze)
+  treasure: Boss Key (Sword & Shield Dungeon)
   room: 0x0580
 d8 SE lava chest:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x056b
 d8 spark chest:
-  treasure: Small Key (Sword & Shield Maze)
+  treasure: Small Key (Sword & Shield Dungeon)
   room: 0x058a
 d8 boss:
   treasure: Heart Container

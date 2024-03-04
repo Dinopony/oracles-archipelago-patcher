@@ -111,7 +111,7 @@ seasons:
   Small Key (Unicorn's Cave): 0x3003
   Small Key (Ancient Ruins): 0x3003
   Small Key (Explorer's Crypt): 0x3003
-  Small Key (Sword & Shield Maze): 0x3003
+  Small Key (Sword & Shield Dungeon): 0x3003
   Boss Key (Gnarled Root Dungeon): 0x3103
   Boss Key (Snake's Remains): 0x3103
   Boss Key (Poison Moth's Lair): 0x3103
@@ -119,7 +119,7 @@ seasons:
   Boss Key (Unicorn's Cave): 0x3103 # ^
   Boss Key (Ancient Ruins): 0x3103
   Boss Key (Explorer's Crypt): 0x3103
-  Boss Key (Sword & Shield Maze): 0x3103
+  Boss Key (Sword & Shield Dungeon): 0x3103
   Compass (Gnarled Root Dungeon): 0x3202
   Compass (Snake's Remains): 0x3202
   Compass (Poison Moth's Lair): 0x3202
@@ -127,7 +127,7 @@ seasons:
   Compass (Unicorn's Cave): 0x3202
   Compass (Ancient Ruins): 0x3202
   Compass (Explorer's Crypt): 0x3202
-  Compass (Sword & Shield Maze): 0x3202
+  Compass (Sword & Shield Dungeon): 0x3202
   Dungeon Map (Gnarled Root Dungeon): 0x3302
   Dungeon Map (Snake's Remains): 0x3302
   Dungeon Map (Poison Moth's Lair): 0x3302
@@ -135,7 +135,7 @@ seasons:
   Dungeon Map (Unicorn's Cave): 0x3302
   Dungeon Map (Ancient Ruins): 0x3302
   Dungeon Map (Explorer's Crypt): 0x3302
-  Dungeon Map (Sword & Shield Maze): 0x3302
+  Dungeon Map (Sword & Shield Dungeon): 0x3302
 
   # equip items
   Rod of Seasons (Spring): 0x0702
