@@ -78,7 +78,8 @@ func parseYamlInput(path string) (*routeInfo, error) {
 }
 
 type routeInfo struct {
-	game int
+	game    int
+	version string
 
 	companion                  int
 	warpToStart                bool
@@ -252,6 +253,14 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 		ri.game = GAME_AGES
 	} else {
 		return nil, fmt.Errorf("invalid game")
+	}
+
+	var ok bool
+	if ri.version, ok = data.settings["version"]; !ok {
+		return nil, fmt.Errorf("invalid version")
+	}
+	if ri.version != VERSION {
+		return nil, fmt.Errorf("invalid version (%s instead of %s)", ri.version, VERSION)
 	}
 
 	err := processSettings(data, ri)

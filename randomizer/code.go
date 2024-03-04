@@ -328,6 +328,7 @@ func (rom *romState) applyAsmFiles() {
 		}
 
 		if err := yaml.Unmarshal(b, asmFiles[i]); err != nil {
+			fmt.Println("Error while unmarshaling ", asmFiles[i])
 			panic(err)
 		}
 	}
