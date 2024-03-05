@@ -33,7 +33,7 @@ floating:
 
 seasons:
   # stop d4 pool item from incrementing subindex when it hits the water.
-  09/40fb/: nop
+  09/40fb/: nop; nop; nop; nop; nop
 
   0b/lookupRoomTreasureBank0b: |
       ld (hl),60

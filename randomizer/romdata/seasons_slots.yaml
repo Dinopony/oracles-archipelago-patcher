@@ -476,7 +476,7 @@ d4 water ring room:
 d4 pool:
   treasure: Small Key (Dancing Dragon Dungeon)
   room: 0x0475
-  collect: d4 pool
+  keydrop: true
 d4 terrace:
   treasure: Small Key (Dancing Dragon Dungeon)
   room: 0x0463

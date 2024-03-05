@@ -134,7 +134,7 @@ func (rom *romState) loadSlots() map[string]*itemSlot {
 					slot.subidAddrs[i] = address{subid.Bank, subid.Offset}
 				}
 			}
-		} else if !raw.Dummy && raw.Collect != "d4 pool" && rom.data != nil {
+		} else if !raw.Dummy && rom.data != nil {
 			// try to get chest data for room
 			addr := getChestAddr(rom.data, rom.game, slot.group, slot.room)
 			if addr != (address{}) {

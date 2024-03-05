@@ -63,7 +63,6 @@ seasons:
       dw collectDiverRoom
       dw collectPoeSkipRoom
       dw collectMakuTree
-      dw collectD4Pool
       dw collectD5Armos
       dw collectTalonCave
 
@@ -98,14 +97,14 @@ seasons:
 
   # when the falling item hits the water, it creates a new item interaction.
   # that one should have the mode that requires diving to get the item.
-  06/collectD4Pool: |
-      ld e,54
-      ld a,(de) # object z position
-      sub a,01
-      ld e,COLLECT_FALL_KEY
-      ret c
-      ld e,COLLECT_DIVE
-      ret
+  # 06/collectD4Pool: |
+  #     ld e,54
+  #     ld a,(de) # object z position
+  #     sub a,01
+  #     ld e,COLLECT_FALL_KEY
+  #     ret c
+  #     ld e,COLLECT_DIVE
+  #     ret
 
   # the first three chests opened in the d5 armos room shouldn't set the room's
   # "item obtained" flag.
