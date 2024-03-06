@@ -39,7 +39,7 @@ seasons:
       .done
       pop de
       pop bc
-      ld a,(wWarpDestIndex)
+      ld a,(wWarpDestRoom)
       ret
   04/461e/: call checkSetAnimalSavePoint
 

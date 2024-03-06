@@ -25,10 +25,10 @@ func (mut *mutableRange) mutate(b []byte) {
 	}
 }
 
-// sets treewarp on or off in the modified ROM. By default, it is on.
-func (rom *romState) setTreewarp(treewarp bool) {
-	mut := rom.codeMutables["treeWarp"]
-	mut.new[5] = byte(ternary(treewarp, 0x28, 0x18).(int)) // jr z / jr
+// sets warp to start on or off in the modified ROM. By default, it is on.
+func (rom *romState) setWarpToStart(warpToStart bool) {
+	mut := rom.codeMutables["warpToStart"]
+	mut.new[5] = byte(ternary(warpToStart, 0x28, 0x18).(int)) // jr z / jr
 }
 
 // sets quickflute on or off in the modified ROM.

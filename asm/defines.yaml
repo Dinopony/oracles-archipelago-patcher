@@ -227,9 +227,6 @@ seasons:
     define wAreaFlags,cc50
     define wDungeonIndex,cc55
     define wLoadingRoomPack,cc61
-    define wWarpDestGroup,cc63
-    define wWarpDestIndex,cc64
-    define wWarpTransition2,cc67
     define wLinkGrabState,cc75
     define wDisableWarpTiles,ccaa
     define wDisableTransitions,ccab
@@ -238,6 +235,12 @@ seasons:
     define wCurrentBombs,c6aa
     define wMaxBombs,c6ab
     define wStatusBarNeedsRefresh,cbea
+    define wWarpDestGroup,cc63
+    define wWarpDestRoom,cc64
+    define wWarpTransition,cc65
+    define wWarpDestPos,cc66
+    define wWarpTransition2,cc67
+    define wLinkObjectIndex,cc48
 
     # rom 00
     define multiplyABy4,01c3
@@ -278,6 +281,8 @@ seasons:
     define getFreePartSlot,3ea7
     define loadScreenMusicAndSetRoomPack,32dc
     define addTreasureToInventory,46bc
+    define fadeoutToWhite,3144
+    define clearStaticObjects,3076
 
     # rom 02
     define _closeMenu,4f7b
@@ -348,7 +353,7 @@ ages:
     define wAreaFlags,cc34
     define wDungeonIndex,cc39
     define wWarpDestGroup,cc47
-    define wWarpDestIndex,cc48
+    define wWarpDestRoom,cc48
     define wWarpTransition,cc49
     define wWarpTransition2,cc4b
     define wLinkGrabState,cc5a

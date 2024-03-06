@@ -11,37 +11,53 @@ common:
       ret
 
 seasons:
+  02/spawnPointDefaultSeason: db 00
+  
   # warp to horon village tree if holding start when closing the map screen.
-  02/treeWarp: |
+  02/warpToStart: |
       ld a,(wKeysPressed)
       and a,08
       jr z,.done
-      ld a,(wActiveRing)
-      cp a,DEV_RING
-      jr z,.warp
-      ld a,(wAreaFlags)
-      and a,AREAFLAG_OUTDOORS
-      jr nz,.warp
-      ld a,SND_ERROR
-      jp playSound
-      .warp
-      ld hl,cbb7
-      ld (hl),05
-      xor a
-      call 5e7b
+
+      ld a,80
+      ld (wWarpDestGroup),a
+      ld a,a7 # Starting room ID
+      ld (wWarpDestRoom),a
+      ld a,54 # Starting room position
+      ld (wWarpDestPos),a
+      ld a,5 # TRANSITION_DEST_FALL
+      ld (wWarpTransition),a
+      ld a,03
+      ld (wWarpTransition2),a
+      
+      ld a,03
+      call setMusicVolume
+      call fadeoutToWhite
+
+      call clearStaticObjects
+
+      ld a,d0
+      ld (wLinkObjectIndex),a
+
+      ld a,(wActiveGroup)
+      or a
+      jr z,.done
+      ld a,(spawnPointDefaultSeason)
+      ld (wRoomStateModifier),a
+
       .done
       jp _closeMenu
 
   02/5ec8/: call checkTreeVisited
-  02/602c/: call nz,treeWarp
-  02/6089/: call nz,treeWarp
+  02/602c/: call nz,warpToStart
+  02/6089/: call nz,warpToStart
   02/609b/: call checkCursorVisited
   02/65e1/: call checkTreeVisited
 
 ages:
   # warp to south lynna present tree if holding start when closing the map
   # screen.
-  02/treeWarp: |
+  02/warpToStart: |
       ld a,(wKeysPressed)
       and a,08
       jr z,.done
@@ -65,7 +81,7 @@ ages:
       jp 4fba
 
   02/5ff9/: call checkTreeVisited
-  02/6133/: call nz,treeWarp
-  02/618b/: call nz,treeWarp
+  02/6133/: call nz,warpToStart
+  02/618b/: call nz,warpToStart
   02/619d/: call checkCursorVisited
   02/66a9/: call checkTreeVisited

@@ -10,7 +10,7 @@ seasons:
     ld a,(wWarpDestGroup)
     cp a,03
     jr nz,.continue
-    ld a,(wWarpDestIndex)
+    ld a,(wWarpDestRoom)
 
     cp a,ab
     jr nz,.notSubrosiaToHoron

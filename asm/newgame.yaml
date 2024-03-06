@@ -2,6 +2,17 @@
 # at actual file creation.
 
 seasons:
+  # Remove the "Accept our quest, hero!" cutscene
+  02/1874/: |
+    nop
+    ld a,0
+    cp a,1
+
+  # Change Link starting point
+  07/4195/: db a7  # Room
+  07/4197/: db 58  # Y
+  07/4199/: db 48  # X
+
   # flags in wGlobalFlags to be set at start of game.
   0a/initialGlobalFlags: |
       db 0a,1c,ff
@@ -73,12 +84,6 @@ seasons:
       ld (wIsLinkedGame),a
       ret
   0a/66ed/: call setInitialFlags; jp objectDelete_useActiveObjectType
-
-  # Remove the "Accept our quest, hero!" cutscene
-  02/1874/: |
-    nop
-    ld a,0
-    cp a,1
 
 ages:
   # flags in wGlobalFlags to be set at start of game.

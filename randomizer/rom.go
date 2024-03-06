@@ -101,7 +101,7 @@ func getChecks(usedItems, usedSlots *list.List) map[string]string {
 // mutates the rom data in-place based on the given route. this doesn't write
 // the file.
 func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
-	rom.setTreewarp(ri.warpToStart)
+	rom.setWarpToStart(ri.warpToStart)
 	rom.setQuickFlute(ri.quickFlute)
 
 	// place selected treasures in slots
@@ -124,6 +124,7 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 		if ri.seasons["horon village"] != 4 {
 			rom.codeMutables["fixedHoronSeason"].new[0] = ri.seasons["horon village"]
 		}
+		rom.codeMutables["spawnPointDefaultSeason"].new[0] = ri.seasons["north horon"]
 	}
 
 	rom.setHeartBeepInterval(ri.heartBeepInterval)

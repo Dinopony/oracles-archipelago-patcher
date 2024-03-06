@@ -13,7 +13,7 @@ common:
       or a,80
       ld (wWarpDestGroup),a
       ld a,(wMapMenu_cursorIndex)
-      ld (wWarpDestIndex),a
+      ld (wWarpDestRoom),a
       .noWarp
       ld a,03
       call setMusicVolume
