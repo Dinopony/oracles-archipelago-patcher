@@ -102,6 +102,7 @@ func getChecks(usedItems, usedSlots *list.List) map[string]string {
 // the file.
 func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 	rom.setTreewarp(ri.warpToStart)
+	rom.setQuickFlute(ri.quickFlute)
 
 	// place selected treasures in slots
 	checks := getChecks(ri.usedItems, ri.usedSlots)

@@ -31,6 +31,13 @@ func (rom *romState) setTreewarp(treewarp bool) {
 	mut.new[5] = byte(ternary(treewarp, 0x28, 0x18).(int)) // jr z / jr
 }
 
+// sets quickflute on or off in the modified ROM.
+func (rom *romState) setQuickFlute(quickFlute bool) {
+	if quickFlute {
+		rom.codeMutables["quickFluteJump"].new = []byte{0x18, 0x30}
+	}
+}
+
 // sets the interval between beeps when low on hearts
 func (rom *romState) setHeartBeepInterval(heartBeepInterval int) {
 	mutable := rom.codeMutables["heartBeepInterval"]

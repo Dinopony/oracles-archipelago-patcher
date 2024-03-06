@@ -83,6 +83,7 @@ type routeInfo struct {
 
 	companion                  int
 	warpToStart                bool
+	quickFlute                 bool
 	heartBeepInterval          int
 	requiredEssences           int
 	goldenBeastsRequirement    int
@@ -194,6 +195,12 @@ func processSettings(data *inputData, ri *routeInfo) error {
 		ri.warpToStart = (val == "true")
 	} else {
 		return fmt.Errorf("settings.warp_to_start is missing ('true' or 'false')")
+	}
+
+	// Quick Flute enabled / disabled
+	ri.quickFlute = false
+	if str, ok := data.settings["quick_flute"]; ok {
+		ri.quickFlute = (str == "true")
 	}
 
 	// Archipelago slot name
