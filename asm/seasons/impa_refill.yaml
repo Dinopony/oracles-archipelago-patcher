@@ -1,0 +1,64 @@
+seasons:
+  15/impaRefill: |
+    push de
+    push hl
+    push bc
+
+    ld e,TREASURE_EMBER_SEEDS
+    ld hl,wNumEmberSeeds
+    
+    .refillSeedsLoop
+    ld a,e
+    call checkTreasureObtained
+    jr nc,.nextSeed
+    ld a,(hl)
+    cp a,10
+    jr nc,.nextSeed
+    ld (hl),10
+    
+    .nextSeed
+    ld a,e
+    cp a,TREASURE_MYSTERY_SEEDS
+    jr z,.refillBombs
+    inc e
+    inc hl
+    jr .refillSeedsLoop
+
+    .refillBombs
+    ld hl,wCurrentBombs
+    ld a,(hl)
+    cp a,10
+    jr nc,.refillShield
+    ld (hl),10
+    
+    .refillShield
+    ld a,TREASURE_SHIELD
+    call checkTreasureObtained
+    jr nc,.return
+    ld a,TREASURE_SHIELD
+    ld (ff00+8b),a
+    ld e,3f
+    ld hl,addTreasureToInventory
+    call interBankCall
+
+    .return
+    ld a,5e # SND_GETSEED
+    call playSound
+    ld a,03
+    ld (wStatusBarNeedsRefresh),a
+
+    pop bc
+    pop hl
+    pop de
+    ret
+
+  0b/74ef/: |
+    db checkabutton
+    db disableinput
+    db showtext,25,03
+    db asm15; dw impaRefill
+    db enableinput
+    db scriptend
+
+  1f/4247/: |
+    db 04,b6,04,06,05,a0,05,07,03,d2,03,bd,61,01,72,65,66,69,6c,6c,2e,00

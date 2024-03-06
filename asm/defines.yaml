@@ -234,6 +234,10 @@ seasons:
     define wDisableWarpTiles,ccaa
     define wDisableTransitions,ccab
     define wActiveTileType,ccb6
+    define wNumEmberSeeds,c6b5
+    define wCurrentBombs,c6aa
+    define wMaxBombs,c6ab
+    define wStatusBarNeedsRefresh,cbea
 
     # rom 00
     define multiplyABy4,01c3
@@ -273,6 +277,7 @@ seasons:
     define interactionDelete,3ad9
     define getFreePartSlot,3ea7
     define loadScreenMusicAndSetRoomPack,32dc
+    define addTreasureToInventory,46bc
 
     # rom 02
     define _closeMenu,4f7b
