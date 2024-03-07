@@ -60,5 +60,14 @@ seasons:
     db enableinput
     db scriptend
 
+  # Change Impa text to explain that she is providing a refill
   1f/4247/: |
     db 04,b6,04,06,05,a0,05,07,03,d2,03,bd,61,01,72,65,66,69,6c,6c,2e,00
+
+  # Make Like-Like only remove the shield without unsetting the treasure flag
+  0c/loseShieldWithoutLosingFlag: |
+    call loseTreasure
+    ld hl,wObtainedTreasureFlags
+    set 1,(hl)
+    ret
+  0c/5dd2/: call loseShieldWithoutLosingFlag
