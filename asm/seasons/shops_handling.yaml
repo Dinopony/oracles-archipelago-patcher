@@ -100,8 +100,8 @@ seasons:
 
   ### ADVANCE SHOP ###################################################################
 
-  # Open advance shop
-  05/2195/: nop; nop; nop; nop
+  # Replace this by 4 nops (00 00 00 00) to open advance shop
+  05/2195/advanceShopDoor: ''
 
   # Change the initial text the game uses for Advance Shop 1 because... it uses a generic one
   # instead of the specific one that exists for it inside textbanks?!

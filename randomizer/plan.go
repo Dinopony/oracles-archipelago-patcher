@@ -88,6 +88,7 @@ type routeInfo struct {
 	companion                  int
 	warpToStart                bool
 	quickFlute                 bool
+	openAdvanceShop            bool
 	heartBeepInterval          int
 	requiredEssences           int
 	goldenBeastsRequirement    int
@@ -204,6 +205,12 @@ func processSettings(data *inputData, ri *routeInfo) error {
 	ri.quickFlute = false
 	if str, ok := data.settings["quick_flute"]; ok {
 		ri.quickFlute = (str == "true")
+	}
+
+	// Advance shop
+	ri.openAdvanceShop = false
+	if str, ok := data.settings["open_advance_shop"]; ok {
+		ri.openAdvanceShop = (str == "true")
 	}
 
 	// Archipelago slot name

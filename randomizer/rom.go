@@ -133,6 +133,10 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 	rom.setArchipelagoSlotName(ri.archipelagoSlotName)
 	rom.setOldManRupeeValues(ri.oldManRupeeValues)
 
+	if ri.openAdvanceShop {
+		rom.codeMutables["advanceShopDoor"].new = []byte{0, 0, 0, 0}
+	}
+
 	warps := make(map[string]string)
 
 	if ri.game == GAME_SEASONS {
