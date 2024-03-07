@@ -18,6 +18,7 @@ type inputData struct {
 	hints             map[string]string
 	settings          map[string]string
 	oldManRupeeValues map[string]string
+	shopPrices        map[string]string
 }
 
 func newInputData() *inputData {
@@ -29,6 +30,7 @@ func newInputData() *inputData {
 		hints:             make(map[string]string),
 		settings:          make(map[string]string),
 		oldManRupeeValues: make(map[string]string),
+		shopPrices:        make(map[string]string),
 	}
 }
 
@@ -60,6 +62,8 @@ func parseYamlInput(path string) (*routeInfo, error) {
 			section = data.settings
 		case "old man rupee values":
 			section = data.oldManRupeeValues
+		case "shop prices":
+			section = data.shopPrices
 		default:
 			return nil, fmt.Errorf("unknown section: %q", name)
 		}
@@ -94,6 +98,7 @@ type routeInfo struct {
 	usedItems         *list.List
 	usedSlots         *list.List
 	oldManRupeeValues map[string]int
+	shopPrices        map[string]int
 
 	// Seasons-specific
 	seasons          map[string]byte
@@ -172,8 +177,6 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
 }
 
 func processSettings(data *inputData, ri *routeInfo) error {
-	var err error
-
 	// Companion deciding which Natzu region will be inside the seed
 	ri.companion = COMPANION_UNDEFINED
 	if val, ok := data.settings["companion"]; ok {
@@ -221,22 +224,6 @@ func processSettings(data *inputData, ri *routeInfo) error {
 		}
 	}
 
-	// Set old man rupee values
-	for key, val := range data.oldManRupeeValues {
-		ri.oldManRupeeValues[key], err = strconv.Atoi(val)
-		if err != nil {
-			return err
-		}
-
-		absValue := ri.oldManRupeeValues[key]
-		if absValue < 0 {
-			absValue *= -1
-		}
-		if _, ok := RUPEE_VALUES[absValue]; !ok {
-			return fmt.Errorf("unsupported rupee value for old man")
-		}
-	}
-
 	if ri.game == GAME_SEASONS {
 		processSeasonsSpecificSettings(data, ri)
 	}
@@ -252,6 +239,7 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 		usedItems:         list.New(),
 		usedSlots:         list.New(),
 		oldManRupeeValues: make(map[string]int),
+		shopPrices:        make(map[string]int),
 	}
 
 	if data.settings["game"] == "seasons" {
@@ -294,6 +282,34 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 			}
 		}
 		ri.entrances[entrance] = dungeon
+	}
+
+	// Set old man rupee values
+	for key, val := range data.oldManRupeeValues {
+		ri.oldManRupeeValues[key], err = strconv.Atoi(val)
+		if err != nil {
+			return nil, err
+		}
+
+		absValue := ri.oldManRupeeValues[key]
+		if absValue < 0 {
+			absValue *= -1
+		}
+		if _, ok := RUPEE_VALUES[absValue]; !ok {
+			return nil, fmt.Errorf("unsupported rupee value for old man")
+		}
+	}
+
+	// Set shop prices
+	for key, val := range data.shopPrices {
+		ri.shopPrices[key], err = strconv.Atoi(val)
+		if err != nil {
+			return nil, err
+		}
+
+		if _, ok := RUPEE_VALUES[ri.shopPrices[key]]; !ok {
+			return nil, fmt.Errorf("unsupported rupee value for shop price")
+		}
 	}
 
 	if ri.game == GAME_SEASONS {

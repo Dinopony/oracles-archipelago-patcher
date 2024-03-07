@@ -5,12 +5,6 @@
 # whatever event that it causes).
 
 seasons:
-  # have horon village shop stock and sell its items from the start, and don't
-  # stop the flute appearing because of animal flags.
-  08/48d7/: nop; nop      # sword check
-  08/4adf/: nop; nop; nop # sword check
-  08/4afd/: jr 0c         # animal + essence + linked checks
-
   # initiate all these events without requiring essences:
   08/5886/: ld a,02  # master diver
   0a/4be9/: ld a,02  # ^
@@ -22,7 +16,6 @@ seasons:
   0f/7428/: jr nz,00 # ^
   09/4e40/: or a,57  # spawn dimitri
   09/4e72/: or a,4f  # spawn ricky
-  09/7750/: or a,01  # stock member's card
 
   # 0a/4f8a/: cp a,00  # old man (round jewel)
   

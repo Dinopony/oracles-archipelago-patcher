@@ -378,15 +378,25 @@ func (rom *romState) attachText() {
 	// insert randomized item names into shop text
 	shopNames := loadShopNames(gameNames[rom.game])
 	shopMap := map[string]string{
-		"shopFluteText": "shop, 150 rupees",
+		"horonShop3Text": "shop, 150 rupees",
 	}
 	if rom.game == GAME_SEASONS {
+		shopMap["horonShop1Text"] = "shop, 20 rupees"
+		shopMap["horonShop2Text"] = "shop, 30 rupees"
+		shopMap["advanceShop1Text"] = "advance shop 1"
+		shopMap["advanceShop2Text"] = "advance shop 2"
+		shopMap["advanceShop3Text"] = "advance shop 3"
+		shopMap["syrupShop1Text"] = "syrup shop 1"
+		shopMap["syrupShop2Text"] = "syrup shop 2"
+		shopMap["syrupShop3Text"] = "syrup shop 3"
 		shopMap["membersShopSatchelText"] = "member's shop 1"
 		shopMap["membersShopGashaText"] = "member's shop 2"
 		shopMap["membersShopMapText"] = "member's shop 3"
-		shopMap["marketRibbonText"] = "subrosia market, 1st item"
-		shopMap["marketPeachStoneText"] = "subrosia market, 2nd item"
-		shopMap["marketCardText"] = "subrosia market, 5th item"
+		shopMap["marketItem1Text"] = "subrosia market, 1st item"
+		shopMap["marketItem2Text"] = "subrosia market, 2nd item"
+		shopMap["marketItem3Text"] = "subrosia market, 3rd item"
+		shopMap["marketItem4Text"] = "subrosia market, 4th item"
+		shopMap["marketItem5Text"] = "subrosia market, 5th item"
 	}
 	for codeName, slotName := range shopMap {
 		code := rom.codeMutables[codeName]

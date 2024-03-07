@@ -231,6 +231,7 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		rom.itemSlots["target carts 2"].subidAddrs[1].offset = codeAddr.offset + 2
 	}
 
+	rom.setShopPrices(ri.shopPrices)
 	rom.setBossItemAddrs()
 	rom.setSeedData()
 	rom.setRoomTreasureData()
@@ -485,6 +486,14 @@ func getDungeonPropertiesAddr(game int, group, room byte) *address {
 		offset += 0x100
 	}
 	return &address{0x01, offset}
+}
+
+func (rom *romState) setShopPrices(shopPrices map[string]int) {
+	for shopSlotName, price := range shopPrices {
+		priceByte := RUPEE_VALUES[price]
+		mutableName := inflictCamelCase(shopSlotName + " price")
+		rom.codeMutables[mutableName].new = []byte{priceByte}
+	}
 }
 
 func (rom *romState) setBossItemAddrs() {

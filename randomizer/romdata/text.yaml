@@ -33,39 +33,86 @@ seasons:
     \x02\x6e\x05\xda\x04\xaa\x01 # Satchel to use
     them.\x00 # them.
 
-  shopFluteText: |
+  horonShop1Text: |
     \x09\x01\x03\xe2 # (insert item name)
-     15\x02\x1d\x01 # 150 Rupees
+     \x0c\x08\x02\x8f\x01 # Price
     \x02\x00\x00 # OK / No thanks
+  horonShop2Text: |
+    \x09\x01\x03\xe2 # (insert item name)
+     \x0c\x08\x02\x8f\x01 # Price
+    \x02\x00\x00 # OK / No thanks
+  horonShop3Text: |
+    \x09\x01\x03\xe2 # (insert item name)
+     \x0c\x08\x02\x8f\x01 # Price
+    \x02\x00\x00 # OK / No thanks
+
+  advanceShop1Text: |
+    \x09\x01\x03\xe2 # (insert item name)
+     \x0c\x08\x02\x8f\x01 # Price
+    \x02\x00\x00 # OK / No thanks
+  advanceShop2Text: |
+    \x09\x01\x03\xe2 # (insert item name)
+     \x0c\x08\x02\x8f\x01 # Price
+    \x02\x00\x00 # OK / No thanks
+  advanceShop3Text: |
+    \x09\x01\x03\xe2 # (insert item name)
+     \x0c\x08\x02\x8f\x01 # Price
+    \x02\x00\x00 # OK / No thanks
+
+  syrupShop1Text: |
+    \x09\x01\x03\xe2 # (insert item name)
+     \x0c\x08\x02\x8f\x01 # Price
+    \x02\x00\x00 # OK / No thanks
+  syrupShop2Text: |
+    \x09\x01\x03\xe2 # (insert item name)
+     \x0c\x08\x02\x8f\x01 # Price
+    \x02\x00\x00 # OK / No thanks
+  syrupShop3Text: |
+    \x09\x01\x03\xe2 # (insert item name)
+     \x0c\x08\x02\x8f\x01 # Price
+    \x02\x00\x00 # OK / No thanks
+
   membersShopSatchelText: |
     \x09\x01\x03\xe2 # (insert item name)
-     30\x02\x1d\x01 # 300 Rupees
+     \x0c\x08\x02\x8f\x01 # Price
     \x02\x00\x00 # OK / No thanks
   membersShopGashaText: |
     \x09\x01\x03\xe2 # (insert item name)
-     30\x02\x1d\x01 # 300 Rupees
+     \x0c\x08\x02\x8f\x01 # Price
     \x02\x00\x00 # OK / No thanks
   membersShopMapText: |
     \x09\x01\x03\xe2 # (insert item name)
-     20\x02\x1d\x01 # 200 Rupees
+     \x0c\x08\x02\x8f\x01 # Price
     \x02\x00\x00 # OK / No thanks
-  marketRibbonText: |
+
+  marketItem1Text: |
     \x09\x01\x09\x00\x01 # (insert item name)
     \x02\x08 # I'll trade for
     \x02\x8e.\x01 # Star-Shaped Ore.
     \x07\x2b # (jump to end text)
-  marketPeachStoneText: |
-    \x09\x01\x09\x00\x01 # (insert item name)
-    \x02\x08 # I'll trade for
-    \x09\x01\x0c\x08 \x02\x09\x01 # (number) Ore Chunks
-    \x05\xa1\x01 # and
-    \x09\x0110 \x04\x79 \x02\x53.\x01 # 10 Ember Seeds.
-    \x07\x2b # (jump to end text)
-  marketCardText: |
+  marketItem2Text: |
     \x09\x01\x09\x00\x01 # (insert item name)
     \x02\x08 # I'll trade for
     \x09\x01\x0c\x08 \x02\x09.\x01 # (number) Ore Chunks
     \x07\x2b # (jump to end text)
+  marketItem3Text: |
+    \x09\x01\x09\x00\x01 # (insert item name)
+    \x02\x08 # I'll trade for
+    \x09\x01\x0c\x08 \x02\x09.\x01 # (number) Ore Chunks
+    \x04\xfc\x02\x8b\x04\xb7 # How about it?
+    \x02\xfe\x03\xbf\x00 # Sure / No
+  marketItem4Text: |
+    \x09\x01\x09\x00\x01 # (insert item name)
+    \x02\x08 # I'll trade for
+    \x09\x01\x0c\x08 \x02\x09.\x01 # (number) Ore Chunks
+    \x07\x2b # (jump to end text)
+  marketItem5Text: |
+    \x09\x01\x09\x00\x01 # (insert item name)
+    \x02\x08 # I'll trade for
+    \x09\x01\x0c\x08 \x02\x09.\x01 # (number) Ore Chunks
+    \x04\xfc\x02\x8b\x04\xb7 # How about it?
+    \x02\xfe\x03\xbf\x00 # Sure / No
+
   marketEndText: |
     \x04\xfc\x02\x8b\x04\xb7 # How about it?
     \x02\xfe\x03\xbf\x00 # Sure / No
@@ -114,7 +161,7 @@ ages:
     \x02\xa0 to\x05\xfb\x01 # Satchel to use
     \x05\x58.\x00 # them.
 
-  shopFluteText: |
+  horonShop3Text: |
     \x09\x01\x09\x00\x0c\x18\x01 # (insert item name)
      15\x02\x2c\x01 # 150 Rupees
     \x02\x00\x00 # OK / No thanks

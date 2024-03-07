@@ -1,0 +1,231 @@
+seasons:
+  # Change shopItemReplacementTable so that each item can only be bought once
+  08/4cf6/shopItemReplacementTable: |
+    db 3f,01,ff,00
+    db 40,80,ff,00
+    db 3f,02,ff,00
+    db 40,40,ff,00
+    db 40,20,ff,00
+    db 3f,08,ff,00
+    db 00,00,00,00
+    db 92,04,09,18
+    db 92,04,0a,10
+    db 3f,20,ff,00
+    db 3f,40,ff,00
+    db 3f,80,ff,00
+    db 00,00,00,00
+    db 00,00,00,00
+    db 40,01,ff,00
+    db 40,02,ff,00
+    db 40,04,ff,00
+    db 00,00,00,00
+    db 00,00,00,00
+    db 00,00,00,00
+
+  # Remove the bits that are altered on-the-fly inside wBoughtShopItems2 when inside a shop
+  08/4af1/: |
+    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00
+
+  # remove generic text from shopItemTextTable so that replacement text can be displayed.
+  08/4d46/: db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+
+  # Remove all "you are already full" checks for shop slots that usually carry hearts, bombs or a shield
+  08/4a66/: |
+    ld a,1
+    or a
+    ret nz
+
+  # Neutralize all vanilla "wBoughtItems1" flag set
+  0b/47e7/: db 00
+  0b/4803/: db 00
+  0b/480d/: db 00
+  0b/4819/: db 00
+  0b/4857/: db 00
+  0b/48c1/: db 00
+  # Neutralize all vanilla "wBoughtItems2" flag set
+  0b/482d/: db 00
+  0b/4837/: db 00
+  0b/4841/: db 00
+
+  # Call giveTreasureCustom instead of giveTreasure for shop slots, and also
+  # set the flag related to that shop item so it can't be bought again
+  08/shopGiveTreasure: |
+    push bc
+    push hl
+
+    call giveTreasureCustom
+
+    ld e,42
+    ld a,(de) # subid
+    add a,a
+    add a,a
+    ld hl,shopItemReplacementTable
+    rst 10 # addAToHL
+    ld b,(hl) # flag_addr -> b
+    inc hl
+    ld c,(hl) # bitmask -> c
+
+    ld h,c6
+    ld l,b
+    ld a,(hl) # flag_value -> a
+    or c
+    ld (hl),a
+
+    pop hl
+    pop bc
+    ret
+  08/4bfb/: call shopGiveTreasure
+
+
+  ### HORON SHOP #####################################################################
+
+  # have horon village shop stock and sell its items from the start, and don't
+  # stop the flute appearing because of animal flags.
+  08/48d7/: nop; nop      # sword check
+  08/4adf/: nop; nop; nop # sword check
+
+  # Don't set a ricky flag when buying 150-rupee shop item.
+  # This has become useless since we randomize the cheap item instead of the special Flute replacement
+  # 0b/4823/: db ormemory; dw wRickyState; db 00
+
+
+  ### MEMBER'S SHOP ##################################################################
+
+  # don't refill seeds when getting the first member's shop item.
+  08/4c02/: nop; nop; nop
+
+
+  ### ADVANCE SHOP ###################################################################
+
+  # Open advance shop
+  05/2195/: nop; nop; nop; nop
+
+  # Change the initial text the game uses for Advance Shop 1 because... it uses a generic one
+  # instead of the specific one that exists for it inside textbanks?!
+  0b/4829/: db 22
+
+
+  ### SYRUP'S SHOP ###################################################################
+
+  # Remove Syrup quantity checks, and set price textbox substitution instead to allow for variable prices
+  08/6d82/: |
+    ld hl,wTextNumberSubstitution
+    ld (hl),c
+    inc l
+    ld (hl),b
+    jr 1d
+
+
+  ### SUBROSIAN MARKET ###############################################################
+
+  # use giveTreasureCustom in the subrosian market when appropriate.
+  09/marketGiveTreasure: |
+      push af
+      push bc
+      ld a,l
+
+      .testItem1
+      cp a,db
+      jr nz,.testItem2
+      ld b,1
+      jr .setFlag
+
+      .testItem2
+      cp a,e3
+      jr nz,.testItem3
+      ld b,2
+      jr .setFlag
+
+      .testItem3
+      cp a,ef
+      jr nz,.testItem4
+      ld b,4
+      jr .setFlag
+
+      .testItem4
+      cp a,f3
+      jr nz,.testItem5
+      ld b,8
+      jr .setFlag
+
+      .testItem5
+      ld b,10
+      jr .setFlag
+
+      .setFlag
+      ld a,(wBoughtSubrosianItems)
+      or b
+      ld (wBoughtSubrosianItems),a
+      pop bc
+      pop af
+
+      call giveTreasureCustom
+      ret
+  09/788a/: |
+      call marketGiveTreasure
+      jr 12
+
+  # Remove star ore from inventory when buying the first subrosian market
+  # item. this can't go in the gain/lose items table, since the given item
+  # doesn't necessarily have a unique ID.
+  09/tradeStarOre: |
+      or a
+      jr nz,.next
+      push hl
+      ld hl,c69a
+      res 5,(hl)
+      pop hl
+      .next
+      rst 18
+      ldi a,(hl)
+      ld c,(hl)
+      ret
+  09/7887/: call tradeStarOre
+
+  # Remove conditions on market slots (remove 2nd if owning shield, and remove Member's Card if under a 
+  # specific essence requirement)
+  09/7744/: |
+    jr 2a
+    db 00,00,00,00,00,00,00,00,00,00
+    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+  # In Subrosian Market, remove item if it was already bought instead of putting the next one in the list
+  09/776d/: jp nz,interactionDelete
+  09/777a/: jr nz,f1
+
+  # Change the tested flags that make the items disappear
+  09/77c6/: db 04 # Item 3
+  09/77ce/: db 08 # Item 4
+  09/77d2/: db 10 # Item 5
+
+  # Remove ember seeds from prices
+  09/77af/: db 00,00 # Item 2
+  09/77c7/: db 00,00 # Item 3
+
+
+  ### PRICES #######################################################################
+
+  08/4c97/horonShop1Price: ''
+  08/4c96/horonShop2Price: ''
+  08/4c94/horonShop3Price: ''
+  
+  08/4c93/memberShop1Price: ''
+  08/4c95/memberShop2Price: ''
+  08/4c98/memberShop3Price: ''
+
+  08/4c9c/syrupShop1Price: ''
+  08/4c9d/syrupShop2Price: ''
+  08/4c9e/syrupShop3Price: ''
+
+  08/4ca1/advanceShop1Price: ''
+  08/4ca2/advanceShop2Price: ''
+  08/4ca3/advanceShop3Price: ''
+
+  09/77b1/subrosianMarket2Price: ''
+  09/77c9/subrosianMarket3Price: ''
+  09/77d1/subrosianMarket4Price: ''
+  09/77d5/subrosianMarket5Price: ''
+  

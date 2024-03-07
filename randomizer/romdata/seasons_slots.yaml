@@ -192,18 +192,18 @@ shop, 20 rupees:
   treasure: Bombs (10)
   room: 0x03a6
   maptile: 0xe6
-  dummy: true # not randomized
+  addr: {bank: 0x08, addr: 0x4cd6}
 shop, 30 rupees:
   treasure: Progressive Shield
   room: 0x03a6
   maptile: 0xe6
-  dummy: true # not randomized
+  addr: {bank: 0x08, addr: 0x4cd4}
 shop, 150 rupees:
   treasure: Moosh's Flute
   room: 0x03a6
   maptile: 0xe6
-  addr: {bank: 0x08, addr: 0x4ce8}
-  local: true
+  addr: {bank: 0x08, addr: 0x4cd0}
+
 member's shop 1:
   treasure: Seed Satchel
   room: 0x03b0
@@ -222,6 +222,38 @@ member's shop 3:
   maptile: 0xe6
   addr: {bank: 0x08, addr: 0x4cd8}
   local: true
+
+advance shop 1:
+  treasure: Gasha Seed
+  room: 0x03af
+  maptile: 0xc5
+  addr: {bank: 0x08, addr: 0x4cea}
+advance shop 2:
+  treasure: Gasha Seed
+  room: 0x03af
+  maptile: 0xc5
+  addr: {bank: 0x08, addr: 0x4cec}
+advance shop 3:
+  treasure: Gasha Seed
+  room: 0x03af
+  maptile: 0xc5
+  addr: {bank: 0x08, addr: 0x4cee}
+
+syrup shop 1:
+  treasure: Potion
+  room: 0x039c
+  maptile: 0x5e
+  addr: {bank: 0x08, addr: 0x4ce4}
+syrup shop 2:
+  treasure: Gasha Seed
+  room: 0x039c
+  maptile: 0x5e
+  addr: {bank: 0x08, addr: 0x4ce0} 
+syrup shop 3:
+  treasure: Bombs (10)
+  room: 0x039c
+  maptile: 0x5e
+  addr: {bank: 0x08, addr: 0x4ce2} 
 
 # subrosia
 #
@@ -305,19 +337,26 @@ subrosia market, 1st item:
   room: 0x03a0
   maptile: 0xb0
   addr: {bank: 0x09, addr: 0x77da}
-  local: true
 subrosia market, 2nd item:
   treasure: Rare Peach Stone
   room: 0x03a0
   maptile: 0xb0
   addr: {bank: 0x09, addr: 0x77e2}
-  local: true
+subrosia market, 3rd item:
+  treasure: Progressive Shield
+  room: 0x03a0
+  maptile: 0xb0
+  addr: {bank: 0x09, addr: 0x77ee}
+subrosia market, 4th item:
+  treasure: Bombs (10)
+  room: 0x03a0
+  maptile: 0xb0
+  addr: {bank: 0x09, addr: 0x77f2}
 subrosia market, 5th item:
   treasure: Member's Card
   room: 0x03a0
   maptile: 0xb0
   addr: {bank: 0x09, addr: 0x77f4}
-  local: true
 great furnace:
   treasure: Hard Ore
   room: 0x038e

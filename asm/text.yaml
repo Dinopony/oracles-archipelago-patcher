@@ -37,16 +37,10 @@ floating:
 seasons:
   3f/owlText: ''
 
-  # remove generic text from shops so that replacement text can be displayed.
-  08/4d46/: db 00,4c,00,1f,4d,00,4b,6d,4b,6d,4b,32,00,00,4b,00,00
-
   0a/7b9e/: ret; nop; nop # ??
 
   1d/5922/remoteItemText: '' # 003b, strange flute
 
-  # overwritten in-place
-  1e/5375/membersShopSatchelText: ''
-  1e/53a0/membersShopMapText: ''
 
   # overwrites maku tree text
   1e/6265/emberSeedText: '' # 1704, cutscene after d1
@@ -57,19 +51,46 @@ seasons:
       .done
       jp showText
   10/4ade/: call useEmberSeedText
-  1e/6361/shopFluteText: '' # 1707, cutscene after d2
+
+  1e/64d7/horonShop1Text: '' # 1716, cutscene after d8
+  1e/681d/horonShop2Text: '' # 172d, cutscene after d6
+  1e/6361/horonShop3Text: '' # 1707, cutscene after d2
+
+  1e/4c05/advanceShop1Text: '' # 0c12, Onox finding Din in linked intro troupe cutscene
+  1e/4c3f/advanceShop2Text: '' # 0c13, Onox taunting Link in linked intro troupe cutscene
+  1e/5497/advanceShop3Text: '' # 0e25, Same as vanilla
+
+  1e/5052/syrupShop1Text: '' # 0d0c, text shown AFTER buying bombchus in vanilla
+  1e/4f19/syrupShop2Text: '' # 0d01, vanilla text
+  1e/4fac/syrupShop3Text: '' # 0d05, vanilla text 
+
+  1e/5375/membersShopSatchelText: '' # vanilla text
   1e/63e0/membersShopGashaText: '' # 1709, cutscene after d3
-  1e/6699/marketRibbonText: '' # 1726, cutscene after d4 if d4 < d5
-  1e/66f6/marketPeachStoneText: '' # 1728, cutscene after d5 if d5 < d4
-  1e/6777/marketCardText: '' # 172a, cutscene after d5 if d4 < d5
+  1e/53a0/membersShopMapText: '' # vanilla text
+
+  1e/6699/marketItem1Text: '' # 1726, cutscene after d4 if d4 < d5
+  1e/66f6/marketItem2Text: '' # 1728, cutscene after d5 if d5 < d4
+  1f/4df1/marketItem3Text: '' # 2b05, vanilla text
+  1e/6777/marketItem4Text: '' # 172a, cutscene after d5 if d4 < d5 
+  1f/4ed4/marketItem5Text: '' # 2b10, vanilla text
   1e/67ba/marketEndText: '' # 172b, cutscene after d4 is d5 < d4
+
   0b/scriptShowTextNonExitableCustom: /include scriptShowTextNonExitableCustom
   0b/scriptTextReplacements: |
-      db 0e,1b,17,07
-      db 0e,1d,17,09
-      db 2b,00,17,26
-      db 2b,01,17,28
-      db 2b,10,17,2a
+      db 0e,04,17,16 # Horon shop 1
+      db 0e,03,17,2d # Horon shop 2
+      db 0e,02,17,07 # Horon shop 3
+
+      db 0e,22,0c,12 # Advance shop 1
+      db 0e,23,0c,13 # Advance shop 2
+
+      db 0d,0a,0d,0c # Syrup shop 1
+
+      db 0e,1d,17,09 # Member shop 2
+
+      db 2b,00,17,26 # Market 1
+      db 2b,01,17,28 # Market 2
+      db 2b,06,17,2a # Market 4
       db ff
   0b/42e8/: call scriptShowTextNonExitableCustom
 
@@ -114,7 +135,7 @@ ages:
       .done
       jp showText
   11/4a7e/: call useEmberSeedText
-  1e/6871/shopFluteText: '' # 05b1, cutscene when breaking d2?
+  1e/6871/horonShop3Text: '' # 05b1, cutscene when breaking d2?
   0c/scriptShowTextNonExitableCustom: /include scriptShowTextNonExitableCustom
   0c/scriptTextReplacements: |
       db 0e,1b,05,b1

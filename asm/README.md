@@ -44,7 +44,7 @@ for readability.
 
 You can use e.g. `-devcmd findaddr seasons/02/76f2` to find out what label or
 substitution (if any) is at a given address, and e.g. `-devcmd showasm
-seasons/treeWarp` to show the location and disassembly of a given label. This
+seasons/warpToStart` to show the location and disassembly of a given label. This
 does not work (or account) for tables not generated until randomization.
 
 The code itself is translated by [lgbtasm](https://github.com/jangler/lgbtasm).

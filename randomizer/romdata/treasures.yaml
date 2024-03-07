@@ -97,6 +97,7 @@ common:
   
   # common page 2
   Flippers: 0x2e00
+  Potion: 0x2f00
   Gasha Seed: 0x3401
 
   Archipelago Item: 0x4100

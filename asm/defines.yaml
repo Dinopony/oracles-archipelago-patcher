@@ -241,6 +241,7 @@ seasons:
     define wWarpDestPos,cc66
     define wWarpTransition2,cc67
     define wLinkObjectIndex,cc48
+    define wBoughtSubrosianItems,c642
 
     # rom 00
     define multiplyABy4,01c3

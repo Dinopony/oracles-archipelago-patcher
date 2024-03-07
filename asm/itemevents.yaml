@@ -35,41 +35,6 @@ seasons:
       and a
       ret
 
-  # call giveTreasureCustom instead of giveTreasure in the shop iff the given
-  # item is randomized. also set fake treasure id 0f when buying the "flute",
-  # so that that id can be checked instead of the flute's to determine whether
-  # to stock the item.
-  08/shopGiveTreasure: |
-      push bc
-      ld b,a
-      ld a,l
-      push hl
-      ld hl,randomizedShopItemLowAddrs
-      call searchValue
-      pop hl
-      ld a,b
-      pop bc
-      jr z,.next
-      call giveTreasure
-      ret
-      .next
-      call giveTreasureCustom
-      ld e,42
-      ld a,(de) # subid
-      cp a,0d
-      ret nz
-      ld hl,c693 # in wObtainedTreasureFlags
-      set 7,(hl)
-      ret
-  08/4bfb/: call shopGiveTreasure
-
-  # these are the low bytes of randomized shop item data addresses.
-  08/randomizedShopItemLowAddrs: |
-      db e9,cf,d3,d9
-
-  # don't refill seeds when getting the first member's shop item.
-  08/4c02/: nop; nop; nop
-
   # ignore sword level for lost woods pedestal.
   08/7e62/: ld a,01
 
@@ -97,61 +62,6 @@ seasons:
       jp 6421
   09/641a/: jp createMtCuccoItem
 
-  # remove star ore from inventory when buying the first subrosian market
-  # item. this can't go in the gain/lose items table, since the given item
-  # doesn't necessarily have a unique ID.
-  09/tradeStarOre: |
-      or a
-      jr nz,.next
-      push hl
-      ld hl,c69a
-      res 5,(hl)
-      pop hl
-      .next
-      rst 18
-      ldi a,(hl)
-      ld c,(hl)
-      ret
-  09/7887/: call tradeStarOre
-
-  # use giveTreasureCustom in the subrosian market when appropriate.
-  09/marketGiveTreasure: |
-      push af
-      ld a,l
-      cp a,db
-      jr z,.custom
-      cp a,e3
-      jr z,.custom
-      cp a,f5 # trade star ore
-      jr z,.customFakeId
-      pop af
-      cp a,TREASURE_RING
-      jr nz,.next
-      call getRandomRingOfGivenTier
-      .next
-      call giveTreasure
-      ld e,42
-      ret
-      .customFakeId
-      push hl
-      ld hl,c694
-      set 0,(hl)
-      pop hl
-      .custom
-      pop af
-      call giveTreasureCustom
-      pop de
-      scf
-      ret
-  09/788a/: |
-      call marketGiveTreasure
-      jr c,12
-      jr 05
-
-  # check fake treasure ids to track:
-  08/4a89/: ld a,0f # shop, 150 rupees
-  08/4af1/: ld a,0f # ^
-  09/7754/: ld a,10 # subrosia market item 5
   0b/72f0/: db jumpifitemobtained,11 # master diver
 
   # stop hero's cave chest from giving a second sword that causes a spin slash.

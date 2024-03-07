@@ -125,9 +125,6 @@ seasons:
   # prevent holodrum plain from changing the animal region when entered.
   09/6f79/: jr 08
 
-  # don't set a ricky flag when buying 150-rupee shop item.
-  0b/4823/: db ormemory; dw wRickyState; db 00
-
   # remove the moosh and dimitri events in spool swamp.
   11/6572/: db ff
   11/68d4/: db ff
