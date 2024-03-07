@@ -118,6 +118,8 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 		m["Treasure Map"].sprite = 0x49
 		m["Member's Card"].text = 0x45
 		m["Member's Card"].sprite = 0x48
+		m["Potion"].text = 0x6d
+		m["Potion"].sprite = 0x4b
 
 		// and seasons flutes aren't initially real treasures like ages ones are
 		t := m["Ricky's Flute"]

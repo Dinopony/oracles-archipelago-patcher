@@ -335,6 +335,7 @@ seasons:
   3f/67ba/: db 60,14,00 # fool's ore
   3f/67c6/: db 5d,10,26 # rare peach stone
   3f/67c9/: db 65,0c,23 # ribbon
+  3f/67bd/: db 5d,00,23 # potion
 
   # also flutes with different palettes? idk how this works in vanilla
   3f/6790/: |
