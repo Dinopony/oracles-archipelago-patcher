@@ -244,16 +244,19 @@ syrup shop 1:
   room: 0x039c
   maptile: 0x5e
   addr: {bank: 0x08, addr: 0x4ce4}
+  collect: touch
 syrup shop 2:
   treasure: Gasha Seed
   room: 0x039c
   maptile: 0x5e
-  addr: {bank: 0x08, addr: 0x4ce0} 
+  addr: {bank: 0x08, addr: 0x4ce0}
+  collect: touch
 syrup shop 3:
   treasure: Bombs (10)
   room: 0x039c
   maptile: 0x5e
   addr: {bank: 0x08, addr: 0x4ce2} 
+  collect: touch
 
 # subrosia
 #
