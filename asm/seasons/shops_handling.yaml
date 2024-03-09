@@ -76,6 +76,10 @@ seasons:
 
     pop hl
     pop bc
+
+    push de
+    call saveFile
+    pop de
     ret
   08/4bfb/: call shopGiveTreasure
 
@@ -163,6 +167,11 @@ seasons:
       pop af
 
       call giveTreasureCustom
+      
+      push de
+      call saveFile
+      pop de
+
       ret
   09/788a/: |
       call marketGiveTreasure
