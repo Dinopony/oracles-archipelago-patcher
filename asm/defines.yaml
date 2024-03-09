@@ -210,7 +210,8 @@ seasons:
     define wAnimalTutorialFlags,c646
     define wInventoryB,c680
     define wObtainedTreasureFlags,c692
-    define wNetCountIn,c6a1
+    define wNetCountInL,c6a0
+    define wNetCountInH,c6a1
     define wShieldLevel,c6a9
     define wSwordLevel,c6ac
     define wFluteIcon,c6af

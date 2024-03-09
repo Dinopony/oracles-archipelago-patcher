@@ -141,8 +141,16 @@ common:
       ld (hl),a
       ld l,71
       ld (hl),02
-      ld hl,wNetCountIn
+
+      ld hl,wNetCountInL
       inc (hl)
+      ld a,(hl)
+      or a
+      jr nz,.noOverflow
+      ld hl,wNetCountInH
+      inc (hl)
+
+      .noOverflow
       ld hl,wNetTreasureIn
       xor a
       ldi (hl),a
