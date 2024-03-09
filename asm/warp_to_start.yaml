@@ -39,12 +39,6 @@ seasons:
       ld a,d0
       ld (wLinkObjectIndex),a
 
-      ld a,(wActiveGroup)
-      or a
-      jr z,.done
-      ld a,(spawnPointDefaultSeason)
-      ld (wRoomStateModifier),a
-
       .done
       jp _closeMenu
 

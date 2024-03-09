@@ -45,8 +45,8 @@ seasons:
     db TREASURE_MEMBERS_CARD
     db TREASURE_FLIPPERS
   
-    db TREASURE_GASHA_SEED
     db TREASURE_POTION
+    db TREASURE_GASHA_SEED
     db 00
 
   # This table contains the position where to draw the sprite on screen depending on the ID of the slot

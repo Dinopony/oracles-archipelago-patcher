@@ -1,39 +1,53 @@
 seasons:
-  00/fixedHoronSeason: db ff
-  04/bank04_templeRemainsDefaultSeason: db 02
+  # [Warp Group, Warp Dest, Arrival Position, Season to apply]
+  # An arrival pos of "FF" means it isn't checked
+  # A season of "FF" means nothing changes
+  04/specificWarpSeasons: |
+    db 03,ab,44,ff # subrosia to horon
+    db 03,a8,14,SEASON_AUTUMN # subrosia to temple remains
+    db 85,12,ff,SEASON_SUMMER # sunken city to woods of winter
+    db 80,a7,ff,SEASON_WINTER # warp to start (holodrum)
+    db ff
 
   # This function aims to fix season handling for Subrosia -> interior map warps
   # There are two occurences of this in the game
   # 1) Subrosia -> Horon warp (mainly for Fixed Horon Season setting)
   # 2) Subrosia -> Upper Temple Remains warp (to put back default Temple Remains season when coming from that portal)
   04/checkSpecificWarps: |
+    push bc
+    push hl
+
     ld a,(wWarpDestGroup)
-    cp a,03
-    jr nz,.continue
+    ld b,a
     ld a,(wWarpDestRoom)
+    ld c,a
+    ld e,02
+    ld hl,specificWarpSeasons
+    call searchDoubleKey
+    jr nc,.done
 
-    cp a,ab
-    jr nz,.notSubrosiaToHoron
-
-    ld a,(fixedHoronSeason)
+    ldi a,(hl)
     cp a,ff
-    jr z,.continue
+    jr z,.noPosCheck
+    ld b,a
+    ld a,(wWarpDestPos)
+    cp b
+    jr nz,.done
+
+    .noPosCheck
+    ld a,(hl)
+    cp a,ff
+    jr z,.done
     ld (wRoomStateModifier),a
-    jr .continue
 
-    .notSubrosiaToHoron
-    cp a,a8
-    jr nz,.continue
-
-    ld a,(bank04_templeRemainsDefaultSeason)
-    ld (wRoomStateModifier),a
-
-    .continue
+    .done
+    pop hl
+    pop bc
     jp loadScreenMusicAndSetRoomPack
-  
   04/465f/: jp checkSpecificWarps
 
   # Change setHoronVillageSeason to remove the random component if fixedHoronSeason != 0xff
+  00/fixedHoronSeason: db ff
   02/3e2c/: |
     ld a,(fixedHoronSeason)
     cp a,ff

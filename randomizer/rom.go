@@ -119,12 +119,13 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 			}
 		}
 
-		rom.codeMutables["bank04_templeRemainsDefaultSeason"].new[0] = ri.seasons["temple remains"]
-
-		if ri.seasons["horon village"] != 4 {
+		if ri.seasons["horon village"] < 4 {
 			rom.codeMutables["fixedHoronSeason"].new[0] = ri.seasons["horon village"]
+			rom.codeMutables["specificWarpSeasons"].new[3] = ri.seasons["horon village"]
 		}
-		rom.codeMutables["spawnPointDefaultSeason"].new[0] = ri.seasons["north horon"]
+		rom.codeMutables["specificWarpSeasons"].new[7] = ri.seasons["temple remains"]
+		rom.codeMutables["specificWarpSeasons"].new[11] = ri.seasons["woods of winter"]
+		rom.codeMutables["specificWarpSeasons"].new[15] = ri.seasons["north horon"]
 	}
 
 	rom.setHeartBeepInterval(ri.heartBeepInterval)
