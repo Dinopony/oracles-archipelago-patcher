@@ -71,3 +71,9 @@ seasons:
     set 1,(hl)
     ret
   0c/5dd2/: call loseShieldWithoutLosingFlag
+
+  # Make Impa always stand in front of her house
+  0a/5d57/: |
+    db 00,00,00,00,00,00,00,00,00
+    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+    db 00,00,00
