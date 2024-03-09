@@ -132,3 +132,10 @@ var SEASON_AREAS = []string{
 	"holodrum plain", "sunken city", "lost woods", "tarm ruins",
 	"western coast", "temple remains", "horon village",
 }
+
+var PALETTE_BYTES = map[string]byte{
+	"green":  0x08,
+	"blue":   0x09,
+	"red":    0x0a,
+	"orange": 0x0b,
+}

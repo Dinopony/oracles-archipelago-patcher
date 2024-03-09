@@ -93,7 +93,10 @@ type routeInfo struct {
 	requiredEssences           int
 	goldenBeastsRequirement    int
 	treehouseOldManRequirement int
-	archipelagoSlotName        string
+
+	characterSprite     string
+	characterPalette    string
+	archipelagoSlotName string
 
 	entrances         map[string]string
 	usedItems         *list.List
@@ -229,6 +232,16 @@ func processSettings(data *inputData, ri *routeInfo) error {
 		case "disabled":
 			ri.heartBeepInterval = HEART_BEEP_DISABLED
 		}
+	}
+
+	ri.characterSprite = "link"
+	if str, ok := data.settings["character_sprite"]; ok {
+		ri.characterSprite = str
+	}
+
+	ri.characterPalette = "green"
+	if str, ok := data.settings["character_palette"]; ok {
+		ri.characterPalette = str
 	}
 
 	if ri.game == GAME_SEASONS {

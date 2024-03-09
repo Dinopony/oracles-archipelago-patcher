@@ -2,6 +2,8 @@ package randomizer
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -121,6 +123,33 @@ func (rom *romState) setOldManRupeeValues(values map[string]int) {
 			giveTakeArray.new[offset+1] = funcTakeAddr[1]
 		}
 	}
+}
+
+func (rom *romState) setCharacterSprite(sprite string, palette string) error {
+	if sprite != "link" {
+		exeDir, err := os.Executable()
+		if err != nil {
+			return err
+		}
+
+		dirName := filepath.Dir(exeDir)
+		data, err := os.ReadFile(filepath.Join(dirName, "sprites", sprite+".bin"))
+		if err != nil {
+			return err
+		}
+
+		copy(rom.data[0x68000:], data)
+	}
+
+	if palette != "green" {
+		if paletteByte, ok := PALETTE_BYTES[palette]; ok {
+			for addr := 0x141cc; addr <= 0x141de; addr += 0x2 {
+				rom.data[addr] = paletteByte
+			}
+		}
+	}
+
+	return nil
 }
 
 // sets the sequence of seasons + directions required to reach the pedestal in seasons' lost woods

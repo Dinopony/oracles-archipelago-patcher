@@ -132,6 +132,7 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 	rom.setAnimal(ri.companion)
 	rom.setArchipelagoSlotName(ri.archipelagoSlotName)
 	rom.setOldManRupeeValues(ri.oldManRupeeValues)
+	rom.setCharacterSprite(ri.characterSprite, ri.characterPalette)
 
 	if ri.openAdvanceShop {
 		rom.codeMutables["advanceShopDoor"].new = []byte{0, 0, 0, 0}
