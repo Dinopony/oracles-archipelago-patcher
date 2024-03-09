@@ -137,7 +137,7 @@ func makeRoomTreasureTable(game int, itemSlots map[string]*itemSlot) string {
 	for _, key := range orderedKeys(itemSlots) {
 		slot := itemSlots[key]
 
-		if key != "maku path basement" && slot.collectMode != collectModes["drop"] && game == GAME_AGES {
+		if key != "maku path basement" && slot.collectMode != collectModes["drop"] {
 			continue
 		}
 
