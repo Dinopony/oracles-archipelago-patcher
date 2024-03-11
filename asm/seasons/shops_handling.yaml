@@ -126,49 +126,36 @@ seasons:
 
   ### SUBROSIAN MARKET ###############################################################
 
-  # use giveTreasureCustom in the subrosian market when appropriate.
+  # A dictionary with:
+  #  - market item descriptor low address as key
+  #  - flag mask as value
+  09/marketItemFlags: |
+    db db,01
+    db e3,02
+    db ef,04
+    db f3,08
+    db 00
+  # 5th item defaults at value 10
+
+  # Give a randomized item and set the matching flag for the item not to reappear
   09/marketGiveTreasure: |
       push af
-      push bc
+      push hl
       ld a,l
-
-      .testItem1
-      cp a,db
-      jr nz,.testItem2
-      ld b,1
-      jr .setFlag
-
-      .testItem2
-      cp a,e3
-      jr nz,.testItem3
-      ld b,2
-      jr .setFlag
-
-      .testItem3
-      cp a,ef
-      jr nz,.testItem4
-      ld b,4
-      jr .setFlag
-
-      .testItem4
-      cp a,f3
-      jr nz,.testItem5
-      ld b,8
-      jr .setFlag
-
-      .testItem5
-      ld b,10
-      jr .setFlag
-
-      .setFlag
-      ld a,(wBoughtSubrosianItems)
-      or b
-      ld (wBoughtSubrosianItems),a
-      pop bc
+      ld e,a
+      ld hl,marketItemFlags
+      call lookupKey
+      jr c,.found
+      ld a,10
+      .found
+      ld hl,wBoughtSubrosianItems
+      or (hl)
+      ld (hl),a
+      pop hl
       pop af
 
       call giveTreasureCustom
-      
+
       push de
       call saveFile
       pop de
