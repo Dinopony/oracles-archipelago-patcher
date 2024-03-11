@@ -4,6 +4,10 @@ seasons:
     push hl
     push bc
 
+    ld hl,wLinkMaxHealth
+    ldd a,(hl)
+    ld (hl),a
+
     ld e,TREASURE_EMBER_SEEDS
     ld hl,wNumEmberSeeds
     

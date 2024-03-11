@@ -243,6 +243,8 @@ seasons:
     define wWarpTransition2,cc67
     define wLinkObjectIndex,cc48
     define wBoughtSubrosianItems,c642
+    define wLinkMaxHealth,c6a3
+    define wLinkHealth,c6a2
 
     # rom 00
     define multiplyABy4,01c3
