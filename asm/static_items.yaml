@@ -1,39 +1,100 @@
 seasons:
   0a/staticItemsReplacementsLookup_body: |
+    ld a,(wActiveGroup)
+    ld b,a
     ld a,(wActiveRoom)
-    ld b,a
-    ld hl,staticItemsReplacementsTable
-
-    .loop
-    ldi a,(hl)
-    cp a,ff
-    jr z,.notfound
-    cp b
-    jr z,.foundroom
-    inc hl
-    inc hl
-    jr .loop
-
-    .foundroom
-    ldi a,(hl)
-    ld b,a
-    ld a,(hl)
     ld c,a
+    ld e,02
+    ld hl,staticItemsReplacementsTable
+    call searchDoubleKey
+    jr nc,.notFound
+    ldi a,(hl)
+    ld b,a # item id
+    ld a,(hl)
+    ld c,a # item subid
     ret
 
-    .notfound
+    .notFound
     ld bc,0000
     ret
 
+  09/: define misc1_spawnTreasureBCifRoomFlagBit5NotSet,6384
   09/staticItemsReplacementsLookup: |
     ld e,0a
     ld hl,staticItemsReplacementsLookup_body
     call interBankCall
-    ret
+    jp misc1_spawnTreasureBCifRoomFlagBit5NotSet
 
   # staticHeartPiece (0x26381)
-  09/6381/: call staticItemsReplacementsLookup
+  09/6381/: jp staticItemsReplacementsLookup
   # staticGashaSeed (0x26608)
-  09/6608/: call staticItemsReplacementsLookup
+  09/6608/: jp staticItemsReplacementsLookup
   # sidescrollingStaticGashaSeed (0x266aa)
-  09/66aa/: call staticItemsReplacementsLookup
+  09/66aa/: jp staticItemsReplacementsLookup
+
+  ### MAKU TREE MISSABLE GASHA SEEDS ###########################################
+
+  # Remove access to stairs behind Farore on 2 essences (this replaces the function that adds
+  # a sign in front of Bipin & Blossom's house when the game is completed)
+  04/6189/: |
+    ld a,(wEssencesObtained)
+    call getNumSetBits
+    cp a,3
+    ret nc
+    jp removeFaroreStairs
+  04/removeFaroreStairs: |
+    ld hl,cf0c
+    ld (hl),b0
+    ret
+
+  # Remove the original reference to the function above on the exterior of Bipin & Blossom house map
+  04/614e/: db 00
+  # Attach the modified function above to Farore's room by extending the group4 tile changer table
+  04/roomTileChangerCodeGroup4DataExt: |
+    db 61,2e
+    db 78,02
+    db 2e,04
+    db 64,05
+    db 89,06
+    db bb,07
+    db e8,08
+    db 00
+  04/611c/: dw roomTileChangerCodeGroup4DataExt
+  
+  # Remove access to first refill room on 4 essences
+  25/49d8/: db 80,80,80
+  25/49df/: db 64
+  25/49f6/: db 64
+  25/4a02/: db 40
+
+  # Remove access to second refill room on 6 essences
+  25/560a/: db 63
+
+  # Remove 3 essence original item
+  11/6373/: db 4c,02,38,10,ff
+  # Add an item inside the hallway (accessible at 3+ essences) that replaces the item removed above
+  11/hallwayMapObjects: |
+    db f2
+    db 6b,19,58,c8
+    db ff
+  11/611d/: dw hallwayMapObjects
+
+  # Remove 5 essences original item
+  11/63ad/: db 4c,02,68,10,ff
+  # Add an item inside the first refill pool (accessible at 5+ essences) that replaces the item removed above
+  11/refillPool1Objects: |
+    db f2
+    db 6b,19,80,78
+    db f3,76,40 # spawn usual items
+    db ff
+  11/611f/: dw refillPool1Objects
+
+  # Remove 7 essences original item
+  11/6387/: db 4c,02,28,10,4c,03,18,90,ff
+  # Add an item inside the second refill pool (accessible at 7+ essences) that replaces the item removed above
+  11/refillPool2Objects: |
+    db f2
+    db 6b,19,80,78
+    db f3,60,40 # spawn usual items
+    db ff
+  11/6127/: dw refillPool2Objects

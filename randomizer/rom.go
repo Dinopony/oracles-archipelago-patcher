@@ -221,8 +221,8 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
 		var i uint16 = 0
 		for _, key := range STATIC_SLOTS {
-			rom.itemSlots[key].idAddrs = []address{{codeAddr.bank, codeAddr.offset + (i * 3) + 1}}
-			rom.itemSlots[key].subidAddrs = []address{{codeAddr.bank, codeAddr.offset + (i * 3) + 2}}
+			rom.itemSlots[key].idAddrs = []address{{codeAddr.bank, codeAddr.offset + (i * 4) + 2}}
+			rom.itemSlots[key].subidAddrs = []address{{codeAddr.bank, codeAddr.offset + (i * 4) + 3}}
 			i++
 		}
 	} else {

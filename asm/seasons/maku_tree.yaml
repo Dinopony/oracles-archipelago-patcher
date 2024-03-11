@@ -1,5 +1,5 @@
 seasons:
-  09/makuTreeRooms: db 0b,0c,7b,2b,2c,2d,5b,5c,5d,ff
+  09/makuTreeRooms: db 0b,0c,7b,2b,2c,2d,5b,5c,5d,5e,ff
   09/7dc0/checkMakuItemObtained: |
     push de
     push hl

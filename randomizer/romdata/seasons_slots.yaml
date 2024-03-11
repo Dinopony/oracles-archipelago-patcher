@@ -10,11 +10,26 @@ eyeglass lake, across bridge:
 maku tree:
   treasure: Gnarled Key
   room: 0x020b # for zero essences. other rooms are for more
-  morerooms: [0x020c, 0x022b, 0x022c, 0x022d, 0x025b, 0x025c, 0x025d, 0x027b]
+  morerooms: [0x020c, 0x022b, 0x022c, 0x022d, 0x025b, 0x025c, 0x025d, 0x025e, 0x027b]
   ids: [{bank: 0x15, addr: 0x613a}, {bank: 0x09, addr: 0x7e16}]
   subids: [{bank: 0x15, addr: 0x613d}, {bank: 0x09, addr: 0x7e19}]
   collect: maku tree (seasons)
   local: true
+maku tree, 3 essences:
+  treasure: Gasha Seed
+  room: 0x04e9
+  collect: touch
+  maptile: 0xc9
+maku tree, 5 essences:
+  treasure: Gasha Seed
+  room: 0x04ea
+  collect: touch
+  maptile: 0xc9
+maku tree, 7 essences:
+  treasure: Gasha Seed
+  room: 0x04ee
+  collect: touch
+  maptile: 0xc9
 horon village SW chest:
   treasure: Rupees (20)
   room: 0x00f5

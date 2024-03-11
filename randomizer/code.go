@@ -116,13 +116,17 @@ var STATIC_SLOTS = [...]string{
 	"d0 hidden 2d section",
 	"subrosian house",
 	"subrosian 2d cave",
+	"maku tree, 3 essences",
+	"maku tree, 5 essences",
+	"maku tree, 7 essences",
 }
 
 func makeStaticItemsReplacementTable(itemSlots map[string]*itemSlot) string {
 	b := new(strings.Builder)
+
 	for _, key := range STATIC_SLOTS {
 		slot := itemSlots[key]
-		b.Write([]byte{slot.room & 0xff, slot.treasure.id, slot.treasure.subid})
+		b.Write([]byte{slot.group, slot.room, slot.treasure.id, slot.treasure.subid})
 	}
 
 	b.Write([]byte{0xff})
