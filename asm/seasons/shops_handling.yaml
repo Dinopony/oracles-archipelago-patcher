@@ -104,8 +104,9 @@ seasons:
 
   ### ADVANCE SHOP ###################################################################
 
-  # Replace this by 4 nops (00 00 00 00) to open advance shop
-  05/2195/advanceShopDoor: ''
+  # Make advance shop always closed, even on GBA
+  # Replace this by 4 nops (00 00 00 00) to make it always open
+  05/2195/advanceShopDoor: ret
 
   # Change the initial text the game uses for Advance Shop 1 because... it uses a generic one
   # instead of the specific one that exists for it inside textbanks?!
