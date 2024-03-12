@@ -105,10 +105,11 @@ type routeInfo struct {
 	shopPrices        map[string]int
 
 	// Seasons-specific
-	seasons          map[string]byte
-	portals          map[string]string
-	foolsOreDamage   int
-	pedestalSequence [8]byte
+	seasons            map[string]byte
+	portals            map[string]string
+	foolsOreDamage     int
+	pedestalSequence   [8]byte
+	samasaGateSequence []int
 }
 
 func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
@@ -174,6 +175,26 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
 			case "left":
 				ri.pedestalSequence[i*2+1] = DIRECTION_LEFT
 			}
+		}
+	}
+
+	// Set Samasa Gate button sequence
+	ri.samasaGateSequence = []int{2, 2, 1, 0, 0, 3, 3, 3}
+	if str, ok := data.settings["samasa_gate_sequence"]; ok {
+		ri.samasaGateSequence = []int{}
+		samasaGateSequence := strings.Split(str, " ")
+		if len(samasaGateSequence) == 0 {
+			return fmt.Errorf("samasa gate sequence is invalid")
+		}
+		for _, numStr := range samasaGateSequence {
+			num, err := strconv.Atoi(numStr)
+			if err != nil {
+				return err
+			}
+			if num < 0 || num > 3 {
+				return fmt.Errorf("samasa gate sequence is invalid")
+			}
+			ri.samasaGateSequence = append(ri.samasaGateSequence, num)
 		}
 	}
 

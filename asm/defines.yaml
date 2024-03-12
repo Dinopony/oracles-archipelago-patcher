@@ -137,6 +137,11 @@ common:
     define movedown,ee
     define delay1frame,f0
     define delay30frames,f6
+    define setdisabledobjectsto91,b8
+    define showtextlowindex,98
+    define writeobjectbyte,8e
+    define setspeed,8b
+    define moveup,ec
 
     # hram
     define hGameboyType,96

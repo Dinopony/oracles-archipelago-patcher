@@ -173,6 +173,7 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 // changes the contents of loaded ROM bytes in place. returns a checksum of the
 // result or an error.
 func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeonsShuffled bool) ([]byte, error) {
+	var err error
 
 	if rom.game == GAME_SEASONS {
 		northHoronSeason := rom.codeMutables["northHoronSeason"].new[0]
@@ -182,6 +183,12 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		rom.codeMutables["seasonAfterPirateCutscene"].new = []byte{westernCoastSeason}
 
 		rom.setTreasureMapData()
+
+		rom.codeMutables["newShowSamasaCombination"].new, err = makeSamasaGateSequenceScript(ri.samasaGateSequence)
+		if err != nil {
+			return nil, err
+		}
+		rom.codeMutables["newSamasaCombinationLengthMinusOne"].new[0] = byte(len(ri.samasaGateSequence) - 1)
 
 		// explicitly set these addresses and IDs after their functions
 		codeAddr := rom.codeMutables["setStarOreIds"].addr

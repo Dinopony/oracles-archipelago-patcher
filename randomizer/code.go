@@ -133,6 +133,74 @@ func makeStaticItemsReplacementTable(itemSlots map[string]*itemSlot) string {
 	return b.String()
 }
 
+func makeSamasaCombinationTable(samasaCombination []int) string {
+	b := new(strings.Builder)
+	for _, val := range samasaCombination {
+		b.Write([]byte{byte(val)})
+	}
+	return b.String()
+}
+
+func makeSamasaGateSequenceScript(samasaSequence []int) ([]byte, error) {
+	if len(samasaSequence) == 0 {
+		return []byte{}, nil
+	}
+
+	const DELAY_6 = 0xf6
+	const CALL_SCRIPT = 0xc0
+	const MOVE_DOWN = 0xee
+	const MOVE_LEFT = 0xef
+	const MOVE_RIGHT = 0xed
+	const WRITE_OBJECT_BYTE = 0x8e
+	const SHOW_TEXT_LOW_INDEX = 0x98
+	const ENABLE_ALL_OBJECTS = 0xb9
+
+	bytes := make([]byte, 0, len(samasaSequence)*10)
+	currentPosition := 1
+
+	// Add a fake last press on button 1 to make the pirate go back to its
+	// original position
+	samasaSequence = append(samasaSequence, 1)
+
+	for _, buttonToPress := range samasaSequence {
+		// If current button is at a different position than the current one,
+		// make the pirate move
+		if buttonToPress != currentPosition {
+			if buttonToPress < currentPosition {
+				distanceToMove := 0x8*(currentPosition-buttonToPress) + 1
+				bytes = append(bytes, MOVE_LEFT, byte(distanceToMove))
+			} else {
+				distanceToMove := 0x8*(buttonToPress-currentPosition) + 1
+				bytes = append(bytes, MOVE_RIGHT, byte(distanceToMove))
+			}
+
+			currentPosition = buttonToPress
+		}
+
+		// Close the cupboard to express a button press on the gate by calling
+		// the "closeOpenCupboard" subscript
+		bytes = append(bytes, CALL_SCRIPT, 0x59, 0x5e)
+	}
+
+	// Remove the "cupboard press" from last entry, since it was only meant
+	// to make the pirate go back to its starting position
+	bytes = bytes[:len(bytes)-3]
+
+	// Add some termination to the script
+	bytes = append(bytes, MOVE_DOWN, 0x15)
+	bytes = append(bytes, WRITE_OBJECT_BYTE, 0x7c, 0x00)
+	bytes = append(bytes, DELAY_6)
+	bytes = append(bytes, SHOW_TEXT_LOW_INDEX, 0x0d)
+	bytes = append(bytes, ENABLE_ALL_OBJECTS)
+	bytes = append(bytes, 0x5e, 0x4b) // jump back to script start
+
+	if len(bytes) >= 0xF6 {
+		return nil, fmt.Errorf("Samasa gate sequence is too long")
+	}
+
+	return bytes, nil
+}
+
 // returns a byte table (group, room, id, subid) entries for randomized small
 // key drops (and other falling items, but those entries won't be used).
 func makeRoomTreasureTable(game int, itemSlots map[string]*itemSlot) string {
@@ -453,7 +521,7 @@ func loadShopNames(game string) map[string]string {
 
 // set up all the pre-randomization asm changes, and track the state so that
 // the randomization changes can be applied later.
-func (rom *romState) initBanks() {
+func (rom *romState) initBanks(ri *routeInfo) {
 	rom.codeMutables = make(map[string]*mutableRange)
 	rom.bankEnds = loadBankEnds(gameNames[rom.game])
 	asm, err := newAssembler()
@@ -473,6 +541,8 @@ func (rom *romState) initBanks() {
 	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets", string(make([]byte, numOwlIds*2)))
 
 	rom.replaceRaw(address{0x0a, 0}, "staticItemsReplacementsTable", makeStaticItemsReplacementTable(rom.itemSlots))
+
+	rom.replaceRaw(address{0x0a, 0}, "newSamasaCombination", makeSamasaCombinationTable(ri.samasaGateSequence))
 
 	// load all asm files in the asm/ directory.
 	rom.applyAsmFiles()
