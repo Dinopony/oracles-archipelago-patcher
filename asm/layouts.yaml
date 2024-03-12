@@ -86,26 +86,38 @@ seasons:
   # data for applyAllTileSubstitutions: group,room,flags,yx,tile
   04/tileSubTable: |
       db 00,01,01,52,04 # permanently remove flower outside D6 when cut
-      db 00,16,01,18,0f # add walkable tile outside temple remains door
-      db 00,16,01,17,64 # ^ and replace the rest of the tree with rocks
-      db 00,16,01,27,64 # ^
-      db 00,16,01,28,70 # ^
+
       db 00,25,00,32,3a # add ledge down from temple remains lower portal
       db 00,25,00,33,cf # ^
       db 00,25,00,34,4b # ^
-      db 00,5c,00,64,48 # extend moblin keep railing as chokepoint for warning
-      db 00,5c,00,74,53 # cont.
+
       db 00,9a,00,14,12 # remove rock across pit blocking exit from D5
       db 00,8a,00,66,64 # ^ but add rock at bottom of cliff to block ricky
+      
       db 00,9a,00,34,04 # remove bush next to rosa portal
       db 00,b0,00,21,13 # remove spool swamp pits to prevent winter softlock
       db 00,b0,00,51,13 # cont.
+
+      db 00,16,01,18,0f # add walkable tile outside temple remains door
+      db 00,16,01,17,64 # ^ and replace the rest of the tree with rocks
+      db 00,16,01,27,64 # ^
+#     db 00,16,01,28,65 # ^
+
+#     db 00,5c,00,64,48 # extend moblin keep railing as chokepoint for warning
+#     db 00,5c,00,74,53 # cont.
   04/d2AltEntranceTileSubs: |
       # these are enabled only if entrances are randomized
       db fe,8d,00,18,04 # remove left stairs
       db fe,8e,00,12,04 # remove right stairs
   04/endTileSubTable: |
       db ff
+
+  # Change temple remains door upper-left tree tile per-layout because the generic tile replacement
+  # was causing a glitched palette in winter
+  22/134e/: db 70 # Spring
+  23/102a/: db 70 # Summer
+  24/0e08/: db 70 # Autumn
+  25/0b22/: db 65 # Winter
 
   # replaces some tiles in shallow spool swamp in spring, in addition to the
   # regular tile sub routine.
