@@ -185,6 +185,17 @@ seasons:
   # Change the number of essences mentioned in text
   1f/737b/treehouseOldManText: db 68,61,73,20,35,20,02,35,2e,00
 
+  # Set room flag 0x20 when knocking off tree seeds
+  10/extendedKnockOffTree: |
+    push hl
+    call getThisRoomFlags
+    or a,20
+    ld (hl),a
+    pop hl
+    ld bc,fec0 # original instruction replaced by injected call
+    ret
+  10/4b29/: call extendedKnockOffTree
+
 ages:
   # set treasure ID 07 (rod of seasons) when buying the 150 rupee shop item, so
   # that the shop can check this specific ID.
