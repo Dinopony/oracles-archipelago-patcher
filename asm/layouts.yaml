@@ -50,38 +50,12 @@ common:
 
 # bank 21 = spring, 22 = summer, 23 = autumn, 24 = winter.
 seasons:
-  # override room layout with bank 02's winterLayout when appropriate.
-  00/loadWinterLayout: |
-      push de
-      ld a,(wRoomStateModifier)
-      cp a,03 # winter
-      jr nz,.done
-      push bc
-      ld bc,9d00
-      call compareRoom
-      pop bc
-      jr nz,.done
-      ld a,02 # bank
-      ld (ff00+8c),a
-      ld hl,winterLayout
-      .done
-      ld a,(ff00+8c)
-      jp 39e2 # can't just ret, idr why
-  00/39df/: jp loadWinterLayout
-
-  # custom room layout for the problematic woods of winter screen in winter.
-  # the code here is one 8-tile compression block per line.
-  02/winterLayout: |
-      db 55,80,81,81,81,81
-      db 7c,16,80,82,17
-      db f0,1b,c4,c4,70,72
-      db 00,01,0d,17,c4,80,81,70,71
-      db 60,04,70,71,1a,1b,1c,f7
-      db 05,80,81,81,70,71,9e,9e
-      db 1c,16,04,15,17,80,81
-      db 30,1b,99,9b,d9,1a,01,19
-      db 00,70,71,15,16,17,f7,7a,8c
-      db 11,18,19,80,81,01,19,70
+  # Remove most snow in Woods of Winter middle room
+  25/2c68/: db 04
+  25/2c70/: db 04
+  25/2c7e/: db 04
+  25/2c71/: db 9e,8b
+  25/2c74/: db c0,04,80,81,99,9b,70,71
 
   # data for applyAllTileSubstitutions: group,room,flags,yx,tile
   04/tileSubTable: |
