@@ -101,9 +101,6 @@ func getChecks(usedItems, usedSlots *list.List) map[string]string {
 // mutates the rom data in-place based on the given route. this doesn't write
 // the file.
 func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
-	rom.setWarpToStart(ri.warpToStart)
-	rom.setQuickFlute(ri.quickFlute)
-
 	// place selected treasures in slots
 	checks := getChecks(ri.usedItems, ri.usedSlots)
 	for slot, item := range checks {

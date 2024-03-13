@@ -250,6 +250,7 @@ seasons:
     define wBoughtSubrosianItems,c642
     define wLinkMaxHealth,c6a3
     define wLinkHealth,c6a2
+    define wDisabledObjects,cca4
 
     # rom 00
     define multiplyABy4,01c3

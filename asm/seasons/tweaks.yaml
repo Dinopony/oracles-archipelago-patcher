@@ -8,6 +8,5 @@ seasons:
   02/1e56/lostWoodsItemSequence4: ''
   1f/56d/lostWoodsPhonographText: ''
 
-  # If replaced by (18,30), jump to end of script instead of spawning music notes
-  06/4cd1/quickFluteJump: db 2e,21
-  
+  # when included, removes the event where the subrosians steal your feather.
+  11/6f8c/: db ff

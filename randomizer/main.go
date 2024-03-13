@@ -189,6 +189,7 @@ func Main() {
 	rom := newRomState(b, game)
 	rom.itemSlots = rom.loadSlots()
 	rom.initBanks(ri)
+	rom.applyAsmFiles(ri)
 
 	fmt.Println("Patching '" + romFilename + "'...")
 

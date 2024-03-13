@@ -21,7 +21,7 @@ seasons:
     ld a,0a
     call checkMakuItemObtained
     jr nz,.gnarledObtained
-    ld a,0
+    xor a
     jr .setStage
 
     .gnarledObtained

@@ -344,8 +344,51 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 }
 
 // applies the labels and EOB declarations in the given asm data files.
-func (rom *romState) applyAsmFiles() {
-	filePaths := []string{}
+func (rom *romState) applyAsmFiles(ri *routeInfo) {
+	asmPaths := []string{
+		"animals",
+		"bossitems",
+		"collect",
+		"cutscenes",
+		"defines",
+		"font",
+		"gfx",
+		"itemevents",
+		"keydrops",
+		"layouts",
+		"linked",
+		"misc",
+		"multi",
+		"newgame",
+		"npc_items",
+		"old_men",
+		"options",
+		"progressives",
+		"rings",
+		"static_items",
+		"text",
+		"trade_items",
+		"triggers",
+		"util",
+		"vars",
+		"warp_to_start",
+		"seasons/impa_refill",
+		"seasons/maku_tree",
+		"seasons/random_ring_digging_spots",
+		"seasons/samasa_combination",
+		"seasons/seasons_handling",
+		"seasons/shops_handling",
+		"seasons/subrosia_seaside",
+		"seasons/subscreen_1_improvement",
+		"seasons/tweaks",
+	}
+
+	if ri.warpToStart {
+		asmPaths = append(asmPaths, "seasons/warp_to_start")
+	}
+	if ri.quickFlute {
+		asmPaths = append(asmPaths, "seasons/quick_flute")
+	}
 
 	exe, err := os.Executable()
 	if err != nil {
@@ -353,46 +396,16 @@ func (rom *romState) applyAsmFiles() {
 	}
 	dirName := filepath.Dir(exe)
 
+	asmFiles := make([]*asmData, len(asmPaths))
+
 	asmBaseDir := filepath.Join(dirName, "asm")
-	infos, err := os.ReadDir(asmBaseDir)
-	if err != nil {
-		panic(err)
-	}
-	for _, info := range infos {
-		filePaths = append(filePaths, filepath.Join(asmBaseDir, info.Name()))
-	}
+	for i, path := range asmPaths {
+		fullPath := filepath.Join(asmBaseDir, path) + ".yaml"
 
-	seasonsDir := filepath.Join(asmBaseDir, "seasons")
-	infosSeasons, err := os.ReadDir(seasonsDir)
-	if err != nil {
-		panic(err)
-	}
-	for _, info := range infosSeasons {
-		filePaths = append(filePaths, filepath.Join(seasonsDir, info.Name()))
-	}
-
-	agesDir := filepath.Join(asmBaseDir, "ages")
-	infosAges, err := os.ReadDir(agesDir)
-	if err != nil {
-		panic(err)
-	}
-	for _, info := range infosAges {
-		filePaths = append(filePaths, filepath.Join(agesDir, info.Name()))
-	}
-
-	asmFiles := make([]*asmData, len(filePaths))
-
-	// standard files are embedded
-	for i, absPath := range filePaths {
 		asmFiles[i] = new(asmData)
-		asmFiles[i].filename = absPath
+		asmFiles[i].filename = fullPath
 
-		// readme etc
-		if !strings.HasSuffix(absPath, ".yaml") {
-			continue
-		}
-
-		b, err := os.ReadFile(absPath)
+		b, err := os.ReadFile(fullPath)
 		if err != nil {
 			panic(err)
 		}
@@ -543,7 +556,4 @@ func (rom *romState) initBanks(ri *routeInfo) {
 	rom.replaceRaw(address{0x0a, 0}, "staticItemsReplacementsTable", makeStaticItemsReplacementTable(rom.itemSlots))
 
 	rom.replaceRaw(address{0x0a, 0}, "newSamasaCombination", makeSamasaCombinationTable(ri.samasaGateSequence))
-
-	// load all asm files in the asm/ directory.
-	rom.applyAsmFiles()
 }
