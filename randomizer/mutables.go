@@ -1,7 +1,6 @@
 package randomizer
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -9,9 +8,11 @@ import (
 )
 
 // an instance of ROM data that can be changed by the randomizer.
+/*
 type mutable interface {
 	mutate([]byte) // change ROM bytes
 }
+*/
 
 // a length of mutable bytes starting at a given address.
 type mutableRange struct {
@@ -38,12 +39,6 @@ func (rom *romState) setHeartBeepInterval(heartBeepInterval int) {
 	case HEART_BEEP_DISABLED:
 		mutable.new = []byte{0x00, 0xc9} // c9 => Unconditional return
 	}
-}
-
-// sets the damage dealt by fool's ore in seasons
-func (rom *romState) setFoolsOreDamage(foolsOreDamage int) {
-	foolsOreDamage *= -1
-	rom.codeMutables["foolsOreDamage"].new = []byte{byte(foolsOreDamage)}
 }
 
 // sets the amount of required essences to get maku seed
@@ -182,24 +177,11 @@ func (rom *romState) setLostWoodsPedestalSequence(sequence [8]byte) {
 	rom.codeMutables["lostWoodsPhonographText"].new = []byte(builder.String())
 }
 
-// sets the natzu region based on a companion number 1 to 3.
-func (rom *romState) setAnimal(companion int) {
-	rom.codeMutables["romAnimalRegion"].new =
-		[]byte{byte(companion + 0x0a)}
-}
-
-// key = area name (as in asm/vars.yaml), id = season index (spring -> winter).
-func (rom *romState) setSeason(key string, id byte) {
-	rom.codeMutables[key].new[0] = id
-}
-
 // get a collated map of all mutables.
+/*
 func (rom *romState) getAllMutables() map[string]mutable {
 	allMutables := make(map[string]mutable)
 	for k, v := range rom.itemSlots {
-		if v.treasure == nil {
-			panic(fmt.Sprintf("treasure for %s is nil", k))
-		}
 		addMutOrPanic(allMutables, k, v)
 	}
 	for k, v := range rom.treasures {
@@ -219,6 +201,7 @@ func addMutOrPanic(m map[string]mutable, k string, v mutable) {
 	}
 	m[k] = v
 }
+*/
 
 // returns the name of a mutable that covers the given address, or an empty
 // string if none is found.

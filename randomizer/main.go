@@ -188,13 +188,16 @@ func Main() {
 
 	rom := newRomState(b, game)
 	rom.itemSlots = rom.loadSlots()
-	rom.initBanks(ri)
-	rom.applyAsmFiles(ri)
 
 	fmt.Println("Patching '" + romFilename + "'...")
 
 	// write roms
-	sum, err := rom.setData(ri)
+	rom.setData(ri)
+
+	rom.initBanks(ri)
+	rom.applyAsmFiles(ri)
+
+	sum, err := rom.mutate(ri)
 	if err != nil {
 		fatal(err)
 		return

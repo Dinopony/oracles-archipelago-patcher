@@ -104,9 +104,12 @@ seasons:
 
   ### ADVANCE SHOP ###################################################################
 
-  # Make advance shop always closed, even on GBA
-  # Replace this by 4 nops (00 00 00 00) to make it always open
-  05/2195/advanceShopDoor: ret
+  # If "open_advance_shop" setting is set, make advance shop always open.
+  # Otherwise, make it always closed, even on GBA
+  05/2195/advanceShopDoor: |
+    ld a,option.openAdvanceShop
+    or a
+    ret z
 
   # Change the initial text the game uses for Advance Shop 1 because... it uses a generic one
   # instead of the specific one that exists for it inside textbanks?!

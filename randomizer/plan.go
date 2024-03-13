@@ -1,7 +1,6 @@
 package randomizer
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strconv"
@@ -99,8 +98,7 @@ type routeInfo struct {
 	archipelagoSlotName string
 
 	entrances         map[string]string
-	usedItems         *list.List
-	usedSlots         *list.List
+	locationContents  map[string]string
 	oldManRupeeValues map[string]int
 	shopPrices        map[string]int
 
@@ -277,12 +275,12 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 	ri := &routeInfo{
 		game:              GAME_UNDEFINED,
 		entrances:         make(map[string]string),
-		usedItems:         list.New(),
-		usedSlots:         list.New(),
+		locationContents:  make(map[string]string),
 		oldManRupeeValues: make(map[string]int),
 		shopPrices:        make(map[string]int),
 	}
 
+	// Determine game
 	if data.settings["game"] == "seasons" {
 		ri.game = GAME_SEASONS
 	} else if data.settings["game"] == "ages" {
@@ -291,6 +289,7 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 		return nil, fmt.Errorf("invalid game")
 	}
 
+	// Test apworld version compatibility
 	var ok bool
 	if ri.version, ok = data.settings["version"]; !ok {
 		return nil, fmt.Errorf("invalid version")
@@ -299,6 +298,7 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 		return nil, fmt.Errorf("invalid version (%s instead of %s)", ri.version, VERSION)
 	}
 
+	// Settings
 	err := processSettings(data, ri)
 	if err != nil {
 		return nil, err
@@ -310,8 +310,7 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 			return nil, fmt.Errorf("%s doesn't fit in %s", item, slot)
 		}
 
-		ri.usedItems.PushBack(item)
-		ri.usedSlots.PushBack(slot)
+		ri.locationContents[slot] = item
 	}
 
 	// Dungeon entrances

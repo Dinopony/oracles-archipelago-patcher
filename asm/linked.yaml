@@ -2,73 +2,67 @@
 
 seasons:
   # use same treasure map data for linked and unlinked games
-  02/664e/: jr 02
+  # 02/664e/: jr 02
 
   # start linked games without sword
-  07/41ac/: db a2,10,92,04
+  # 07/41ac/: db a2,10,92,04
 
   # in linked, start with the item that *would* be in the d0 sword chest
   # instead of the sword.
-  0a/giveLinkedStartItem: |
-      ld a,(7ffe)
-      ld c,a
-      ld a,(7ffd)
-      ld (c682),a
-      call giveTreasureCustomSilent
-      xor a
-      ld (wInventoryB),a
-      ret
-
-  # remove interactions from jewel caves so that they act as normal chests,
-  # meaning no linked changes. this also removes the vire event.
-  11/6ca2/: db ff # swamp
-  11/6ca8/: db ff # lake
-  11/6d0f/: db ff # woods
+  # 0a/giveLinkedStartItem: |
+  #     ld a,(7ffe)
+  #     ld c,a
+  #     ld a,(7ffd)
+  #     ld (c682),a
+  #     call giveTreasureCustomSilent
+  #     xor a
+  #     ld (wInventoryB),a
+  #     ret
 
   # allow screen transitions away from linked great moblin event, since seeds
   # could be uncompleteable without a way to kill the moblins.
-  14/5247/: db writememory; dw wDisableTransitions; db 00
+  # 14/5247/: db writememory; dw wDisableTransitions; db 00
 
   # give shield upgrade secret instead of smithy check when appropriate (everytime?)
   # Also set a unique room flag to recognize the check was obtained
-  15/giveSmithySecret: |
-      push hl
-      ld hl,c897
-      set 6,(hl)
-      pop hl
-      ld de,d00b
-      push bc
-      push hl
-      ld hl,d458 # script ptr
-      ldi a,(hl)
-      ld h,(hl)
-      ld l,a
-      ld bc,762a
-      call compareHlToBc
-      pop hl
-      pop bc
-      ret nz
-      ld (hl),01
-      dec hl
-      ld (hl),01
-      inc hl
-      ret
-  15/62c2/: call giveSmithySecret
+  # 15/giveSmithySecret: |
+  #     push hl
+  #     ld hl,c897
+  #     set 6,(hl)
+  #     pop hl
+  #     ld de,d00b
+  #     push bc
+  #     push hl
+  #     ld hl,d458 # script ptr
+  #     ldi a,(hl)
+  #     ld h,(hl)
+  #     ld l,a
+  #     ld bc,762a
+  #     call compareHlToBc
+  #     pop hl
+  #     pop bc
+  #     ret nz
+  #     ld (hl),01
+  #     dec hl
+  #     ld (hl),01
+  #     inc hl
+  #     ret
+  # 15/62c2/: call giveSmithySecret
 
   # don't play item fanfare for the item given at the start of a linked game.
   # this doesn't actually check for linked, just for the room.
-  3f/playSoundExceptForLinkedStartItem: |
-      ld e,a
-      push bc
-      push de
-      ld bc,a700
-      call compareRoom
-      pop de
-      pop bc
-      ld a,e
-      ret z
-      jp playSound
-  3f/4535/: call playSoundExceptForLinkedStartItem
+  # 3f/playSoundExceptForLinkedStartItem: |
+  #     ld e,a
+  #     push bc
+  #     push de
+  #     ld bc,a700
+  #     call compareRoom
+  #     pop de
+  #     pop bc
+  #     ld a,e
+  #     ret z
+  #     jp playSound
+  # 3f/4535/: call playSoundExceptForLinkedStartItem
 
 ages:
   # start linked games with shield instead of sword.

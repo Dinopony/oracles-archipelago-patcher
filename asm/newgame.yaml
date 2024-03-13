@@ -35,7 +35,7 @@ seasons:
       pop hl
 
       # animal vars
-      ld a,(romAnimalRegion)
+      ld a,option.animalCompanion
       ld (wAnimalRegion),a
       ld a,ff
       ld (wAnimalTutorialFlags),a
@@ -118,7 +118,7 @@ ages:
       .unlinked
 
       # animal vars
-      ld a,(romAnimalRegion)
+      ld a,option.animalCompanion
       ld (wAnimalRegion),a
       cp a,0c
       jr nz,.notDimitri

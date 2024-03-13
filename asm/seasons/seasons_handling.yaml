@@ -3,10 +3,10 @@ seasons:
   # An arrival pos of "FF" means it isn't checked
   # A season of "FF" means nothing changes
   04/specificWarpSeasons: |
-    db 03,ab,44,ff # subrosia to horon
-    db 03,a8,14,SEASON_AUTUMN # subrosia to temple remains
-    db 85,12,ff,SEASON_SUMMER # sunken city to woods of winter
-    db 80,a7,ff,SEASON_WINTER # warp to start (holodrum)
+    db 03,ab,44,defaultSeason.horonVillage # subrosia to horon
+    db 03,a8,14,defaultSeason.templeRemains # subrosia to temple remains
+    db 85,12,ff,defaultSeason.woodsOfWinter # sunken city to woods of winter
+    db 80,a7,ff,defaultSeason.northHoron # warp to start (holodrum)
     db ff
 
   # This function aims to fix season handling for Subrosia -> interior map warps
@@ -36,8 +36,8 @@ seasons:
 
     .noPosCheck
     ld a,(hl)
-    cp a,ff
-    jr z,.done
+    cp a,4 # if season is >= 4, it's an invalid placeholder season -> don't change anything
+    jr c,.done
     ld (wRoomStateModifier),a
 
     .done
@@ -47,9 +47,8 @@ seasons:
   04/465f/: jp checkSpecificWarps
 
   # Change setHoronVillageSeason to remove the random component if fixedHoronSeason != 0xff
-  00/fixedHoronSeason: db ff
   02/3e2c/: |
-    ld a,(fixedHoronSeason)
+    ld a,defaultSeason.horonVillage
     cp a,ff
     nop
     nop

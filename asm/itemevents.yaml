@@ -57,7 +57,7 @@ seasons:
   # mt. cucco platform cave item is normally created using ring-specific code.
   # values are replaced at randomization.
   09/createMtCuccoItem: |
-      ld bc,0000
+      ld bc,slot.mtCuccoPlatformCave.full
       call createTreasure
       jp 6421
   09/641a/: jp createMtCuccoItem
@@ -79,7 +79,7 @@ seasons:
   # randomization. also - remove master's plaque from inventory to prevent
   # confusion.
   0b/script_diverGiveItem: |
-      db giveitem; db TREASURE_FLIPPERS; db 00
+      db giveitem; db slot.masterDiversReward.id; db slot.masterDiversReward.subid
       db orroomflag; db 80
       db ormemory; dw c694; db 02 # in wObtainedTreasureFlags
       db asm15; dw loseMastersPlaque
@@ -97,9 +97,9 @@ seasons:
   # randomization.
   15/setHardOreIds: |
       inc l
-      ld (hl),52
+      ld (hl),slot.greatFurnace.id
       inc l
-      ld (hl),00
+      ld (hl),slot.greatFurnace.subid
       ret
   15/5b83/: call setHardOreIds
 
@@ -172,18 +172,21 @@ seasons:
     ret
   15/6adc/: jp giveGoldenBeastsReward
   # Change the golden beasts old man requirement (both checked value and text)
-  15/6acf/goldenBeastsRequirement: db 04
+  15/6acf/goldenBeastsRequirement: db option.goldenBeastsRequirement
   # Change the "jr z" into a "jr nc" to allow having more beasts killed than needed
   15/6ad2/: db 30
   # Change not yet completed text value
-  1f/3247/goldenBeastsText: db 34,20,05,8e,20
+  1f/3247/goldenBeastsText: db option.goldenBeastsRequirementTextDigit,20,05,8e,20
   # Change completion text value
-  1f/3295/goldenBeastsRewardText: db 34,20,05,8e,20
+  1f/3295/goldenBeastsRewardText: db option.goldenBeastsRequirementTextDigit,20,05,8e,20
 
   # Change the essence requirement for treehouse old man
-  0a/4f8b/treehouseOldManRequirement: db 05
+  0a/4f8b/: db option.treehouseOldManRequirement
   # Change the number of essences mentioned in text
-  1f/737b/treehouseOldManText: db 68,61,73,20,35,20,02,35,2e,00
+  1f/737b/treehouseOldManText: |
+    db 68,61,73,20
+    db option.treehouseOldManRequirementTextDigit
+    db 20,02,35,2e,00
 
   # Set room flag 0x20 when knocking off tree seeds
   10/extendedKnockOffTree: |
@@ -195,6 +198,12 @@ seasons:
     ld bc,fec0 # original instruction replaced by injected call
     ret
   10/4b29/: call extendedKnockOffTree
+
+  # remove interactions from jewel caves so that they act as normal chests,
+  # meaning no linked changes. this also removes the vire event.
+  11/6ca2/: db ff # swamp
+  11/6ca8/: db ff # lake
+  11/6d0f/: db ff # woods
 
 ages:
   # set treasure ID 07 (rod of seasons) when buying the 150 rupee shop item, so

@@ -91,6 +91,10 @@ func (asm *assembler) decompile(s string) (string, error) {
 */
 
 // add a constant def as if `define symbol,string` were run.
-func (asm *assembler) define(symbol string, value uint16) {
+func (asm *assembler) defineWord(symbol string, value uint16) {
 	asm.defs.RawSetString(symbol, lua.LNumber(value))
+}
+
+func (asm *assembler) defineByte(symbol string, value uint8) {
+	asm.defs.RawSetString(symbol, lua.LNumber(uint16(value)))
 }

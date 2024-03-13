@@ -1,5 +1,5 @@
 seasons:
-  08/23cb/foolsOreDamage: db f4
+  08/23cb/foolsOreDamage: db option.foolsOreDamage
   03/1116/heartBeepInterval: db 3f
 
   02/1e3e/lostWoodsItemSequence1: ''

@@ -1,10 +1,4 @@
 seasons:
-  14/subrosianWildsDiggingSpotItem: db TREASURE_GASHA_SEED
-  14/subrosianWildsDiggingSpotItemSubid: db 00
-  
-  14/vasuSignDiggingSpotItem: db TREASURE_GASHA_SEED
-  14/vasuSignDiggingSpotItemSubid: db 00
-
   14/handleSubrosianWildsDiggingSpot: |
     call getFreeInteractionSlot
     ret nz
@@ -15,18 +9,18 @@ seasons:
     jr z,.spool
 
     .wilds
-    ld a,(subrosianWildsDiggingSpotItem)
+    ld a,slot.subrosianWildsDiggingSpot.id
     ld (hl),a
     inc l
-    ld a,(subrosianWildsDiggingSpotItemSubid)
+    ld a,slot.subrosianWildsDiggingSpot.subid
     ld (hl),a
     jr .end
 
     .spool
-    ld a,(vasuSignDiggingSpotItem)
+    ld a,slot.spoolSwampDiggingSpot.id
     ld (hl),a
     inc l
-    ld a,(vasuSignDiggingSpotItemSubid)
+    ld a,slot.spoolSwampDiggingSpot.subid
     ld (hl),a
 
     .end

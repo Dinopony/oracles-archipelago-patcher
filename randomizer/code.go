@@ -62,7 +62,7 @@ func (rom *romState) replaceRaw(addr address, label, data string) string {
 		addr: addr,
 		new:  []byte(data),
 	}
-	rom.assembler.define(label, addr.offset)
+	rom.assembler.defineWord(label, addr.offset)
 
 	return label
 }
@@ -98,35 +98,6 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 		if _, err := b.Write([]byte{0x05, 0x2c, collectModes["chest"], byte(player)}); err != nil {
 			panic(err)
 		}
-	}
-
-	b.Write([]byte{0xff})
-	return b.String()
-}
-
-var STATIC_SLOTS = [...]string{
-	"horon heart piece",
-	"woods of winter heart piece",
-	"mt. cucco heart piece",
-	"windmill heart piece",
-	"graveyard heart piece",
-	"spool swamp heart piece",
-	"temple remains heart piece",
-	"mayor's house secret room",
-	"d0 hidden 2d section",
-	"subrosian house",
-	"subrosian 2d cave",
-	"maku tree, 3 essences",
-	"maku tree, 5 essences",
-	"maku tree, 7 essences",
-}
-
-func makeStaticItemsReplacementTable(itemSlots map[string]*itemSlot) string {
-	b := new(strings.Builder)
-
-	for _, key := range STATIC_SLOTS {
-		slot := itemSlots[key]
-		b.Write([]byte{slot.group, slot.room, slot.treasure.id, slot.treasure.subid})
 	}
 
 	b.Write([]byte{0xff})
@@ -195,7 +166,7 @@ func makeSamasaGateSequenceScript(samasaSequence []int) ([]byte, error) {
 	bytes = append(bytes, 0x5e, 0x4b) // jump back to script start
 
 	if len(bytes) >= 0xF6 {
-		return nil, fmt.Errorf("Samasa gate sequence is too long")
+		return nil, fmt.Errorf("samasa gate sequence is too long")
 	}
 
 	return bytes, nil
@@ -203,7 +174,7 @@ func makeSamasaGateSequenceScript(samasaSequence []int) ([]byte, error) {
 
 // returns a byte table (group, room, id, subid) entries for randomized small
 // key drops (and other falling items, but those entries won't be used).
-func makeRoomTreasureTable(game int, itemSlots map[string]*itemSlot) string {
+func makeRoomTreasureTable(itemSlots map[string]*itemSlot) string {
 	b := new(strings.Builder)
 
 	for _, key := range orderedKeys(itemSlots) {
@@ -282,7 +253,7 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 			k, v := item.Key.(string), item.Value.(string)
 			addr, label := parseMetalabel(k)
 			if label != "" {
-				rom.assembler.define(label, 0)
+				rom.assembler.defineWord(label, 0)
 			}
 			if addr.offset == 0 {
 				allEobThings = append(allEobThings,
@@ -314,7 +285,7 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 		for _, item := range slice {
 			addr, label := parseMetalabel(item.Key.(string))
 			if addr.offset != 0 && label != "" {
-				rom.assembler.define(label, addr.offset)
+				rom.assembler.defineWord(label, addr.offset)
 			}
 		}
 	}
@@ -346,11 +317,13 @@ func (rom *romState) applyAsmData(asmFiles []*asmData) []string {
 // applies the labels and EOB declarations in the given asm data files.
 func (rom *romState) applyAsmFiles(ri *routeInfo) {
 	asmPaths := []string{
+		"defines",
+		"util",
+		"vars",
 		"animals",
 		"bossitems",
 		"collect",
 		"cutscenes",
-		"defines",
 		"font",
 		"gfx",
 		"itemevents",
@@ -369,8 +342,6 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"text",
 		"trade_items",
 		"triggers",
-		"util",
-		"vars",
 		"warp_to_start",
 		"seasons/impa_refill",
 		"seasons/maku_tree",
@@ -530,30 +501,4 @@ func loadShopNames(game string) map[string]string {
 	}
 
 	return m
-}
-
-// set up all the pre-randomization asm changes, and track the state so that
-// the randomization changes can be applied later.
-func (rom *romState) initBanks(ri *routeInfo) {
-	rom.codeMutables = make(map[string]*mutableRange)
-	rom.bankEnds = loadBankEnds(gameNames[rom.game])
-	asm, err := newAssembler()
-	if err != nil {
-		panic(err)
-	}
-	rom.assembler = asm
-
-	// do this before loading asm files, since the sizes of the tables vary
-	// with the number of checks.
-	rom.replaceRaw(address{0x06, 0}, "collectPropertiesTable", makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
-
-	roomTreasureBank := byte(sora(rom.game, 0x3f, 0x38).(int))
-	rom.replaceRaw(address{roomTreasureBank, 0}, "roomTreasures", makeRoomTreasureTable(rom.game, rom.itemSlots))
-
-	numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
-	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets", string(make([]byte, numOwlIds*2)))
-
-	rom.replaceRaw(address{0x0a, 0}, "staticItemsReplacementsTable", makeStaticItemsReplacementTable(rom.itemSlots))
-
-	rom.replaceRaw(address{0x0a, 0}, "newSamasaCombination", makeSamasaCombinationTable(ri.samasaGateSequence))
 }

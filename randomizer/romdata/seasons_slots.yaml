@@ -60,7 +60,6 @@ spool swamp digging spot:
   treasure: Gasha Seed
   room: 0x0082
   collect: dig
-  addr: {bank: 0x14} # addr set at EOB
 floodgate keeper's house:
   treasure: Floodgate Key
   room: 0x03b5
@@ -82,7 +81,6 @@ master diver's reward:
   treasure: Flippers
   room: 0x05bd
   maptile: 0x2e
-  addr: {bank: 0x0b} # addr set at EOB
   collect: diver room
   local: true
 spring banana tree:
@@ -98,7 +96,6 @@ mt. cucco, platform cave:
   collect: drop
   room: 0x05bb
   maptile: 0x1f
-  reverseaddr: {bank: 0x09} # addr set at EOB
 diving spot outside D4:
   treasure: Pyramid Jewel
   room: 0x07e5
@@ -326,7 +323,6 @@ subrosia seaside:
   room: 0x0166
   morerooms: [0x0176, 0x0175, 0x0165]
   maptile: 0xb0
-  addr: {bank: 0x08} # addr set at EOB
   local: true
 subrosian wilds chest:
   treasure: Blue Ore
@@ -337,7 +333,6 @@ subrosian wilds digging spot:
   room: 0x0140
   maptile: 0x1e
   collect: dig
-  addr: {bank: 0x14} # addr set at EOB
 subrosia village chest:
   treasure: Red Ore
   room: 0x0158
@@ -379,8 +374,8 @@ great furnace:
   treasure: Hard Ore
   room: 0x038e
   maptile: 0xb9
-  ids: [{bank: 0x15}, {bank: 0x09, addr: 0x66eb}] # addr set at EOB
-  subids: [{bank: 0x15}, {bank: 0x09, addr: 0x66ea}] # addr set at EOB
+  ids: [{bank: 0x09, addr: 0x66eb}]
+  subids: [{bank: 0x09, addr: 0x66ea}]
 subrosian smithy ore:
   treasure: Progressive Shield
   room: 0x0397
@@ -441,7 +436,6 @@ d1 goriya chest:
 d1 boss:
   treasure: Heart Container
   room: 0x0412
-  addr: {bank: 0x15} # addr set at EOB
 
 # d2
 d2 rope drop:
@@ -475,7 +469,6 @@ d2 terrace chest:
 d2 boss:
   treasure: Heart Container
   room: 0x0429
-  addr: {bank: 0x15} # addr set at EOB
 
 # d3
 d3 roller chest:
@@ -508,7 +501,6 @@ d3 giant blade room:
 d3 boss:
   treasure: Heart Container
   room: 0x0453
-  addr: {bank: 0x15} # addr set at EOB
 
 # d4
 d4 pot puzzle:
@@ -548,7 +540,6 @@ d4 dive spot:
 d4 boss:
   treasure: Heart Container
   room: 0x045f
-  addr: {bank: 0x15} # addr set at EOB
 
 # d5
 d5 cart chest:
@@ -589,7 +580,6 @@ d5 basement:
 d5 boss:
   treasure: Heart Container
   room: 0x048c
-  addr: {bank: 0x15} # addr set at EOB
 
 # d6
 d6 magnet ball drop:
@@ -630,7 +620,6 @@ d6 vire chest:
 d6 boss:
   treasure: Heart Container
   room: 0x04d5
-  addr: {bank: 0x15} # addr set at EOB
 
 # d7
 d7 wizzrobe chest:
@@ -675,7 +664,6 @@ d7 stalfos chest:
 d7 boss:
   treasure: Heart Container
   room: 0x0550
-  addr: {bank: 0x15} # addr set at EOB
 
 # d8
 d8 eye drop:
@@ -724,7 +712,6 @@ d8 spark chest:
 d8 boss:
   treasure: Heart Container
   room: 0x0564
-  addr: {bank: 0x15} # addr set at EOB
 
 # static items
 horon heart piece:

@@ -5,14 +5,14 @@ common:
   # during randomization.
   15/bossItemTable: |
       db 00,00
-      db 2a,00
-      db 2a,00
-      db 2a,00
-      db 2a,00
-      db 2a,00
-      db 2a,00
-      db 2a,00
-      db 2a,00
+      dw slot.d1Boss.reverse
+      dw slot.d2Boss.reverse
+      dw slot.d3Boss.reverse
+      dw slot.d4Boss.reverse
+      dw slot.d5Boss.reverse
+      dw slot.d6Boss.reverse
+      dw slot.d7Boss.reverse
+      dw slot.d8Boss.reverse
 
   # spawn items from bossItemTable in place of boss heart containers.
   15/spawnBossItem: |

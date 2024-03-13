@@ -1,4 +1,22 @@
 seasons:
+  # Format is group,room,tresure_id,treasure_subid
+  0a/staticItemsReplacementsTable: |
+    db 00,d8; dw slot.horonHeartPiece.reverse
+    db 00,af; dw slot.woodsOfWinterHeartPiece.reverse
+    db 00,2d; dw slot.mtCuccoHeartPiece.reverse
+    db 05,b2; dw slot.windmillHeartPiece.reverse
+    db 00,d1; dw slot.graveyardHeartPiece.reverse
+    db 00,b1; dw slot.spoolSwampHeartPiece.reverse
+    db 05,c7; dw slot.templeRemainsHeartPiece.reverse
+    db 03,87; dw slot.mayorsHouseSecretRoom.reverse
+    db 03,a1; dw slot.subrosianHouse.reverse
+    db 07,e3; dw slot.subrosian2dCave.reverse
+    db 06,01; dw slot.d0Hidden2dSection.reverse
+    db 04,e9; dw slot.makuTree3Essences.reverse
+    db 04,ea; dw slot.makuTree5Essences.reverse
+    db 04,ee; dw slot.makuTree7Essences.reverse
+    db ff
+
   0a/staticItemsReplacementsLookup_body: |
     ld a,(wActiveGroup)
     ld b,a

@@ -1,7 +1,7 @@
 seasons:
   # Vasu's gift in Horon
   15/vasuGiveItem: |
-    ld bc,0000
+    ld bc,slot.vasusGift.full
     call createTreasure
     push de
     ld de,w1Link.yh

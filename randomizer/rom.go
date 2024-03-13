@@ -2,7 +2,6 @@ package randomizer
 
 import (
 	"bytes"
-	"container/list"
 	"crypto/sha1"
 	"fmt"
 	"regexp"
@@ -82,64 +81,93 @@ func newRomState(data []byte, game int) *romState {
 		data:      data,
 		treasures: loadTreasures(data, game),
 	}
+
+	asm, err := newAssembler()
+	if err != nil {
+		panic(err)
+	}
+	rom.assembler = asm
+
+	rom.codeMutables = make(map[string]*mutableRange)
+	rom.bankEnds = loadBankEnds(gameNames[game])
+
 	return rom
 }
 
-// getChecks converts a route info into a map of checks.
-func getChecks(usedItems, usedSlots *list.List) map[string]string {
-	checks := make(map[string]string)
+// set up all the pre-randomization asm changes, and track the state so that
+// the randomization changes can be applied later.
+func (rom *romState) initBanks(ri *routeInfo) {
+	// do this before loading asm files, since the sizes of the tables vary
+	// with the number of checks.
+	rom.replaceRaw(address{0x06, 0}, "collectPropertiesTable", makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
 
-	ei, es := usedItems.Front(), usedSlots.Front()
-	for ei != nil {
-		checks[es.Value.(string)] = ei.Value.(string)
-		ei, es = ei.Next(), es.Next()
-	}
+	roomTreasureBank := byte(sora(rom.game, 0x3f, 0x38).(int))
+	rom.replaceRaw(address{roomTreasureBank, 0}, "roomTreasures", makeRoomTreasureTable(rom.itemSlots))
 
-	return checks
+	numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
+	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets", string(make([]byte, numOwlIds*2)))
+
+	rom.replaceRaw(address{0x0a, 0}, "newSamasaCombination", makeSamasaCombinationTable(ri.samasaGateSequence))
 }
 
 // mutates the rom data in-place based on the given route. this doesn't write
 // the file.
-func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
-	// place selected treasures in slots
-	checks := getChecks(ri.usedItems, ri.usedSlots)
-	for slot, item := range checks {
-		rom.itemSlots[slot].treasure = rom.treasures[item]
+func (rom *romState) setData(ri *routeInfo) {
+	// Apply location contents on slots
+	for slotName, itemName := range ri.locationContents {
+		slot := rom.itemSlots[slotName]
+		item := rom.treasures[itemName]
+		slot.treasure = item
 	}
 
-	// set season data
-	if rom.game == GAME_SEASONS {
-		for area, id := range ri.seasons {
-			if id != 4 {
-				// Exclude season 4 ("chaotic") which is meant to represent vanilla Horon behavior and is not a real season... for now
-				rom.setSeason(inflictCamelCase(area+"Season"), id)
-			}
-		}
-
-		if ri.seasons["horon village"] < 4 {
-			rom.codeMutables["fixedHoronSeason"].new[0] = ri.seasons["horon village"]
-			rom.codeMutables["specificWarpSeasons"].new[3] = ri.seasons["horon village"]
-		}
-		rom.codeMutables["specificWarpSeasons"].new[7] = ri.seasons["temple remains"]
-		rom.codeMutables["specificWarpSeasons"].new[11] = ri.seasons["woods of winter"]
-		rom.codeMutables["specificWarpSeasons"].new[15] = ri.seasons["north horon"]
+	// Create ASM defines for slot contents
+	for slotName, slot := range rom.itemSlots {
+		item := slot.treasure
+		defineBaseName := "slot." + inflictCamelCase(slotName)
+		rom.assembler.defineByte(defineBaseName+".id", item.id)
+		rom.assembler.defineByte(defineBaseName+".subid", item.subid)
+		rom.assembler.defineWord(defineBaseName+".full", uint16((uint16(item.id)<<8)|uint16(item.subid)))
+		rom.assembler.defineWord(defineBaseName+".reverse", uint16((uint16(item.subid)<<8)|uint16(item.id)))
 	}
+
+	// Create ASM defines for default seasons
+	for region, season := range ri.seasons {
+		if season >= 4 {
+			season = 0xff
+		}
+		rom.assembler.defineByte("defaultSeason."+inflictCamelCase(region), season)
+	}
+
+	// Determines natzu landscape: 0b for ricky, 0c for dimitri, 0d for moosh.
+	rom.assembler.defineByte("option.animalCompanion", byte(ri.companion+0x0a))
+
+	rom.assembler.defineByte("option.treehouseOldManRequirement", byte(ri.treehouseOldManRequirement))
+	rom.assembler.defineByte("option.treehouseOldManRequirementTextDigit", byte(0x30+ri.treehouseOldManRequirement))
+
+	rom.assembler.defineByte("option.goldenBeastsRequirement", byte(ri.goldenBeastsRequirement))
+	rom.assembler.defineByte("option.goldenBeastsRequirementTextDigit", byte(0x30+ri.goldenBeastsRequirement))
+
+	rom.assembler.defineByte("option.openAdvanceShop", byte(ri.treehouseOldManRequirement))
+
+	rom.assembler.defineByte("option.foolsOreDamage", byte(ri.foolsOreDamage*-1))
+
+}
+
+// changes the contents of loaded ROM bytes in place. returns a checksum of the
+// result or an error.
+func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
+	var err error
 
 	rom.setHeartBeepInterval(ri.heartBeepInterval)
 	rom.setRequiredEssences(ri.requiredEssences)
-	rom.setAnimal(ri.companion)
+
 	rom.setArchipelagoSlotName(ri.archipelagoSlotName)
 	rom.setOldManRupeeValues(ri.oldManRupeeValues)
 	rom.setCharacterSprite(ri.characterSprite, ri.characterPalette)
 
-	if ri.openAdvanceShop {
-		rom.codeMutables["advanceShopDoor"].new = []byte{0, 0, 0, 0}
-	}
-
 	warps := make(map[string]string)
 
 	if ri.game == GAME_SEASONS {
-		rom.setFoolsOreDamage(ri.foolsOreDamage)
 		rom.setLostWoodsPedestalSequence(ri.pedestalSequence)
 
 		arePortalsShuffled := (ri.portals != nil && len(ri.portals) > 0)
@@ -163,22 +191,7 @@ func (rom *romState) setData(ri *routeInfo) ([]byte, error) {
 		rom.setWarps(warps, areDungeonsShuffled)
 	}
 
-	// do it! (but don't write anything)
-	return rom.mutate(warps, ri, areDungeonsShuffled)
-}
-
-// changes the contents of loaded ROM bytes in place. returns a checksum of the
-// result or an error.
-func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeonsShuffled bool) ([]byte, error) {
-	var err error
-
 	if rom.game == GAME_SEASONS {
-		northHoronSeason := rom.codeMutables["northHoronSeason"].new[0]
-		rom.codeMutables["initialSeason"].new = []byte{0x2d, northHoronSeason}
-
-		westernCoastSeason := rom.codeMutables["westernCoastSeason"].new[0]
-		rom.codeMutables["seasonAfterPirateCutscene"].new = []byte{westernCoastSeason}
-
 		rom.setTreasureMapData()
 
 		rom.codeMutables["newShowSamasaCombination"].new, err = makeSamasaGateSequenceScript(ri.samasaGateSequence)
@@ -187,48 +200,7 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		}
 		rom.codeMutables["newSamasaCombinationLengthMinusOne"].new[0] = byte(len(ri.samasaGateSequence) - 1)
 
-		// explicitly set these addresses and IDs after their functions
-		codeAddr := rom.codeMutables["setStarOreIds"].addr
-		rom.itemSlots["subrosia seaside"].idAddrs[0].offset = codeAddr.offset + 2
-		rom.itemSlots["subrosia seaside"].subidAddrs[0].offset = codeAddr.offset + 5
-
-		codeAddr = rom.codeMutables["setHardOreIds"].addr
-		rom.itemSlots["great furnace"].idAddrs[0].offset = codeAddr.offset + 2
-		rom.itemSlots["great furnace"].subidAddrs[0].offset = codeAddr.offset + 5
-
-		codeAddr = rom.codeMutables["script_diverGiveItem"].addr
-		rom.itemSlots["master diver's reward"].idAddrs[0].offset = codeAddr.offset + 1
-		rom.itemSlots["master diver's reward"].subidAddrs[0].offset = codeAddr.offset + 2
-
-		codeAddr = rom.codeMutables["createMtCuccoItem"].addr
-		rom.itemSlots["mt. cucco, platform cave"].idAddrs[0].offset = codeAddr.offset + 2
-		rom.itemSlots["mt. cucco, platform cave"].subidAddrs[0].offset = codeAddr.offset + 1
-
-		wildsDigSpotSlot := rom.itemSlots["subrosian wilds digging spot"]
-		wildsDigSpotSlot.idAddrs[0].offset = rom.codeMutables["subrosianWildsDiggingSpotItem"].addr.offset
-		wildsDigSpotSlot.subidAddrs[0].offset = rom.codeMutables["subrosianWildsDiggingSpotItemSubid"].addr.offset
-
-		spoolDigSpotSlot := rom.itemSlots["spool swamp digging spot"]
-		spoolDigSpotSlot.idAddrs[0].offset = rom.codeMutables["vasuSignDiggingSpotItem"].addr.offset
-		spoolDigSpotSlot.subidAddrs[0].offset = rom.codeMutables["vasuSignDiggingSpotItemSubid"].addr.offset
-
-		rom.codeMutables["goldenBeastsRequirement"].new[0] = byte(ri.goldenBeastsRequirement)
-		rom.codeMutables["goldenBeastsText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement)
-		rom.codeMutables["goldenBeastsRewardText"].new[0] = 0x30 + byte(ri.goldenBeastsRequirement)
-
-		rom.codeMutables["treehouseOldManRequirement"].new[0] = byte(ri.treehouseOldManRequirement)
-		rom.codeMutables["treehouseOldManText"].new[4] = 0x30 + byte(ri.treehouseOldManRequirement)
-
 		rom.codeMutables["makuSignText"].new[3] = 0x30 + byte(ri.requiredEssences)
-
-		// prepare static items addresses
-		codeAddr = rom.codeMutables["staticItemsReplacementsTable"].addr
-		var i uint16 = 0
-		for _, key := range STATIC_SLOTS {
-			rom.itemSlots[key].idAddrs = []address{{codeAddr.bank, codeAddr.offset + (i * 4) + 2}}
-			rom.itemSlots[key].subidAddrs = []address{{codeAddr.bank, codeAddr.offset + (i * 4) + 3}}
-			i++
-		}
 	} else {
 		// explicitly set these addresses and IDs after their functions
 		mut := rom.codeMutables["script_soldierGiveItem"]
@@ -242,57 +214,21 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 	}
 
 	rom.setShopPrices(ri.shopPrices)
-	rom.setBossItemAddrs()
 	rom.setSeedData()
 	rom.setRoomTreasureData()
 	rom.setFileSelectText(ri.archipelagoSlotName)
 	rom.attachText()
-	rom.codeMutables["multiPlayerNumber"].new[0] = byte(rom.player)
 
 	// regenerate collect mode table to accommodate changes based on contents.
-	rom.codeMutables["collectPropertiesTable"].new =
-		[]byte(makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
-
-	mutables := rom.getAllMutables()
-	for _, k := range orderedKeys(mutables) {
-		mutables[k].mutate(rom.data)
-	}
-
-	// explicitly set these items after their functions are written
-	for i := 1; i <= 8; i++ {
-		rom.itemSlots[fmt.Sprintf("d%d boss", i)].mutate(rom.data)
-	}
+	rom.codeMutables["collectPropertiesTable"].new = []byte(makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
 
 	if rom.game == GAME_SEASONS {
-		rom.itemSlots["subrosia seaside"].mutate(rom.data)
-		rom.itemSlots["great furnace"].mutate(rom.data)
-		rom.itemSlots["master diver's reward"].mutate(rom.data)
-		rom.itemSlots["subrosian wilds digging spot"].mutate(rom.data)
-		rom.itemSlots["spool swamp digging spot"].mutate(rom.data)
-
-		codeAddr := rom.codeMutables["vasuGiveItem"].addr
-		slotToMutate := rom.itemSlots["vasu's gift"]
-		slotToMutate.idAddrs = []address{{codeAddr.bank, codeAddr.offset + 2}}
-		slotToMutate.subidAddrs = []address{{codeAddr.bank, codeAddr.offset + 1}}
-		slotToMutate.mutate(rom.data)
-
 		// annoying special case to prevent text on key drop
 		mut := rom.itemSlots["d7 armos puzzle"]
 		if mut.treasure.id == rom.treasures["Small Key (Explorer's Crypt)"].id {
 			rom.data[mut.subidAddrs[0].fullOffset()] = 0x01
 		}
-
-		// mutate static items
-		for _, key := range STATIC_SLOTS {
-			rom.itemSlots[key].mutate(rom.data)
-		}
-
 	} else {
-		rom.itemSlots["nayru's house"].mutate(rom.data)
-		rom.itemSlots["deku forest soldier"].mutate(rom.data)
-		rom.itemSlots["target carts 2"].mutate(rom.data)
-		rom.itemSlots["hidden tokay cave"].mutate(rom.data)
-
 		// other special case to prevent text on key drop
 		mut := rom.itemSlots["d8 stalfos"]
 		if mut.treasure.id == rom.treasures["Small Key (Sword & Shield Dungeon)"].id {
@@ -300,8 +236,23 @@ func (rom *romState) mutate(warpMap map[string]string, ri *routeInfo, areDungeon
 		}
 	}
 
+	for _, v := range rom.itemSlots {
+		v.mutate(rom.data)
+	}
+	for _, v := range rom.treasures {
+		v.mutate(rom.data)
+	}
+	for _, v := range rom.codeMutables {
+		v.mutate(rom.data)
+	}
+	// For some reason, we need to mutate treasures BEFORE and AFTER code to have altered
+	// Archipelago item sprites
+	for _, v := range rom.treasures {
+		v.mutate(rom.data)
+	}
+
 	rom.setCompassData()
-	rom.setLinkedData()
+	//	rom.setLinkedData()
 
 	sum := makeRomChecksum(rom.data)
 	rom.data[0x14e] = sum[0]
@@ -341,26 +292,16 @@ func (rom *romState) setSeedData() {
 		}
 	} else {
 		// set high nybbles (seed types) of seed tree interactions
-		setTreeNybble(rom.codeMutables["symmetryCityTreeSubId"],
-			rom.itemSlots["symmetry city tree"])
-		setTreeNybble(rom.codeMutables["southLynnaPresentTreeSubId"],
-			rom.itemSlots["south lynna tree"])
-		setTreeNybble(rom.codeMutables["crescentIslandTreeSubId"],
-			rom.itemSlots["crescent island tree"])
-		setTreeNybble(rom.codeMutables["zoraVillagePresentTreeSubId"],
-			rom.itemSlots["zora village tree"])
-		setTreeNybble(rom.codeMutables["rollingRidgeWestTreeSubId"],
-			rom.itemSlots["rolling ridge west tree"])
-		setTreeNybble(rom.codeMutables["ambisPalaceTreeSubId"],
-			rom.itemSlots["ambi's palace tree"])
-		setTreeNybble(rom.codeMutables["rollingRidgeEastTreeSubId"],
-			rom.itemSlots["rolling ridge east tree"])
-		setTreeNybble(rom.codeMutables["southLynnaPastTreeSubId"],
-			rom.itemSlots["south lynna tree"])
-		setTreeNybble(rom.codeMutables["dekuForestTreeSubId"],
-			rom.itemSlots["deku forest tree"])
-		setTreeNybble(rom.codeMutables["zoraVillagePastTreeSubId"],
-			rom.itemSlots["zora village tree"])
+		setTreeNybble(rom.codeMutables["symmetryCityTreeSubId"], rom.itemSlots["symmetry city tree"])
+		setTreeNybble(rom.codeMutables["southLynnaPresentTreeSubId"], rom.itemSlots["south lynna tree"])
+		setTreeNybble(rom.codeMutables["crescentIslandTreeSubId"], rom.itemSlots["crescent island tree"])
+		setTreeNybble(rom.codeMutables["zoraVillagePresentTreeSubId"], rom.itemSlots["zora village tree"])
+		setTreeNybble(rom.codeMutables["rollingRidgeWestTreeSubId"], rom.itemSlots["rolling ridge west tree"])
+		setTreeNybble(rom.codeMutables["ambisPalaceTreeSubId"], rom.itemSlots["ambi's palace tree"])
+		setTreeNybble(rom.codeMutables["rollingRidgeEastTreeSubId"], rom.itemSlots["rolling ridge east tree"])
+		setTreeNybble(rom.codeMutables["southLynnaPastTreeSubId"], rom.itemSlots["south lynna tree"])
+		setTreeNybble(rom.codeMutables["dekuForestTreeSubId"], rom.itemSlots["deku forest tree"])
+		setTreeNybble(rom.codeMutables["zoraVillagePastTreeSubId"], rom.itemSlots["zora village tree"])
 
 		// satchel and shooter come with south lynna tree seeds
 		rom.codeMutables["satchelInitialSeeds"].new[0] = 0x20 + seedType
@@ -391,6 +332,8 @@ func (rom *romState) setSeedData() {
 
 // converts e.g. "hello world" to "helloWorld". disgusting tbh
 func inflictCamelCase(s string) string {
+	s = strings.ReplaceAll(s, ".", "")
+	s = strings.ReplaceAll(s, ",", "")
 	return fmt.Sprintf("%c%s", s[0], strings.ReplaceAll(
 		strings.Title(strings.ReplaceAll(s, "'", "")), " ", "")[1:])
 }
@@ -398,8 +341,7 @@ func inflictCamelCase(s string) string {
 // fill table. initial table is blank, since it's created before items are
 // placed.
 func (rom *romState) setRoomTreasureData() {
-	rom.codeMutables["roomTreasures"].new =
-		[]byte(makeRoomTreasureTable(rom.game, rom.itemSlots))
+	rom.codeMutables["roomTreasures"].new = []byte(makeRoomTreasureTable(rom.itemSlots))
 	if rom.game == GAME_SEASONS {
 		t := rom.itemSlots["d7 zol button"].treasure
 		rom.codeMutables["aboveD7ZolButtonId"].new = []byte{t.id}
@@ -506,16 +448,8 @@ func (rom *romState) setShopPrices(shopPrices map[string]int) {
 	}
 }
 
-func (rom *romState) setBossItemAddrs() {
-	table := rom.codeMutables["bossItemTable"]
-	for i := uint16(1); i <= 8; i++ {
-		slot := rom.itemSlots[fmt.Sprintf("d%d boss", i)]
-		slot.idAddrs[0].offset = table.addr.offset + i*2
-		slot.subidAddrs[0].offset = table.addr.offset + i*2 + 1
-	}
-}
-
 // set data to make linked playthroughs isomorphic to unlinked ones.
+/*
 func (rom *romState) setLinkedData() {
 	if rom.game == GAME_SEASONS {
 		// set linked starting / hero's cave terrace items based on which items
@@ -551,7 +485,7 @@ func (rom *romState) setLinkedData() {
 		linkedChest.mutate(rom.data)
 	}
 }
-
+*/
 // -- dungeon entrance / subrosia portal connections --
 
 type warpData struct {

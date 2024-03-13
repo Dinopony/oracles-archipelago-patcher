@@ -29,8 +29,8 @@ seasons:
   # star ore item doesn't normally get a subid. values are replaced at randomization.
   08/setStarOreIds: |
       inc l
-      ld (hl),TREASURE_STAR_ORE
+      ld (hl),slot.subrosiaSeaside.id
       inc l
-      ld (hl),00
+      ld (hl),slot.subrosiaSeaside.subid
       ret
   08/62f2/: call setStarOreIds
