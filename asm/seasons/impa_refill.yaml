@@ -1,57 +1,61 @@
 seasons:
+  15/impaRefillTable: |
+    db TREASURE_EMBER_SEEDS,b5    # <wNumEmberSeeds
+    db TREASURE_SCENT_SEEDS,b6    # <wNumScentSeeds
+    db TREASURE_PEGASUS_SEEDS,b7  # <wNumPegasusSeeds
+    db TREASURE_GALE_SEEDS,b8     # <wNumGaleSeeds
+    db TREASURE_MYSTERY_SEEDS,b9  # <wNumMysterySeeds
+    db TREASURE_BOMBS,aa          # <wNumBombs
+    db TREASURE_SHIELD,00         # Give the item itself and end table
+
   15/impaRefill: |
     push de
     push hl
-    push bc
 
-    ld hl,wLinkMaxHealth
-    ldd a,(hl)
-    ld (hl),a
-
-    ld e,TREASURE_EMBER_SEEDS
-    ld hl,wNumEmberSeeds
+    ld hl,impaRefillTable
     
-    .refillSeedsLoop
-    ld a,e
+    .refillLoop
+    ld a,(hl)
     call checkTreasureObtained
-    jr nc,.nextSeed
+    ldi a,(hl)                    # Put back item in A
+    jr nc,.nextElement
+
+    # Treasure was obtained, refill the matching variable if under the threshold
+    ld a,(hl)
+    or a
+    jr z,.giveItem
+    push hl
+    ld h,c6
+    ld l,a
     ld a,(hl)
     cp a,10
-    jr nc,.nextSeed
+    jr nc,.popHLAndNextElement
     ld (hl),10
-    
-    .nextSeed
-    ld a,e
-    cp a,TREASURE_MYSTERY_SEEDS
-    jr z,.refillBombs
-    inc e
+
+    .popHLAndNextElement
+    pop hl
+    .nextElement
     inc hl
-    jr .refillSeedsLoop
+    jr .refillLoop
 
-    .refillBombs
-    ld hl,wCurrentBombs
-    ld a,(hl)
-    cp a,10
-    jr nc,.refillShield
-    ld (hl),10
-    
-    .refillShield
-    ld a,TREASURE_SHIELD
-    call checkTreasureObtained
-    jr nc,.return
+    .giveItem
     ld a,TREASURE_SHIELD
     ld (ff00+8b),a
     ld e,3f
     ld hl,addTreasureToInventory
     call interBankCall
 
-    .return
+    # Refill health to max
+    ld hl,wLinkMaxHealth
+    ldd a,(hl)
+    ld (hl),a
+
+    # Play a sound and update status bar to give feedback
     ld a,5e # SND_GETSEED
     call playSound
     ld a,03
     ld (wStatusBarNeedsRefresh),a
 
-    pop bc
     pop hl
     pop de
     ret
@@ -62,7 +66,7 @@ seasons:
     db showtext,25,03
     db asm15; dw impaRefill
     db enableinput
-    db scriptend
+    db 74,ef # jump back to the beginning of the script
 
   # Change Impa text to explain that she is providing a refill
   1f/4247/: |

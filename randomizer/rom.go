@@ -360,9 +360,7 @@ func (rom *romState) setTreasureMapData() {
 		label := "jewelCoords" + strings.ReplaceAll(name, "-", "")
 		rom.codeMutables[label].new[0] = 0x63 // default to tarm gate
 		for _, slot := range rom.lookupAllItemSlots(name + " Jewel") {
-			if int(slot.player) == 0 || int(slot.player) == rom.player {
-				rom.codeMutables[label].new[0] = slot.mapTile
-			}
+			rom.codeMutables[label].new[0] = slot.mapTile
 		}
 	}
 }
