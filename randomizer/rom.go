@@ -236,19 +236,18 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 		}
 	}
 
-	for _, v := range rom.itemSlots {
-		v.mutate(rom.data)
+	for _, k := range orderedKeys(rom.itemSlots) {
+		rom.itemSlots[k].mutate(rom.data)
 	}
-	for _, v := range rom.treasures {
-		v.mutate(rom.data)
+	for _, k := range orderedKeys(rom.codeMutables) {
+		rom.codeMutables[k].mutate(rom.data)
 	}
-	for _, v := range rom.codeMutables {
-		v.mutate(rom.data)
-	}
-	// For some reason, we need to mutate treasures BEFORE and AFTER code to have altered
-	// Archipelago item sprites
-	for _, v := range rom.treasures {
-		v.mutate(rom.data)
+	for _, k := range orderedKeys(rom.treasures) {
+		treasure := rom.treasures[k]
+		if treasure.id != 0x2d {
+			// Don't mutate rings, as they are handled in asm/rings.yaml
+			rom.treasures[k].mutate(rom.data)
+		}
 	}
 
 	rom.setCompassData()
