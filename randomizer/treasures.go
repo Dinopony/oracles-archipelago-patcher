@@ -111,15 +111,24 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 		// game, so they're missing some data.
 		m["Fool's Ore"].text = 0x36
 		m["Fool's Ore"].sprite = 0x4a
+
 		m["Rare Peach Stone"].sprite = 0x4e
+
 		m["Ribbon"].text = 0x41
 		m["Ribbon"].sprite = 0x4f
+
 		m["Treasure Map"].text = 0x6c
 		m["Treasure Map"].sprite = 0x49
+
 		m["Member's Card"].text = 0x45
 		m["Member's Card"].sprite = 0x48
+
 		m["Potion"].text = 0x6d
 		m["Potion"].sprite = 0x4b
+
+		// Make bombs increase max carriable quantity when obtained from treasures, not drops
+		// (see asm/seasons/bomb_bag_behavior)
+		m["Bombs (10)"].param |= 0x80
 
 		// and seasons flutes aren't initially real treasures like ages ones are
 		t := m["Ricky's Flute"]
