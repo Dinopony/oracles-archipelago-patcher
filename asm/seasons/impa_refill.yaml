@@ -7,6 +7,7 @@ seasons:
     db TREASURE_MYSTERY_SEEDS,b9  # <wNumMysterySeeds
     db TREASURE_BOMBS,aa          # <wNumBombs
     db TREASURE_SHIELD,00         # Give the item itself and end table
+    db 00
 
   15/impaRefill: |
     push de
@@ -16,6 +17,8 @@ seasons:
     
     .refillLoop
     ld a,(hl)
+    or a
+    jr z,.refillHealth
     call checkTreasureObtained
     ldi a,(hl)                    # Put back item in A
     jr nc,.nextElement
@@ -46,6 +49,7 @@ seasons:
     call interBankCall
 
     # Refill health to max
+    .refillHealth
     ld hl,wLinkMaxHealth
     ldd a,(hl)
     ld (hl),a
