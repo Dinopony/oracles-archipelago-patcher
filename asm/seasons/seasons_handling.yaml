@@ -1,12 +1,12 @@
 seasons:
   # [Warp Group, Warp Dest, Arrival Position, Season to apply]
-  # An arrival pos of "FF" means it isn't checked
+  # An arrival pos of "00" means it isn't checked
   # A season of "FF" means nothing changes
   04/specificWarpSeasons: |
     db 03,ab,44,defaultSeason.horonVillage # subrosia to horon
     db 03,a8,14,defaultSeason.templeRemains # subrosia to temple remains
-    db 85,12,ff,defaultSeason.woodsOfWinter # sunken city to woods of winter
-    db 80,a7,ff,defaultSeason.northHoron # warp to start (holodrum)
+    db 85,12,00,defaultSeason.woodsOfWinter # sunken city to woods of winter
+    db 80,a7,00,defaultSeason.northHoron # warp to start (holodrum)
     db ff
 
   # This function aims to fix season handling for Subrosia -> interior map warps
@@ -27,7 +27,7 @@ seasons:
     jr nc,.done
 
     ldi a,(hl)
-    cp a,ff
+    or a
     jr z,.noPosCheck
     ld b,a
     ld a,(wWarpDestPos)
@@ -37,7 +37,7 @@ seasons:
     .noPosCheck
     ld a,(hl)
     cp a,4 # if season is >= 4, it's an invalid placeholder season -> don't change anything
-    jr c,.done
+    jr nc,.done
     ld (wRoomStateModifier),a
 
     .done
