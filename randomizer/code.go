@@ -300,7 +300,6 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"multi",
 		"newgame",
 		"npc_items",
-		"old_men",
 		"options",
 		"progressives",
 		"rings",
@@ -318,7 +317,6 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"seasons/specific_checks",
 		"seasons/subscreen_1_improvement",
 		"seasons/tarm_gate_requirement",
-		"seasons/tweaks",
 	}
 
 	if ri.warpToStart {

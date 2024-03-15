@@ -27,29 +27,29 @@ floating:
       ret
 
 seasons:
-  02/handleGetMultiworldItem: /include handleGetMultiworldItem
-  02/handleGetItem_body: |
-      call handleGetMultiworldItem
-      ld e,73
-      ld a,(de) # nonzero if interaction should set item room flag
-      and a
-      ret
-
-  # see function in bank 02.
-  09/handleGetItem: |
-      ld b,a
-      push af
-      push de
-      push hl
-      ld hl,handleGetItem_body
-      call callBank2
-      pop hl
-      pop de
-      pop af
-      ld a,b
-      call giveTreasure
-      ret
-  09/42e0/: call handleGetItem
+#  02/handleGetMultiworldItem: /include handleGetMultiworldItem
+#  02/handleGetItem_body: |
+#      call handleGetMultiworldItem
+#      ld e,73
+#      ld a,(de) # nonzero if interaction should set item room flag
+#      and a
+#      ret
+#
+#  # see function in bank 02.
+#  09/handleGetItem: |
+#      ld b,a
+#      push af
+#      push de
+#      push hl
+#      ld hl,handleGetItem_body
+#      call callBank2
+#      pop hl
+#      pop de
+#      pop af
+#      ld a,b
+#      call giveTreasure
+#      ret
+#  09/42e0/: call handleGetItem
 
   # have seed satchel inherently refill all seeds.
   3f/satchelRefillSeeds: |

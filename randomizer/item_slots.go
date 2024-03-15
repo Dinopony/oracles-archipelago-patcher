@@ -113,10 +113,20 @@ func (rom *romState) loadSlots() map[string]*itemSlot {
 					slot.subidAddrs[i] = address{subid.Bank, subid.Offset}
 				}
 			}
-		} else if slot.collectMode == collectModes["chest"] && rom.data != nil {
-			// try to get chest data for room
-			addr := getChestAddr(rom.data, rom.game, slot.group, slot.room)
-			if addr != (address{}) {
+		} else if rom.data != nil {
+			isSpecialChest := map[string]bool{
+				"chest in master diver's cave": true,
+				"mt. cucco, talon's cave":      true,
+				"d7 bombed wall chest":         true,
+			}
+
+			if slot.collectMode == collectModes["chest"] || isSpecialChest[name] {
+				// try to get chest data for room
+				addr := getChestAddr(rom.data, rom.game, slot.group, slot.room)
+				if addr == (address{}) {
+					panic("chest addr not found for " + name)
+				}
+
 				slot.idAddrs = []address{{addr.bank, addr.offset}}
 				slot.subidAddrs = []address{{addr.bank, addr.offset + 1}}
 			}
