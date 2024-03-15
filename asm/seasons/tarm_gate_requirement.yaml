@@ -1,0 +1,34 @@
+seasons:
+  # Instead of testing a fixed value (0x0f) on a bitfield, we add a function
+  # which counts the number of inserted jewels...
+  0a/getInsertedJewelsCount: |
+    ld a,(wInsertedJewels)
+    jp getNumSetBits
+  # ...then call it before comparing with the required amount to open the
+  # gates
+  0a/5092/: |
+    call getInsertedJewelsCount
+    cp a,option.tarmGateRequiredJewels
+
+  ####################
+  # Bring X precious #
+  # items for the    #
+  # door to open.    #
+  ####################
+  1f/5169/tarmRequirementText: |
+    # "Bring "
+    db 42,03,3e
+    # "X " (colored)
+    db 09,01,option.tarmGateRequiredJewelsTextDigit,05,e8
+    # "precious\n"
+    db 03,4a,01
+    # "items"
+    db 04,cc
+    # " for the"
+    db 02,a1,01
+    # "door"
+    db 05,a7
+    # " to "
+    db 03,b0
+    # "open."
+    db 05,02,2e,00

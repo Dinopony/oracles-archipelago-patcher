@@ -79,6 +79,14 @@ seasons:
       ld a,03
       ld (wRingBoxLevel),a
 
+      # automatically open tarm gate if requirement is 0 jewels
+      ld a,option.tarmGateRequiredJewels
+      or a
+      jr nz,.tarmCheckDone
+      ld a,80
+      ld (c763),a
+      .tarmCheckDone
+      
       # no linked gaming
       ld a,00
       ld (wIsLinkedGame),a

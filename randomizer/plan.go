@@ -92,6 +92,7 @@ type routeInfo struct {
 	requiredEssences           int
 	goldenBeastsRequirement    int
 	treehouseOldManRequirement int
+	tarmGateRequiredJewels     int
 	revealGoldenOreTiles       bool
 
 	characterSprite     string
@@ -137,6 +138,14 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
 		ri.treehouseOldManRequirement, err = strconv.Atoi(str)
 		if err != nil || ri.treehouseOldManRequirement < 0 || ri.treehouseOldManRequirement > 8 {
 			return fmt.Errorf("settings.treehouse_old_man_requirement is invalid (0 to 8)")
+		}
+	}
+
+	ri.tarmGateRequiredJewels = 4
+	if str, ok := data.settings["tarm_gate_required_jewels"]; ok {
+		ri.tarmGateRequiredJewels, err = strconv.Atoi(str)
+		if err != nil || ri.tarmGateRequiredJewels < 0 || ri.tarmGateRequiredJewels > 4 {
+			return fmt.Errorf("settings.tarm_gate_required_jewels is invalid (0 to 4)")
 		}
 	}
 

@@ -135,9 +135,7 @@ func (rom *romState) setData(ri *routeInfo) {
 		rom.assembler.defineByte("defaultSeason."+inflictCamelCase(region), season)
 	}
 
-	// Determines natzu landscape: 0b for ricky, 0c for dimitri, 0d for moosh.
-	rom.assembler.defineByte("option.animalCompanion", byte(ri.companion+0x0a))
-
+	// Create ASM defines for various options
 	rom.assembler.defineByte("option.treehouseOldManRequirement", byte(ri.treehouseOldManRequirement))
 	rom.assembler.defineByte("option.treehouseOldManRequirementTextDigit", byte(0x30+ri.treehouseOldManRequirement))
 
@@ -147,6 +145,12 @@ func (rom *romState) setData(ri *routeInfo) {
 	rom.assembler.defineByte("option.openAdvanceShop", byte(ri.treehouseOldManRequirement))
 
 	rom.assembler.defineByte("option.foolsOreDamage", byte(ri.foolsOreDamage*-1))
+
+	rom.assembler.defineByte("option.tarmGateRequiredJewels", byte(ri.tarmGateRequiredJewels))
+	rom.assembler.defineByte("option.tarmGateRequiredJewelsTextDigit", byte(0x30+ri.tarmGateRequiredJewels))
+
+	// Determines natzu landscape: 0b for ricky, 0c for dimitri, 0d for moosh.
+	rom.assembler.defineByte("option.animalCompanion", byte(ri.companion+0x0a))
 
 	// If enabled, put real Subrosia map group (0x01), otherwise put a fake map group that will never trigger tile changes (0xfe)
 	rom.assembler.defineByte("option.revealGoldenOreTiles", ternary(ri.revealGoldenOreTiles, uint8(0x01), uint8(0xfe)).(uint8))

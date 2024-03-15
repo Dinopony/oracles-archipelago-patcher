@@ -317,6 +317,7 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"seasons/shops_handling",
 		"seasons/subrosia_seaside",
 		"seasons/subscreen_1_improvement",
+		"seasons/tarm_gate_requirement",
 		"seasons/tweaks",
 	}
 
