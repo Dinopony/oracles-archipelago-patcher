@@ -172,39 +172,6 @@ func makeSamasaGateSequenceScript(samasaSequence []int) ([]byte, error) {
 	return bytes, nil
 }
 
-// returns a byte table (group, room, id, subid) entries for randomized small
-// key drops (and other falling items, but those entries won't be used).
-func makeRoomTreasureTable(itemSlots map[string]*itemSlot) string {
-	b := new(strings.Builder)
-
-	for _, key := range orderedKeys(itemSlots) {
-		slot := itemSlots[key]
-
-		if key != "maku path basement" && slot.collectMode != collectModes["drop"] {
-			continue
-		}
-
-		// accommodate nil treasures when creating the dummy table before
-		// treasures have actually been assigned.
-		var err error
-		if slot.treasure == nil {
-			_, err = b.Write([]byte{slot.group, slot.room, 0x00, 0x00})
-		} else if slot.treasure.id == 0x30 {
-			// make small keys the normal falling variety, with no text box.
-			_, err = b.Write([]byte{slot.group, slot.room, 0x30, 0x01})
-		} else {
-			_, err = b.Write([]byte{slot.group, slot.room,
-				slot.treasure.id, slot.treasure.subid})
-		}
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	b.Write([]byte{0xff})
-	return b.String()
-}
-
 // that's correct
 type eobThing struct {
 	addr         address
@@ -327,7 +294,6 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"font",
 		"gfx",
 		"itemevents",
-		"keydrops",
 		"layouts",
 		"linked",
 		"misc",
@@ -346,7 +312,6 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"seasons/bomb_bag_behavior",
 		"seasons/impa_refill",
 		"seasons/maku_tree",
-		"seasons/random_ring_digging_spots",
 		"seasons/samasa_combination",
 		"seasons/seasons_handling",
 		"seasons/shops_handling",

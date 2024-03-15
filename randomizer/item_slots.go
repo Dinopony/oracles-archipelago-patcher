@@ -11,7 +11,6 @@ type itemSlot struct {
 	group, room, collectMode, player byte
 	moreRooms                        []uint16 // high = group, low = room
 	mapTile                          byte     // overworld map coords, yx
-	localOnly                        bool     // multiworld
 }
 
 // implementes `mutate` from the `mutable` interface.
@@ -37,27 +36,18 @@ type rawSlot struct {
 	Addr        rawAddr // for id, then subid
 	ReverseAddr rawAddr // for subid, then id
 	Ids, SubIds []rawAddr
-	KeyDrop     bool
-	Dummy       bool
 
 	// optional override
 	Collect string
 
 	// optional additional rooms
 	MoreRooms []uint16
-
-	Local bool // dummy implies true
 }
 
 // like address, but has exported fields for loading from yaml.
 type rawAddr struct {
 	Bank   byte
 	Offset uint16 `yaml:"addr"`
-}
-
-// data that can be inferred from a room's music.
-type musicData struct {
-	MapTile byte
 }
 
 // return a map of slot names to slot data. if romState.data is nil, only
@@ -70,15 +60,9 @@ func (rom *romState) loadSlots() map[string]*itemSlot {
 		panic(err)
 	}
 
-	allMusic := make(map[string](map[byte]musicData))
-	if err := ReadEmbeddedYaml("romdata/music.yaml", allMusic); err != nil {
-		panic(err)
-	}
-	musicMap := allMusic[gameNames[rom.game]]
-
 	m := make(map[string]*itemSlot)
 	for name, raw := range raws {
-		if raw.Room == 0 && !raw.Dummy {
+		if raw.Room == 0 {
 			panic(name + " room is zero")
 		}
 
@@ -87,32 +71,28 @@ func (rom *romState) loadSlots() map[string]*itemSlot {
 			group:     byte(raw.Room >> 8),
 			room:      byte(raw.Room),
 			moreRooms: raw.MoreRooms,
-			localOnly: raw.Local || raw.Dummy,
 		}
 
 		// unspecified map tile = assume overworld
 		if raw.MapTile == nil && rom.data != nil {
-			musicIndex := getMusicIndex(rom.data, rom.game, slot.group, slot.room)
-			if music, ok := musicMap[musicIndex]; ok {
-				slot.mapTile = music.MapTile
-			} else {
+			if slot.group > 2 || (slot.group == 2 && (slot.room&0x0f > 0x0d || slot.room&0xf0 > 0xd0)) {
 				// nope, definitely not overworld.
-				if slot.group > 2 || (slot.group == 2 &&
-					(slot.room&0x0f > 0x0d || slot.room&0xf0 > 0xd0)) {
-					panic(fmt.Sprintf("invalid room for %s: %04x",
-						name, raw.Room))
-				}
-				slot.mapTile = slot.room
+				panic(fmt.Sprintf("invalid room for %s: %04x", name, raw.Room))
 			}
+			slot.mapTile = slot.room
 		} else if raw.MapTile != nil {
 			slot.mapTile = *raw.MapTile
 		}
 
-		if raw.KeyDrop {
-			if raw.Collect == "" {
-				slot.collectMode = collectModes["drop"]
-			}
-		} else if raw.Addr != (rawAddr{}) {
+		if raw.Collect == "" {
+			panic("no collect mode for slot " + name)
+		} else if mode, ok := collectModes[raw.Collect]; ok {
+			slot.collectMode = mode
+		} else {
+			panic("collect mode not found: " + raw.Collect)
+		}
+
+		if raw.Addr != (rawAddr{}) {
 			slot.idAddrs = []address{{raw.Addr.Bank, raw.Addr.Offset}}
 			slot.subidAddrs = []address{{raw.Addr.Bank, raw.Addr.Offset + 1}}
 		} else if raw.ReverseAddr != (rawAddr{}) {
@@ -133,28 +113,12 @@ func (rom *romState) loadSlots() map[string]*itemSlot {
 					slot.subidAddrs[i] = address{subid.Bank, subid.Offset}
 				}
 			}
-		} else if !raw.Dummy && rom.data != nil {
+		} else if slot.collectMode == collectModes["chest"] && rom.data != nil {
 			// try to get chest data for room
 			addr := getChestAddr(rom.data, rom.game, slot.group, slot.room)
 			if addr != (address{}) {
 				slot.idAddrs = []address{{addr.bank, addr.offset}}
 				slot.subidAddrs = []address{{addr.bank, addr.offset + 1}}
-			}
-		}
-
-		if slot.collectMode != collectModes["drop"] { // drops already set
-			if raw.Collect != "" {
-				if mode, ok := collectModes[raw.Collect]; ok {
-					slot.collectMode = mode
-				} else {
-					panic("collect mode not found: " + raw.Collect)
-				}
-			} else {
-				if t, ok := rom.treasures[raw.Treasure]; ok {
-					slot.collectMode = t.mode
-				} else {
-					panic("treasure not found: " + raw.Treasure)
-				}
 			}
 		}
 
@@ -169,8 +133,7 @@ func (rom *romState) loadSlots() map[string]*itemSlot {
 func getChestAddr(b []byte, game int, group, room byte) address {
 	ptr := sora(game, address{0x15, 0x4f6c}, address{0x16, 0x5108}).(address)
 	ptr.offset += uint16(group) * 2
-	ptr.offset = uint16(b[ptr.fullOffset()]) +
-		uint16(b[ptr.fullOffset()+1])*0x100
+	ptr.offset = uint16(b[ptr.fullOffset()]) + uint16(b[ptr.fullOffset()+1])*0x100
 
 	for {
 		info := b[ptr.fullOffset()]
@@ -188,16 +151,4 @@ func getChestAddr(b []byte, game int, group, room byte) address {
 	}
 
 	return address{}
-}
-
-// returns the music index for the given room.
-func getMusicIndex(b []byte, game int, group, room byte) byte {
-	ptr := sora(game, address{0x04, 0x483c}, address{0x04, 0x495c}).(address)
-
-	ptr.offset += uint16(group) * 2
-	ptr.offset = uint16(b[ptr.fullOffset()]) +
-		uint16(b[ptr.fullOffset()+1])*0x100
-	ptr.offset += uint16(room)
-
-	return b[ptr.fullOffset()]
 }

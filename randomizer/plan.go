@@ -92,6 +92,7 @@ type routeInfo struct {
 	requiredEssences           int
 	goldenBeastsRequirement    int
 	treehouseOldManRequirement int
+	revealGoldenOreTiles       bool
 
 	characterSprite     string
 	characterPalette    string
@@ -146,6 +147,12 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
 		if err != nil {
 			return fmt.Errorf("settings.fools_ore_damage is invalid (must be a number)")
 		}
+	}
+
+	// Change golden ore tiles in Subrosia to indicate they are digging spots
+	ri.revealGoldenOreTiles = false
+	if str, ok := data.settings["reveal_golden_ore_tiles"]; ok {
+		ri.revealGoldenOreTiles = (str == "true")
 	}
 
 	// Set Lost Woods item sequence

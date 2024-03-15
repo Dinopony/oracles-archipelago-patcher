@@ -41,10 +41,6 @@ seasons:
   07/418e/satchelInitialSelection: db be,00
   07/419a/slingshotInitialSelection: db bf,00
 
-  # for the item dropped in the room *above* the trampoline.
-  15/55d8/aboveD7ZolButtonId: db TREASURE_SMALL_KEY
-  15/55db/aboveD7ZolButtonSubid: db 03
-
   # initial seeds in satchel (set to match horon village tree)
   3f/453b/satchelInitialSeeds: db TREASURE_EMBER_SEEDS
 

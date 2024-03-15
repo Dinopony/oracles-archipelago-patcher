@@ -7,6 +7,7 @@
 eyeglass lake, across bridge:
   treasure: Gasha Seed
   room: 0x00b8
+  collect: chest
 maku tree:
   treasure: Gnarled Key
   room: 0x020b # for zero essences. other rooms are for more
@@ -14,7 +15,7 @@ maku tree:
   ids: [{bank: 0x15, addr: 0x613a}, {bank: 0x09, addr: 0x7e16}]
   subids: [{bank: 0x15, addr: 0x613d}, {bank: 0x09, addr: 0x7e19}]
   collect: maku tree (seasons)
-  local: true
+  maptile: 0xc9
 maku tree, 3 essences:
   treasure: Gasha Seed
   room: 0x04e9
@@ -33,24 +34,27 @@ maku tree, 7 essences:
 horon village SW chest:
   treasure: Rupees (20)
   room: 0x00f5
+  collect: chest
 horon village SE chest:
   treasure: Rupees (20)
   room: 0x00f9
+  collect: chest
 holly's house:
   treasure: Shovel
   room: 0x03a3
   maptile: 0x7f
   addr: {bank: 0x0b, addr: 0x6a6c}
+  collect: touch
 chest on top of D2:
   treasure: Gasha Seed
   room: 0x008e
+  collect: chest
 blaino prize:
   treasure: Gasha Seed # rip Ricky's Gloves
   room: 0x03b4
   maptile: 0x78
   addr: {bank: 0x0b, addr: 0x64cc}
   collect: touch
-  local: true
 underwater item below natzu bridge:
   treasure: Gasha Seed
   room: 0x0066
@@ -65,51 +69,59 @@ floodgate keeper's house:
   room: 0x03b5
   maptile: 0x62
   reverseaddr: {bank: 0x09, addr: 0x6281}
+  collect: touch
 spool swamp cave:
   treasure: Square Jewel
   room: 0x04fa
   maptile: 0xc2
+  collect: chest
   chest: true
 moblin keep:
   treasure: Piece of Heart
   room: 0x005b
+  collect: chest
 master diver's challenge:
   treasure: Master's Plaque
   room: 0x05bc
   maptile: 0x2e
+  collect: chest
 master diver's reward:
   treasure: Flippers
   room: 0x05bd
   maptile: 0x2e
   collect: diver room
-  local: true
 spring banana tree:
   treasure: Spring Banana
   room: 0x000f
   reverseaddr: {bank: 0x09, addr: 0x66c6}
+  collect: chest
 goron mountain, across pits:
   treasure: Dragon Key
   room: 0x001a
   reverseaddr: {bank: 0x09, addr: 0x62a3}
+  collect: touch
 mt. cucco, platform cave:
   treasure: Green Joy Ring
-  collect: drop
   room: 0x05bb
   maptile: 0x1f
+  collect: drop
 diving spot outside D4:
   treasure: Pyramid Jewel
   room: 0x07e5
   maptile: 0x1d
   ids: [{bank: 0x0b, addr: 0x734e}, {bank: 0x0b, addr: 0x7358}]
   subids: [{bank: 0x0b, addr: 0x734f}, {bank: 0x0b, addr: 0x7359}]
+  collect: touch
 black beast's chest:
   treasure: X-Shaped Jewel
   room: 0x00f4
+  collect: chest
 old man in treehouse:
   treasure: Round Jewel
   room: 0x0394
   maptile: 0xb5
   addr: {bank: 0x0b, addr: 0x7332}
+  collect: touch
 lost woods:
   treasure: Progressive Sword
   room: 0x00c9
@@ -122,6 +134,7 @@ samasa desert pit:
   maptile: 0xbf
   ids: [{bank: 0x09, addr: 0x648d}, {bank: 0x0b, addr: 0x60b1}]
   subids: [{bank: 0x09, addr: 0x648c}]
+  collect: touch
 samasa desert chest:
   treasure: Rang Ring L-1
   collect: chest
@@ -134,6 +147,7 @@ western coast, in house:
   treasure: Bombs (10)
   room: 0x0388
   maptile: 0xd2
+  collect: chest
 cave south of mrs. ruul:
   treasure: Octo Ring
   collect: chest
@@ -153,20 +167,22 @@ woods of winter, 1st cave:
   treasure: Rupees (30)
   room: 0x05b4
   maptile: 0x7d
+  collect: chest
 sunken city, summer cave:
   treasure: Gasha Seed
   room: 0x05b5
   maptile: 0x4f
+  collect: chest
 chest in master diver's cave:
   treasure: Rupees (50)
   room: 0x05bd
   maptile: 0x2e
   collect: diver room
-  local: true
 dry eyeglass lake, east cave:
   treasure: Piece of Heart
   room: 0x05c0
   maptile: 0xaa
+  collect: chest
 chest in goron mountain:
   treasure: Armor Ring L-2
   collect: chest
@@ -176,80 +192,89 @@ natzu region, across water:
   treasure: Rupees (50)
   room: 0x050e
   maptile: 0x49
+  collect: chest
 mt. cucco, talon's cave:
   treasure: Subrosian Ring
   collect: talon cave
   room: 0x05b6
   maptile: 0x1b
-  local: true
 tarm ruins, under tree:
   treasure: Gasha Seed
   room: 0x039b
   maptile: 0x10
+  collect: chest
 eastern suburbs spring cave:
   treasure: Gasha Seed
   room: 0x04f7
   maptile: 0xcc
+  collect: chest
 dry eyeglass lake, west cave:
   treasure: Rupees (100)
   room: 0x04fb
   maptile: 0xa7
-  chest: true
+  collect: chest
 woods of winter, 2nd cave:
   treasure: Gasha Seed
   room: 0x0512
   maptile: 0x7e
-  chest: true
+  collect: chest
+
 shop, 20 rupees:
   treasure: Bombs (10)
   room: 0x03a6
   maptile: 0xe6
   addr: {bank: 0x08, addr: 0x4cd6}
+  collect: touch
 shop, 30 rupees:
   treasure: Progressive Shield
   room: 0x03a6
   maptile: 0xe6
   addr: {bank: 0x08, addr: 0x4cd4}
+  collect: touch
 shop, 150 rupees:
   treasure: Moosh's Flute
   room: 0x03a6
   maptile: 0xe6
   addr: {bank: 0x08, addr: 0x4cd0}
+  collect: touch
 
 member's shop 1:
   treasure: Seed Satchel
   room: 0x03b0
   maptile: 0xe6
   addr: {bank: 0x08, addr: 0x4cce}
-  local: true
+  collect: touch
 member's shop 2:
   treasure: Gasha Seed
   room: 0x03b0
   maptile: 0xe6
   addr: {bank: 0x08, addr: 0x4cd2}
-  local: true
+  collect: touch
 member's shop 3:
   treasure: Treasure Map
   room: 0x03b0
   maptile: 0xe6
   addr: {bank: 0x08, addr: 0x4cd8}
-  local: true
+  collect: touch
 
 advance shop 1:
   treasure: Gasha Seed
   room: 0x03af
   maptile: 0xc5
   addr: {bank: 0x08, addr: 0x4cea}
+  collect: touch
 advance shop 2:
   treasure: Gasha Seed
   room: 0x03af
   maptile: 0xc5
   addr: {bank: 0x08, addr: 0x4cec}
+  collect: touch
 advance shop 3:
   treasure: Gasha Seed
   room: 0x03af
   maptile: 0xc5
   addr: {bank: 0x08, addr: 0x4cee}
+  collect: touch
 
 syrup shop 1:
   treasure: Potion
@@ -290,44 +315,49 @@ tower of winter:
   room: 0x05f2
   maptile: 0xb0
   addr: {bank: 0x0b, addr: 0x4fc5}
+  collect: touch
 tower of summer:
   treasure: Rod of Seasons (Summer)
   room: 0x05f8
   maptile: 0xb0
   addr: {bank: 0x0b, addr: 0x4fb9}
+  collect: touch
 tower of spring:
   treasure: Rod of Seasons (Spring)
   room: 0x05f5
   maptile: 0x1e
   addr: {bank: 0x0b, addr: 0x4fb5}
+  collect: touch
 tower of autumn:
   treasure: Rod of Seasons (Autumn)
   room: 0x05fb
   maptile: 0xb0
   addr: {bank: 0x0b, addr: 0x4fc1}
+  collect: touch
 subrosian dance hall:
   treasure: Progressive Boomerang
   room: 0x0395
   maptile: 0x9a
   addr: {bank: 0x0b, addr: 0x6646}
-  local: true
+  collect: touch
 temple of seasons:
   treasure: Fool's Ore # lone rod doesn't exist in rando
   room: 0x03ac
   maptile: 0xb0
   ids: [{bank: 0x15, addr: 0x70ce}]
   subids: [{bank: 0x15, addr: 0x70cc}]
-  local: true
+  collect: touch
 subrosia seaside:
   treasure: Star Ore
   room: 0x0166
   morerooms: [0x0176, 0x0175, 0x0165]
   maptile: 0xb0
-  local: true
+  collect: dig
 subrosian wilds chest:
   treasure: Blue Ore
   room: 0x0141
   maptile: 0x1e
+  collect: chest
 subrosian wilds digging spot:
   treasure: Gasha Seed
   room: 0x0140
@@ -337,381 +367,557 @@ subrosia village chest:
   treasure: Red Ore
   room: 0x0158
   maptile: 0xb0
+  collect: chest
 subrosia, open cave:
   treasure: Gasha Seed
   room: 0x04f1
   maptile: 0x25
+  collect: chest
 subrosia, locked cave:
   treasure: Gasha Seed
   room: 0x05c6
   maptile: 0x25
+  collect: chest
 subrosia market, 1st item:
   treasure: Ribbon
   room: 0x03a0
   maptile: 0xb0
   addr: {bank: 0x09, addr: 0x77da}
+  collect: touch
 subrosia market, 2nd item:
   treasure: Rare Peach Stone
   room: 0x03a0
   maptile: 0xb0
   addr: {bank: 0x09, addr: 0x77e2}
+  collect: touch
 subrosia market, 3rd item:
   treasure: Progressive Shield
   room: 0x03a0
   maptile: 0xb0
   addr: {bank: 0x09, addr: 0x77ee}
+  collect: touch
 subrosia market, 4th item:
   treasure: Bombs (10)
   room: 0x03a0
   maptile: 0xb0
   addr: {bank: 0x09, addr: 0x77f2}
+  collect: touch
 subrosia market, 5th item:
   treasure: Member's Card
   room: 0x03a0
   maptile: 0xb0
   addr: {bank: 0x09, addr: 0x77f4}
+  collect: touch
 great furnace:
   treasure: Hard Ore
   room: 0x038e
   maptile: 0xb9
   ids: [{bank: 0x09, addr: 0x66eb}]
   subids: [{bank: 0x09, addr: 0x66ea}]
+  collect: touch
 subrosian smithy ore:
   treasure: Progressive Shield
   room: 0x0397
   maptile: 0x1e
   ids: [{bank: 0x15, addr: 0x62be}]
   subids: [{bank: 0x15, addr: 0x62b4}]
-  local: true
+  collect: touch
 
 # hero's cave
 d0 key chest:
   treasure: Small Key (Hero's Cave)
   room: 0x0403
+  maptile: 0xd4
+  collect: chest
 d0 hidden 2d section:
   treasure: Gasha Seed
   room: 0x0601
+  maptile: 0xd4
   collect: touch
 d0 rupee chest:
   treasure: Rupees (30)
   room: 0x0405
+  maptile: 0xd4
+  collect: chest
 d0 sword chest:
   treasure: Progressive Sword
   room: 0x0404
-  ids: [{bank: 0x0a, addr: 0x7b90}] # not a real chest!
+  maptile: 0xd4
+  ids: [{bank: 0x0a, addr: 0x7b90}] 
   subids: [{bank: 0x0a, addr: 0x7b92}]
-  local: true
+  collect: touch # not a real chest!
 
 # d1
 d1 stalfos drop:
   treasure: Small Key (Gnarled Root Dungeon)
   room: 0x041b
-  keydrop: true
+  maptile: 0x96
+  collect: drop
 d1 basement:
   treasure: Seed Satchel
   room: 0x0609
+  maptile: 0x96
   reverseaddr: {bank: 0x09, addr: 0x66b1}
+  collect: touch
 d1 block-pushing room:
   treasure: Gasha Seed
   room: 0x040d
+  maptile: 0x96
+  collect: chest
 d1 railway chest:
   treasure: Bombs (10)
   room: 0x0410
+  maptile: 0x96
+  collect: chest
 d1 floormaster room:
   treasure: Discovery Ring
   collect: chest
   room: 0x0417
+  maptile: 0x96
 d1 lever room:
   treasure: Compass (Gnarled Root Dungeon)
   room: 0x040f
+  maptile: 0x96
+  collect: chest
 d1 stalfos chest:
   treasure: Dungeon Map (Gnarled Root Dungeon)
   room: 0x0419
+  maptile: 0x96
+  collect: chest
 d1 button chest:
   treasure: Small Key (Gnarled Root Dungeon)
   room: 0x0411
+  maptile: 0x96
+  collect: chest
 d1 goriya chest:
   treasure: Boss Key (Gnarled Root Dungeon)
   room: 0x0414
+  maptile: 0x96
+  collect: chest
 d1 boss:
   treasure: Heart Container
   room: 0x0412
+  maptile: 0x96
+  collect: poof
 
 # d2
 d2 rope drop:
   treasure: Small Key (Snake's Remains)
   room: 0x0434
-  keydrop: true
+  maptile: 0x8d
+  collect: drop
 d2 moblin chest:
   treasure: Bracelet
   room: 0x042a
+  maptile: 0x8d
+  collect: chest
 d2 roller chest:
   treasure: Rupees (10)
   room: 0x041f
+  maptile: 0x8d
+  collect: chest
 d2 left from entrance:
   treasure: Rupees (5)
   room: 0x0438
+  maptile: 0x8d
+  collect: chest
 d2 pot chest:
   treasure: Dungeon Map (Snake's Remains)
   room: 0x042b
+  maptile: 0x8d
+  collect: chest
 d2 rope chest:
   treasure: Compass (Snake's Remains)
   room: 0x0436
+  maptile: 0x8d
+  collect: chest
 d2 blade chest:
   treasure: Small Key (Snake's Remains)
   room: 0x0431
+  maptile: 0x8d
+  collect: chest
 d2 spiral chest:
   treasure: Small Key (Snake's Remains)
   room: 0x042d
+  maptile: 0x8d
+  collect: chest
 d2 terrace chest:
   treasure: Boss Key (Snake's Remains)
   room: 0x0424
+  maptile: 0x8d
+  collect: chest
 d2 boss:
   treasure: Heart Container
   room: 0x0429
+  maptile: 0x8d
+  collect: poof
 
 # d3
 d3 roller chest:
   treasure: Small Key (Poison Moth's Lair)
   room: 0x044c
+  maptile: 0x60
+  collect: chest
 d3 mimic chest:
   treasure: Progressive Feather
   room: 0x0450
+  maptile: 0x60
+  collect: chest
 d3 zol chest:
   treasure: Small Key (Poison Moth's Lair)
   room: 0x044f
+  maptile: 0x60
+  collect: chest
 d3 water room:
   treasure: Rupees (30)
   room: 0x0441
+  maptile: 0x60
+  collect: chest
 d3 quicksand terrace:
   treasure: Gasha Seed
   room: 0x0444
+  maptile: 0x60
+  collect: chest
 d3 moldorm chest:
   treasure: Bombs (10)
   room: 0x0454
+  maptile: 0x60
+  collect: chest
 d3 trampoline chest:
   treasure: Compass (Poison Moth's Lair)
   room: 0x044d
+  maptile: 0x60
+  collect: chest
 d3 bombed wall chest:
   treasure: Dungeon Map (Poison Moth's Lair)
   room: 0x0451
+  maptile: 0x60
+  collect: chest
 d3 giant blade room:
   treasure: Boss Key (Poison Moth's Lair)
   room: 0x0446
+  maptile: 0x60
+  collect: chest
 d3 boss:
   treasure: Heart Container
   room: 0x0453
+  maptile: 0x60
+  collect: poof
 
 # d4
 d4 pot puzzle:
   treasure: Small Key (Dancing Dragon Dungeon)
   room: 0x047b
-  keydrop: true
+  maptile: 0x1d
+  collect: drop
 d4 cracked floor room:
   treasure: Progressive Slingshot
   room: 0x0473
+  maptile: 0x1d
+  collect: chest
 d4 north of entrance:
   treasure: Bombs (10)
   room: 0x047f
+  maptile: 0x1d
+  collect: chest
 d4 maze chest:
   treasure: Dungeon Map (Dancing Dragon Dungeon)
   room: 0x0469
+  maptile: 0x1d
+  collect: chest
 d4 dark room:
   treasure: Small Key (Dancing Dragon Dungeon)
   room: 0x046d
+  maptile: 0x1d
+  collect: chest
 d4 water ring room:
   treasure: Compass (Dancing Dragon Dungeon)
   room: 0x0483
+  maptile: 0x1d
+  collect: chest
 d4 pool:
   treasure: Small Key (Dancing Dragon Dungeon)
   room: 0x0475
-  keydrop: true
+  maptile: 0x1d
+  collect: drop
 d4 terrace:
   treasure: Small Key (Dancing Dragon Dungeon)
   room: 0x0463
+  maptile: 0x1d
+  collect: chest
 d4 torch chest:
   treasure: Small Key (Dancing Dragon Dungeon)
   room: 0x0464
+  maptile: 0x1d
+  collect: chest
 d4 dive spot:
   treasure: Boss Key (Dancing Dragon Dungeon)
   room: 0x046c
+  maptile: 0x1d
   addr: {bank: 0x0b, addr: 0x4c0b}
   collect: dive
 d4 boss:
   treasure: Heart Container
   room: 0x045f
+  maptile: 0x1d
+  collect: poof
 
 # d5
 d5 cart chest:
   treasure: Small Key (Unicorn's Cave)
   room: 0x0499
+  maptile: 0x8a
+  collect: chest
 d5 left chest:
   treasure: Small Key (Unicorn's Cave)
   room: 0x04a3
+  maptile: 0x8a
+  collect: chest
 d5 magnet ball chest:
   treasure: Magnet Gloves
   room: 0x0489
+  maptile: 0x8a
+  collect: chest
 d5 terrace chest:
   treasure: Rupees (100)
   room: 0x0497
+  maptile: 0x8a
+  collect: chest
 d5 armos chest:
   treasure: Small Key (Unicorn's Cave)
   room: 0x0491
+  maptile: 0x8a
   addr: {bank: 0x09, addr: 0x5051}
   collect: d5 armos
-  local: true
 d5 gibdo/zol chest:
   treasure: Dungeon Map (Unicorn's Cave)
   room: 0x048f
+  maptile: 0x8a
+  collect: chest
 d5 spiral chest:
   treasure: Compass (Unicorn's Cave)
   room: 0x049d
+  maptile: 0x8a
+  collect: chest
 d5 spinner chest:
   treasure: Small Key (Unicorn's Cave)
   room: 0x049f
+  maptile: 0x8a
+  collect: chest
 d5 stalfos room:
   treasure: Small Key (Unicorn's Cave)
   room: 0x04a5
+  maptile: 0x8a
+  collect: chest
 d5 basement:
   treasure: Boss Key (Unicorn's Cave)
   room: 0x068b
+  maptile: 0x8a
   addr: {bank: 0x0b, addr: 0x4c22}
   collect: touch
 d5 boss:
   treasure: Heart Container
   room: 0x048c
+  maptile: 0x8a
+  collect: poof
 
 # d6
 d6 magnet ball drop:
   treasure: Small Key (Ancient Ruins)
   room: 0x04ab
-  keydrop: true
+  maptile: 0x00
+  collect: drop
 d6 spinner north:
   treasure: Small Key (Ancient Ruins)
   room: 0x04c2
+  maptile: 0x00
+  collect: chest
 d6 armos hall:
   treasure: Progressive Boomerang
   room: 0x04d0
+  maptile: 0x00
   collect: chest
 d6 crystal trap room:
   treasure: Rupees (10)
   room: 0x04af
+  maptile: 0x00
+  collect: chest
 d6 1F east:
   treasure: Rupees (5)
   room: 0x04b3
+  maptile: 0x00
+  collect: chest
 d6 2F gibdo chest:
   treasure: Bombs (10)
   room: 0x04bf
+  maptile: 0x00
+  collect: chest
 d6 2F armos chest:
   treasure: Rupees (5)
   room: 0x04c3
+  maptile: 0x00
+  collect: chest
 d6 beamos room:
   treasure: Compass (Ancient Ruins)
   room: 0x04ad
+  maptile: 0x00
+  collect: chest
 d6 1F terrace:
   treasure: Dungeon Map (Ancient Ruins)
   room: 0x04b0
+  maptile: 0x00
+  collect: chest
 d6 escape room:
   treasure: Boss Key (Ancient Ruins)
   room: 0x04c4
+  maptile: 0x00
+  collect: chest
 d6 vire chest:
   treasure: Small Key (Ancient Ruins)
   room: 0x04c1
+  maptile: 0x00
+  collect: chest
 d6 boss:
   treasure: Heart Container
   room: 0x04d5
+  maptile: 0x00
+  collect: poof
 
 # d7
 d7 wizzrobe chest:
   treasure: Small Key (Explorer's Crypt)
+  collect: chest
   room: 0x0554
+  maptile: 0xd0
 d7 spike chest:
   treasure: Progressive Feather
+  collect: chest
   room: 0x0544
+  maptile: 0xd0
 d7 maze chest:
   treasure: Rupees (1)
+  collect: chest
   room: 0x0543
+  maptile: 0xd0
 d7 right of entrance:
   treasure: Power Ring L-1
   collect: chest
   room: 0x055a
+  maptile: 0xd0
 d7 bombed wall chest:
   treasure: Compass (Explorer's Crypt)
   room: 0x0552
   collect: poe skip room
+  maptile: 0xd0
 d7 zol button:
   treasure: Small Key (Explorer's Crypt)
   room: 0x0545
-  keydrop: true
+  collect: drop
+  maptile: 0xd0
 d7 armos puzzle:
   treasure: Small Key (Explorer's Crypt)
   room: 0x0535
   reverseaddr: {bank: 0x09, addr: 0x5689}
   collect: drop
+  maptile: 0xd0
 d7 magunesu chest:
   treasure: Small Key (Explorer's Crypt)
   room: 0x0547
+  collect: chest
+  maptile: 0xd0
 d7 quicksand chest:
   treasure: Dungeon Map (Explorer's Crypt)
   room: 0x0558
+  collect: chest
+  maptile: 0xd0
 d7 B2F drop:
   treasure: Small Key (Explorer's Crypt)
   room: 0x053d
-  keydrop: true
+  collect: drop
+  maptile: 0xd0
 d7 stalfos chest:
   treasure: Boss Key (Explorer's Crypt)
   room: 0x0548
+  collect: chest
+  maptile: 0xd0
 d7 boss:
   treasure: Heart Container
   room: 0x0550
+  collect: poof
+  maptile: 0xd0
 
 # d8
 d8 eye drop:
   treasure: Small Key (Sword & Shield Dungeon)
   room: 0x0582
-  keydrop: true
+  collect: drop
+  maptile: 0x04
 d8 armos chest:
   treasure: Progressive Slingshot
   room: 0x058d
+  collect: chest
+  maptile: 0x04
 d8 SW lava chest:
   treasure: Bombs (10)
   room: 0x056a
+  collect: chest
+  maptile: 0x04
 d8 three eyes chest:
   treasure: Steadfast Ring
   collect: chest
   room: 0x057d
+  collect: chest
+  maptile: 0x04
 d8 hardhat drop:
   treasure: Small Key (Sword & Shield Dungeon)
   room: 0x0575
-  keydrop: true
+  collect: drop
+  maptile: 0x04
 d8 spike room:
   treasure: Compass (Sword & Shield Dungeon)
   room: 0x058b
+  collect: chest
+  maptile: 0x04
 d8 spinner chest:
   treasure: Small Key (Sword & Shield Dungeon)
   room: 0x0570
+  collect: chest
+  maptile: 0x04
 d8 magnet ball room:
   treasure: Dungeon Map (Sword & Shield Dungeon)
   room: 0x058e
+  collect: chest
+  maptile: 0x04
 d8 darknut chest:
   treasure: Small Key (Sword & Shield Dungeon)
   room: 0x058c
+  collect: chest
+  maptile: 0x04
 d8 ghost armos drop:
   treasure: Small Key (Sword & Shield Dungeon)
   room: 0x057f
-  keydrop: true
+  collect: drop
+  maptile: 0x04
 d8 pols voice chest:
   treasure: Boss Key (Sword & Shield Dungeon)
   room: 0x0580
+  collect: chest
+  maptile: 0x04
 d8 SE lava chest:
   treasure: Small Key (Sword & Shield Dungeon)
   room: 0x056b
+  collect: chest
+  maptile: 0x04
 d8 spark chest:
   treasure: Small Key (Sword & Shield Dungeon)
   room: 0x058a
+  collect: chest
+  maptile: 0x04
 d8 boss:
   treasure: Heart Container
   room: 0x0564
+  collect: poof
+  maptile: 0x04
 
 # static items
 horon heart piece:
@@ -855,34 +1061,70 @@ guru-guru trade:
   addr: {bank: 0x0b, addr: 0x63e5} # 2E3E5
   collect: touch
 
+subrosia bath ore digging spot:
+  treasure: Ore Chunks (50)
+  room: 0x0106
+  collect: dig
+  maptile: 0x1e
+subrosia market portal ore digging spot:
+  treasure: Ore Chunks (50)
+  room: 0x0157
+  collect: dig
+  maptile: 0xb0
+subrosia hard-working ore digging spot:
+  treasure: Ore Chunks (50)
+  room: 0x0147
+  collect: dig
+  maptile: 0xb0
+subrosia temple ore digging spot:
+  treasure: Ore Chunks (50)
+  room: 0x013a
+  collect: dig
+  maptile: 0x1e
+subrosia northern volcanoes ore digging spot:
+  treasure: Ore Chunks (50)
+  room: 0x0107
+  collect: dig
+  maptile: 0x1e
+subrosia d8 portal ore digging spot:
+  treasure: Ore Chunks (50)
+  room: 0x0120
+  collect: dig
+  maptile: 0x1e
+subrosia western volcanoes ore digging spot:
+  treasure: Ore Chunks (50)
+  room: 0x0142
+  collect: dig
+  maptile: 0x1e
+
 # seed trees; semi-fake in that they don't slot real treasures
 horon village tree:
   treasure: Ember Seeds
   room: 0x00f8
   ids: [{bank: 0x0d, addr: 0x68fb}]
-  local: true
+  collect: touch
 woods of winter tree:
   treasure: Mystery Seeds
   room: 0x009e
   ids: [{bank: 0x0d, addr: 0x68fe}]
-  local: true
+  collect: touch
 north horon tree:
   treasure: Scent Seeds
   room: 0x0067
   ids: [{bank: 0x0d, addr: 0x6901}]
-  local: true
+  collect: touch
 spool swamp tree:
   treasure: Pegasus Seeds
   room: 0x0072
   ids: [{bank: 0x0d, addr: 0x6904}]
-  local: true
+  collect: touch
 sunken city tree:
   treasure: Gale Seeds
   room: 0x005f
   ids: [{bank: 0x0d, addr: 0x6907}]
-  local: true
+  collect: touch
 tarm ruins tree:
   treasure: Gale Seeds
   room: 0x0010
   ids: [{bank: 0x0d, addr: 0x690a}]
-  local: true
+  collect: touch

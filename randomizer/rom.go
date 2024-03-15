@@ -101,9 +101,6 @@ func (rom *romState) initBanks(ri *routeInfo) {
 	// with the number of checks.
 	rom.replaceRaw(address{0x06, 0}, "collectPropertiesTable", makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
 
-	roomTreasureBank := byte(sora(rom.game, 0x3f, 0x38).(int))
-	rom.replaceRaw(address{roomTreasureBank, 0}, "roomTreasures", makeRoomTreasureTable(rom.itemSlots))
-
 	numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
 	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets", string(make([]byte, numOwlIds*2)))
 
@@ -151,6 +148,8 @@ func (rom *romState) setData(ri *routeInfo) {
 
 	rom.assembler.defineByte("option.foolsOreDamage", byte(ri.foolsOreDamage*-1))
 
+	// If enabled, put real Subrosia map group (0x01), otherwise put a fake map group that will never trigger tile changes (0xfe)
+	rom.assembler.defineByte("option.revealGoldenOreTiles", ternary(ri.revealGoldenOreTiles, uint8(0x01), uint8(0xfe)).(uint8))
 }
 
 // changes the contents of loaded ROM bytes in place. returns a checksum of the
@@ -215,7 +214,6 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 
 	rom.setShopPrices(ri.shopPrices)
 	rom.setSeedData()
-	rom.setRoomTreasureData()
 	rom.setFileSelectText(ri.archipelagoSlotName)
 	rom.attachText()
 
@@ -333,19 +331,9 @@ func (rom *romState) setSeedData() {
 func inflictCamelCase(s string) string {
 	s = strings.ReplaceAll(s, ".", "")
 	s = strings.ReplaceAll(s, ",", "")
+	s = strings.ReplaceAll(s, "-", " ")
 	return fmt.Sprintf("%c%s", s[0], strings.ReplaceAll(
 		strings.Title(strings.ReplaceAll(s, "'", "")), " ", "")[1:])
-}
-
-// fill table. initial table is blank, since it's created before items are
-// placed.
-func (rom *romState) setRoomTreasureData() {
-	rom.codeMutables["roomTreasures"].new = []byte(makeRoomTreasureTable(rom.itemSlots))
-	if rom.game == GAME_SEASONS {
-		t := rom.itemSlots["d7 zol button"].treasure
-		rom.codeMutables["aboveD7ZolButtonId"].new = []byte{t.id}
-		rom.codeMutables["aboveD7ZolButtonSubid"].new = []byte{t.subid}
-	}
 }
 
 // sets the high nybble (seed type) of a seed tree interaction in ages.
