@@ -40,6 +40,7 @@ seasons:
     db ff
 
   0a/staticItemsReplacementsLookup_body: |
+    push bc
     ld a,(wActiveGroup)
     ld b,a
     ld a,(wActiveRoom)
@@ -47,7 +48,7 @@ seasons:
     ld e,02
     ld hl,staticItemsReplacementsTable
     call searchDoubleKey
-    ld bc,0000
+    pop bc
     ret nc
     ld b,(hl) # item id
     inc hl
@@ -108,10 +109,13 @@ seasons:
   # Call our custom handler in scriptCmd_spawnItem
   0b/4416/: call handleRandomizedSpawnedItem
 
+  # stop d4 pool item from incrementing subindex when it hits the water.
+  09/40fb/: nop; nop; nop; nop; nop
+
   # for the item dropped in the room *above* the trampoline.
   15/55d8/aboveD7ZolButtonId: db slot.d7ZolButton.id
   15/55db/aboveD7ZolButtonSubid: db slot.d7ZolButton.subid
-  
+
 
   ### MAKU TREE MISSABLE GASHA SEEDS ###########################################
 
