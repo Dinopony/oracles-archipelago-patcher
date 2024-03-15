@@ -52,6 +52,34 @@ seasons:
   3f/4543/editGainLoseItemsTables: db 13,20,20,00,00,00,00
   3f/44ce/: ld hl,4547 # shift lose items table pointer
 
+  16/2233/oldManRupeeValues: |
+    db 10    # Goron mountain
+    db 0d    # North Horon
+    db 0c    # D1 stump
+    db 10    # Western Coast
+    db 0c    # Horon
+    db 0d    # Tarm Ruins
+    db 0b    # Woods of Winter
+    db 0c    # Ghastly stump
+  0b/187b/oldManGiveTake: |
+    dw 7472  # Goron mountain
+    dw 7472  # North Horon
+    dw 7472  # D1 stump
+    dw 7472  # Western Coast
+    dw 7472  # Horon
+    dw 7488  # Tarm Ruins
+    dw 7488  # Woods of Winter
+    dw 7488  # Ghastly stump
+
+  08/23cb/foolsOreDamage: db option.foolsOreDamage
+  03/1116/heartBeepInterval: db 3f
+
+  02/1e3e/lostWoodsItemSequence1: ''
+  02/1e46/lostWoodsItemSequence2: ''
+  02/1e4e/lostWoodsItemSequence3: ''
+  02/1e56/lostWoodsItemSequence4: ''
+  1f/56d/lostWoodsPhonographText: ''
+
 ages:
   # map pop-up icons for seed trees
   02/6d05/crescentIslandTreeMapIcon: db 16
