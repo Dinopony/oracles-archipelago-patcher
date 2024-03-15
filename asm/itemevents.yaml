@@ -35,9 +35,6 @@ seasons:
       and a
       ret
 
-  # ignore sword level for lost woods pedestal.
-  08/7e62/: ld a,01
-
   # see function in bank 02.
   09/handleGetItem: |
       ld b,a
@@ -53,61 +50,6 @@ seasons:
       call giveTreasure
       ret
   09/42e0/: call handleGetItem
-
-  # mt. cucco platform cave item is normally created using ring-specific code.
-  # values are replaced at randomization.
-  09/createMtCuccoItem: |
-      ld bc,slot.mtCuccoPlatformCave.full
-      call createTreasure
-      jp 6421
-  09/641a/: jp createMtCuccoItem
-
-  0b/72f0/: db jumpifitemobtained,11 # master diver
-
-  # stop hero's cave chest from giving a second sword that causes a spin slash.
-  0a/7bb9/: |
-    db 00,00,00,00,00,00,00
-    db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
-    db 00
-
-  # remove second sword (used to trigger spin slash) from lost woods script.
-  0b/641a/: db retscript
-  0b/6421/: db retscript
-
-  # give a fake item id for the master diver to check instead of flippers. the
-  # item id and subid at the beginning of this script are changed during
-  # randomization. also - remove master's plaque from inventory to prevent
-  # confusion.
-  0b/script_diverGiveItem: |
-      db giveitem; db slot.masterDiversReward.id; db slot.masterDiversReward.subid
-      db orroomflag; db 80
-      db ormemory; dw c694; db 02 # in wObtainedTreasureFlags
-      db asm15; dw loseMastersPlaque
-      db retscript
-  15/loseMastersPlaque: |
-      ld a,TREASURE_MASTERS_PLAQUE
-      jp loseTreasure
-  0b/730d/: db callscript; dw script_diverGiveItem
-
-  # skip shield + shield level checks for forging hard ore.
-  0b/75c6/: db jumpifitemobtained,TREASURE_PUNCH
-  15/62ac/: jr 05
-
-  # hard ore item doesn't normally get a subid. values are replaced at
-  # randomization.
-  15/setHardOreIds: |
-      inc l
-      ld (hl),slot.greatFurnace.id
-      inc l
-      ld (hl),slot.greatFurnace.subid
-      ret
-  15/5b83/: call setHardOreIds
-
-  # don't display normal fixed text for temple of seasons item.
-  15/70be/: nop; nop; nop
-
-  # rod cutscene
-  15/70cf/: call giveTreasureCustom
 
   # have seed satchel inherently refill all seeds.
   3f/satchelRefillSeeds: |
@@ -159,34 +101,6 @@ seasons:
       call applyParameter
       ret
   3f/452b/: call activateFlute
-
-  # Make the golden beasts old man give a treasure instead of a ring
-  15/giveGoldenBeastsReward: |
-    call createTreasure
-    ret nz
-    push de
-    ld de,w1Link.yh
-    call objectCopyPosition_rawAddress
-    pop de
-    xor a
-    ret
-  15/6adc/: jp giveGoldenBeastsReward
-  # Change the golden beasts old man requirement (both checked value and text)
-  15/6acf/goldenBeastsRequirement: db option.goldenBeastsRequirement
-  # Change the "jr z" into a "jr nc" to allow having more beasts killed than needed
-  15/6ad2/: db 30
-  # Change not yet completed text value
-  1f/3247/goldenBeastsText: db option.goldenBeastsRequirementTextDigit,20,05,8e,20
-  # Change completion text value
-  1f/3295/goldenBeastsRewardText: db option.goldenBeastsRequirementTextDigit,20,05,8e,20
-
-  # Change the essence requirement for treehouse old man
-  0a/4f8b/: db option.treehouseOldManRequirement
-  # Change the number of essences mentioned in text
-  1f/737b/treehouseOldManText: |
-    db 68,61,73,20
-    db option.treehouseOldManRequirementTextDigit
-    db 20,02,35,2e,00
 
   # Set room flag 0x20 when knocking off tree seeds
   10/extendedKnockOffTree: |

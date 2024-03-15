@@ -90,3 +90,12 @@ seasons:
       call interBankCall
       pop af
       ret
+
+  # Add a "remove item" script command attached to unused byte 0xdc
+  0b/scriptCmd_removeItem: |
+    pop hl
+    inc hl
+    ldi a,(hl)
+    call loseTreasure
+    ret
+  0b/40c1/: dw scriptCmd_removeItem

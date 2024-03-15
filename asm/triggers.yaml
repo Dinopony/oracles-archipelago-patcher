@@ -9,15 +9,18 @@ seasons:
   08/5886/: ld a,02  # master diver
   0a/4be9/: ld a,02  # ^
   0a/4bf4/: cp a,00  # ^
+
   08/6c31/: cp a,00  # piratian captain
+  
   08/7c40/: cp a,00  # subrosian at volcano
   08/7cd2/: cp a,00  # ^
+  
   09/4e36/: jp 4eab  # spawn moosh
   0f/7428/: jr nz,00 # ^
+  
   09/4e40/: or a,57  # spawn dimitri
+  
   09/4e72/: or a,4f  # spawn ricky
-
-  # 0a/4f8a/: cp a,00  # old man (round jewel)
   
   # dimitri also won't spawn normally if you have flippers.
   09/4e55/: ld a,TREASURE_CANE_OF_SOMARIA

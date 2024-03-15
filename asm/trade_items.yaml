@@ -137,15 +137,6 @@ seasons:
 
   # ----- item removal script changes -----
 
-  # Add a "remove item" script command attached to unused byte 0xdc
-  0b/scriptCmd_removeItem: |
-    pop hl
-    inc hl
-    ldi a,(hl)
-    call loseTreasure
-    ret
-  0b/40c1/: dw scriptCmd_removeItem
-
   # Overwrite INTERACID_S_GREAT_FAIRY to have some space for item removal scripts
   0b/7e73/: |
     db orroomflag,40

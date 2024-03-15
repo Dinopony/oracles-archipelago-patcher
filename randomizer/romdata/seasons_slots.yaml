@@ -422,6 +422,11 @@ subrosian smithy ore:
   ids: [{bank: 0x15, addr: 0x62be}]
   subids: [{bank: 0x15, addr: 0x62b4}]
   collect: touch
+bomb flower:
+  treasure: Bomb Flower
+  room: 0x0169
+  maptile: 0xb9
+  collect: touch
 
 # hero's cave
 d0 key chest:

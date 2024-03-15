@@ -276,6 +276,7 @@ seasons:
     define lookupKey,1dc4
     define lookupCollisionTable,1ddd
     define objectSetVisiblec2,1e03
+    define objectSetInvisible,1e39
     define convertShortToLongPosition,2089
     define objectDelete_useActiveObjectType,219e
     define objectCopyPosition,21fd

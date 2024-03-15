@@ -100,6 +100,7 @@ common:
   Potion: 0x2f00
   Gasha Seed: 0x3401
 
+  Bomb Flower: 0x4900
   Archipelago Item: 0x4100
 
 seasons:
@@ -214,7 +215,6 @@ ages:
   old mermaid key: 0x4500
   library key: 0x4600
   Ricky's Gloves: 0x4800
-  bomb flower: 0x4900
   slate: 0x4b00
   tuni nut: 0x4c00
   scent seedling: 0x4d00
