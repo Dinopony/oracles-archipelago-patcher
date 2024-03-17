@@ -52,6 +52,10 @@ seasons:
       jp showText
   10/4ade/: call useEmberSeedText
 
+  # Remove the mention of seeds being included with the seed satchel, since Ember was most likely
+  # the wrong one in random given seed type
+  1d/5730/: db 00
+
   1e/64d7/horonShop1Text: '' # 1716, cutscene after d8
   1e/681d/horonShop2Text: '' # 172d, cutscene after d6
   1e/6361/horonShop3Text: '' # 1707, cutscene after d2

@@ -39,6 +39,9 @@ seasons:
       ld (wAnimalRegion),a
       ld a,ff
       ld (wAnimalTutorialFlags),a
+      # Remove the requirement to go in the screen under Sunken City tree to make Dimitri bullies appear
+      ld a,20
+      ld (wDimitriState),a
 
       # room flags 4 | 6
       ld a,50

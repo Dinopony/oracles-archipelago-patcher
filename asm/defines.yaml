@@ -212,6 +212,7 @@ seasons:
 
     # wram
     define wRickyState,c643
+    define wDimitriState,c644
     define wAnimalTutorialFlags,c646
     define wInventoryB,c680
     define wObtainedTreasureFlags,c692

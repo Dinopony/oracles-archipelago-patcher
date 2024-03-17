@@ -83,7 +83,7 @@ seasons:
       cp a,80
       ld e,COLLECT_FALL_KEY
       ret c
-      ld e,COLLECT_CHEST_MAP_OR_COMPASS
+      ld e,COLLECT_CHEST
       ret
 
   # maku tree item drops at a specific script pos, otherwise use regular mode.

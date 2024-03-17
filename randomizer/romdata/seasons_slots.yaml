@@ -94,7 +94,7 @@ spring banana tree:
   treasure: Spring Banana
   room: 0x000f
   reverseaddr: {bank: 0x09, addr: 0x66c6}
-  collect: chest
+  collect: touch
 goron mountain, across pits:
   treasure: Dragon Key
   room: 0x001a
