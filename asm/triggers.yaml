@@ -31,9 +31,6 @@ seasons:
   # don't require rod to get items from season spirits.
   0b/4eb1/: db jumpifitemobtained,TREASURE_PUNCH
 
-  # when included, removes the event where the subrosians steal your feather.
-  11/6f8c/: db ff
-
 ages:
   # only increment the maku tree's state if on the maku tree screen, or if
   # all essences are obtained, set it to the value it would normally have at
