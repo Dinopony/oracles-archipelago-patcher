@@ -975,6 +975,11 @@ subrosia hide and seek:
   room: 0x0160
   collect: dig
   maptile: 0x1e
+subrosian sign loving guy:
+  treasure: Sign Ring
+  room: 0x03A9
+  collect: touch
+  maptile: 0xb9
 
 # npc rewards
 mayor's gift:
@@ -996,7 +1001,6 @@ goron's gift:
   maptile: 0x19
 golden beasts old man:
   treasure: Red Ring
-  reverseaddr: {bank: 0x15, addr: 0x6ada}
   room: 0x0511
   collect: touch
   maptile: 0xa6

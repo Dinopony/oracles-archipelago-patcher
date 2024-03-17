@@ -80,6 +80,18 @@ common:
     .done
     ret
 
+  # b = treasure id
+  # c = treasure subid
+  00/spawnTreasureOnLink: |
+    call createTreasure
+    ret nz
+    push de
+    ld de,w1Link.yh
+    call objectCopyPosition_rawAddress
+    pop de
+    xor a
+    ret
+
 seasons:
   # call a function hl in bank 02, preserving af. e can't be used as a
   # parameter to that function, but it can be returned. this function only

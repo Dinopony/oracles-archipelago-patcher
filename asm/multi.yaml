@@ -131,11 +131,10 @@ common:
       and a
       jr z,.noUpgradeFeather
       ld c,02
+      
       .noUpgradeFeather
-      call createTreasure
+      call spawnTreasureOnLink
       jr nz,.done
-      ld de,w1Link.yh
-      call objectCopyPosition_rawAddress
       ld a,(multiPlayerNumber)
       ld l,INTERAC_MULTI_BYTE
       ld (hl),a

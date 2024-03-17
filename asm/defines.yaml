@@ -296,7 +296,7 @@ seasons:
     define addTreasureToInventory,46bc
     define fadeoutToWhite,3144
     define clearStaticObjects,3076
-    define saveFile,9b4
+    define saveFile,09b4
 
     # rom 02
     define _closeMenu,4f7b

@@ -41,28 +41,17 @@ seasons:
 
   09/4397/: call objectSetInvisible
   09/43be/: |
-    push de
     ld bc,slot.bombFlower.full
-    call createTreasure
-    ld de,w1Link.yh
-    call objectCopyPosition_rawAddress
-    pop de
-    ret
+    jp spawnTreasureOnLink
 
 
   ##### GOLDEN BEASTS OLD MAN ####################################
 
   # Make the golden beasts old man give a treasure instead of a ring
-  15/giveGoldenBeastsReward: |
-    call createTreasure
-    ret nz
-    push de
-    ld de,w1Link.yh
-    call objectCopyPosition_rawAddress
-    pop de
-    xor a
-    ret
-  15/6adc/: jp giveGoldenBeastsReward
+  15/6ad9/: |
+    ld bc,slot.goldenBeastsOldMan.full
+    jp spawnTreasureOnLink
+
   # Change the golden beasts old man requirement (both checked value and text)
   15/6acf/goldenBeastsRequirement: db option.goldenBeastsRequirement
   # Change the "jr z" into a "jr nc" to allow having more beasts killed than needed
@@ -165,3 +154,42 @@ seasons:
     xor a
     ld (ccab),a
     jp interactionDelete
+
+
+  ##### VASU'S GIFT ###################################################
+
+  # Vasu usually gives a ring, we need him to give a treasure instead
+  15/49a6/: |
+    ld bc,slot.vasusGift.full
+    jp spawnTreasureOnLink
+
+
+  ##### LONELY GORON'S GIFT ###################################################
+
+  # Instructions to remove most of the Goron's ring box upgrade script
+  0c/1bff/: db eb
+  0c/1c00/: db eb,eb,eb,eb,eb,eb,eb,eb,eb,eb,eb,eb,eb,eb,eb,eb
+  0c/1c10/: db eb,eb,eb,eb,eb,eb,eb,eb,eb,eb
+
+
+  ##### SUBROSIAN SIGN-LOVING GUY ########################################
+
+  # Edit subrosian_checkSignsDestroyed to edit the condition
+  15/592c/: |
+    ld a,(wTotalSignsDestroyed)
+    ld b,a
+    ld c,5  # condition met text
+    cp a,10 # option.signGuyRequirement
+    jr nc,14
+
+    ld c,2  # some signs broken text
+    cp a,0
+    jr nz,0e
+
+    ld c,0  # no signs broken text
+    jr 0a
+
+  # Change the item given
+  15/595d/: |
+    ld bc,slot.subrosianSignLovingGuy.full
+    jp spawnTreasureOnLink

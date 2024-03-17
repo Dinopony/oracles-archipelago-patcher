@@ -299,7 +299,6 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"misc",
 		"multi",
 		"newgame",
-		"npc_items",
 		"options",
 		"progressives",
 		"rings",
