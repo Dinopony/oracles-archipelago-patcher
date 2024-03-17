@@ -146,3 +146,22 @@ seasons:
     db 00,00,00,00,00,00,00
     db 00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
     db 00
+
+
+  ##### SUBROSIAN HIDE AND SEEK ############################################
+   
+  # removes the event where the subrosians steal your feather.
+  11/6f8c/: db ff
+  
+  # set fixed items for the first dig and all subsequent digs
+  15/5dd6/: |
+    ld bc,slot.subrosiaHideAndSeek.full
+    jr 25
+    ld bc,3700  # Ore Chunks (50)
+    jr 20
+
+  # allow to transition away from the screen even if the item is not dug
+  09/659b/: |
+    xor a
+    ld (ccab),a
+    jp interactionDelete

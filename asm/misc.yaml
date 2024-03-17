@@ -114,24 +114,6 @@ seasons:
   21/6267/: db 04 # ricky tile
   23/5cb7/: db 04 # moosh tile
 
-  # feather game: don't give fools ore, and don't return fools ore.
-  14/4881/: db delay1frame,delay1frame,delay1frame
-  # always give up feather at the end if the player doesn't have it.
-  15/5dcf/: |
-      ld a,TREASURE_FEATHER
-      call checkTreasureObtained
-      jr c,05
-  # and make the feather appear without needing to be dug up.
-  15/5335/: db 1a # treasure mode
-  # allow transition away from the screen once you have feather (not once the
-  # hole is dug).
-  09/65a0/: |
-      ld a,TREASURE_FEATHER
-      call checkTreasureObtained
-      nop
-      nop
-      ret nc
-
   # move d8 magnet ball one tile to the left, so you don't get stuck if
   # you go up the stairs without magnet glove.
   15/4f62/: db 38

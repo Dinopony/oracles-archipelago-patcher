@@ -970,6 +970,11 @@ subrosian 2d cave:
   room: 0x07e3
   collect: touch
   maptile: 0x1e
+subrosia hide and seek:
+  treasure: Gasha Seed
+  room: 0x0160
+  collect: dig
+  maptile: 0x1e
 
 # npc rewards
 mayor's gift:
