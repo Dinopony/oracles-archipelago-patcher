@@ -398,12 +398,11 @@ func (rom *romState) attachText() {
 
 	// insert randomized item names into shop text
 	shopNames := loadShopNames(gameNames[rom.game])
-	shopMap := map[string]string{
-		"horonShop3Text": "shop, 150 rupees",
-	}
+	shopMap := map[string]string{}
 	if rom.game == GAME_SEASONS {
 		shopMap["horonShop1Text"] = "shop, 20 rupees"
 		shopMap["horonShop2Text"] = "shop, 30 rupees"
+		shopMap["horonShop3Text"] = "shop, 150 rupees"
 		shopMap["advanceShop1Text"] = "advance shop 1"
 		shopMap["advanceShop2Text"] = "advance shop 2"
 		shopMap["advanceShop3Text"] = "advance shop 3"

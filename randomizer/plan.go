@@ -83,6 +83,7 @@ func parseYamlInput(path string) (*routeInfo, error) {
 type routeInfo struct {
 	game    int
 	version string
+	goal    string
 
 	companion                  int
 	warpToStart                bool
@@ -216,6 +217,14 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
 }
 
 func processSettings(data *inputData, ri *routeInfo) error {
+	ri.goal = ""
+	if val, ok := data.settings["goal"]; ok {
+		ri.goal = val
+	}
+	if ri.goal != "beat_onox" && ri.goal != "beat_ganon" {
+		return fmt.Errorf("settings.goal is invalid ('beat_onox' or 'beat_ganon')")
+	}
+
 	// Companion deciding which Natzu region will be inside the seed
 	ri.companion = COMPANION_UNDEFINED
 	if val, ok := data.settings["companion"]; ok {
