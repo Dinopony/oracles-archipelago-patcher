@@ -179,17 +179,43 @@ seasons:
     ld a,(wTotalSignsDestroyed)
     ld b,a
     ld c,5  # condition met text
-    cp a,10 # option.signGuyRequirement
+    cp a,option.signGuyRequirement
     jr nc,14
-
-    ld c,2  # some signs broken text
-    cp a,0
-    jr nz,0e
-
-    ld c,0  # no signs broken text
-    jr 0a
+    ld c,0  # tell requirement text
+    jr 10
 
   # Change the item given
   15/595d/: |
     ld bc,slot.subrosianSignLovingGuy.full
     jp spawnTreasureOnLink
+
+  # Edit text to show the requirement
+  ####################
+  # You have broken  #
+  # XXX signs!\n     #
+  # You'd better not #
+  # break more than  #
+  # XXX, or else...  #
+  ####################
+  20/5160/: |
+    db 03,e8                 # "You "
+    db 02,f5                 # "have "
+    db 03,82,01              # "broken\n"
+    db 02,7e                 # "XXX signs!\n"
+
+    db 05,9d,27,64,20        # "You'd "
+    db 03,5b                 # "better"
+    db 20,05,0c              # " not\n"
+
+    db 03,f0                 # "break"
+    db 03,2b                 # " more"
+    db 20,74,68,61,6e,01     # " than\n"
+    
+    db 09,01 # red color
+    db option.signGuyRequirement.digit1
+    db option.signGuyRequirement.digit2
+    db option.signGuyRequirement.digit3
+    db 09,00
+    db 2c,20,6f,72,20,       # ", or"
+    db 65,6c,73,65,2e,2e,2e  # "else..."
+    db 00

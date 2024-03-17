@@ -154,6 +154,30 @@ func (rom *romState) setData(ri *routeInfo) {
 
 	// If enabled, put real Subrosia map group (0x01), otherwise put a fake map group that will never trigger tile changes (0xfe)
 	rom.assembler.defineByte("option.revealGoldenOreTiles", ternary(ri.revealGoldenOreTiles, uint8(0x01), uint8(0xfe)).(uint8))
+
+	// Sign guy requirement being a multi-digit requirement, it requires quite some decomposition work
+	rom.assembler.defineByte("option.signGuyRequirement", byte(ri.signGuyRequirement))
+	rom.defineSignGuyTextConstants(ri)
+}
+
+func (rom *romState) defineSignGuyTextConstants(ri *routeInfo) {
+	signDigit3 := ri.signGuyRequirement % 10
+	signDigit2 := (ri.signGuyRequirement / 10) % 10
+	signDigit1 := int(ri.signGuyRequirement / 100)
+
+	textDigit1 := '0' + signDigit1
+	if signDigit1 == 0 {
+		textDigit1 = ' '
+	}
+	textDigit2 := '0' + signDigit2
+	if signDigit1 == 0 && signDigit2 == 0 {
+		textDigit2 = ' '
+	}
+	textDigit3 := '0' + signDigit3
+
+	rom.assembler.defineByte("option.signGuyRequirement.digit1", byte(textDigit1))
+	rom.assembler.defineByte("option.signGuyRequirement.digit2", byte(textDigit2))
+	rom.assembler.defineByte("option.signGuyRequirement.digit3", byte(textDigit3))
 }
 
 // changes the contents of loaded ROM bytes in place. returns a checksum of the
