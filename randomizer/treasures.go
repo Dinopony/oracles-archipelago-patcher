@@ -158,6 +158,9 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 		m["Archipelago Item"].text = 0x57
 		m["Archipelago Item"].sprite = 0x53
 
+		m["Archipelago Progression Item"].text = 0x57
+		m["Archipelago Progression Item"].sprite = 0x52
+
 		// give bracelet a level for ages multiworld compatibility
 		m["Power Bracelet"].param = 0x01
 	} else {

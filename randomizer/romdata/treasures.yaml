@@ -102,6 +102,7 @@ common:
 
   Bomb Flower: 0x4900
   Archipelago Item: 0x4100
+  Archipelago Progression Item: 0x4101
 
 seasons:
   # dungeon items

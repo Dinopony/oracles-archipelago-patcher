@@ -190,9 +190,10 @@ seasons:
       jp setGlobalFlag
   15/49bc/: jp checkSetFileCompleted
 
-  # change treasure 0x41 (now used as "Archipelago Item") sprite to a blue Star Ore
-  # Put a Star Ore with a galaxy blue palette inside GFX#53
-  3f/67d5/: db 66,00,43  
+  # Put a Star Ore with a galaxy blue palette inside GFX#53 (will be used by "Archipelago Item")
+  3f/67d5/: db 66,00,43
+  # Put a Star Ore with a hellish red palette inside GFX#52 (will be used by "Archipelago Progression Item")
+  3f/67d2/: db 66,00,53
   
 ages:
   05/5526/: call checkNetItemBuffer
