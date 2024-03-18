@@ -1,54 +1,48 @@
 seasons:
-  15/impaRefillTable: |
-    db TREASURE_EMBER_SEEDS,b5    # <wNumEmberSeeds
-    db TREASURE_SCENT_SEEDS,b6    # <wNumScentSeeds
-    db TREASURE_PEGASUS_SEEDS,b7  # <wNumPegasusSeeds
-    db TREASURE_GALE_SEEDS,b8     # <wNumGaleSeeds
-    db TREASURE_MYSTERY_SEEDS,b9  # <wNumMysterySeeds
-    db TREASURE_BOMBS,aa          # <wNumBombs
-    db TREASURE_SHIELD,00         # Give the item itself and end table
-    db 00
-
   15/impaRefill: |
     push de
     push hl
 
-    ld hl,impaRefillTable
+    ld b,TREASURE_EMBER_SEEDS
+    ld hl,wNumEmberSeeds
     
-    .refillLoop
-    ld a,(hl)
-    or a
-    jr z,.refillHealth
+    .refillSeedsLoop
+    ld a,b
     call checkTreasureObtained
-    ldi a,(hl)                    # Put back item in A
-    jr nc,.nextElement
+    jr nc,.nextSeed
+    ld a,(hl)  # currently owned seeds
+    cp a,20
+    jr nc,.nextSeed
+    ld (hl),20
 
-    # Treasure was obtained, refill the matching variable if under the threshold
-    ld a,(hl)
-    or a
-    jr z,.giveItem
-    push hl
-    ld h,c6
-    ld l,a
+    .nextSeed
+    ld a,b
+    cp a,TREASURE_MYSTERY_SEEDS
+    jr z,.refillBombs
+    inc hl
+    inc b
+    jr .refillSeedsLoop
+
+    .refillBombs
+    ld a,TREASURE_BOMBS
+    call checkTreasureObtained
+    jr nc,.refillShield
+    ld hl,wCurrentBombs
     ld a,(hl)
     cp a,10
-    jr nc,.popHLAndNextElement
+    jr nc,.refillShield
     ld (hl),10
 
-    .popHLAndNextElement
-    pop hl
-    .nextElement
-    inc hl
-    jr .refillLoop
-
-    .giveItem
+    .refillShield
     ld a,TREASURE_SHIELD
-    ld (ff00+8b),a
+    call checkTreasureObtained
+    jr nc,.refillHealth
+    ld a,TREASURE_SHIELD
+    ld (ff00+8b),a  # put item ID in FF8B
     ld e,3f
     ld hl,addTreasureToInventory
     call interBankCall
 
-    # Refill health to max
     .refillHealth
     ld hl,wLinkMaxHealth
     ldd a,(hl)
