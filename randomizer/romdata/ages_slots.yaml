@@ -674,7 +674,7 @@ d8 1F chest:
   treasure: Small Key (Sword & Shield Dungeon)
   room: 0x05a7
 d8 floor puzzle:
-  treasure: Bracelet
+  treasure: Power Bracelet
   room: 0x05a6
   collect: chest
 d8 tile room:

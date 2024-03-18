@@ -14,7 +14,7 @@ common:
   Dimitri's Flute: 0x0e01
   Moosh's Flute: 0x0e02
   Shovel: 0x1500
-  Bracelet: 0x1600
+  Power Bracelet: 0x1600
   Progressive Feather: 0x1700
   Seed Satchel: 0x1900
 
@@ -146,7 +146,7 @@ seasons:
   Rod of Seasons (Summer): 0x0703
   Rod of Seasons (Autumn): 0x0704
   Rod of Seasons (Winter): 0x0705
-  Magnet Gloves: 0x0800
+  Magnetic Gloves: 0x0800
   Progressive Slingshot: 0x1300
   Fool's Ore: 0x1e00
 

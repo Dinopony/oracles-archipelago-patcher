@@ -512,7 +512,7 @@ d2 rope drop:
   maptile: 0x8d
   collect: drop
 d2 moblin chest:
-  treasure: Bracelet
+  treasure: Power Bracelet
   room: 0x042a
   maptile: 0x8d
   collect: chest
@@ -679,7 +679,7 @@ d5 left chest:
   maptile: 0x8a
   collect: chest
 d5 magnet ball chest:
-  treasure: Magnet Gloves
+  treasure: Magnetic Gloves
   room: 0x0489
   maptile: 0x8a
   collect: chest
