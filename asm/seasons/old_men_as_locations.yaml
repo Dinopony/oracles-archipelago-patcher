@@ -1,0 +1,33 @@
+seasons:
+  # In "oldManScript_giveRupees", replace "wait 8; checkrupeedisplayupdated" by
+  # two useless "disableinput" instructions
+  0c/347e/: db bd,bd
+
+  # Replace most of "oldMan_takeRupees" by a table of location contents for 
+  # each Old Man (in the same order as vanilla table)
+  15/6212/oldManLocationTable: |
+    dw slot.oldManGoronMountain.reverse
+    dw slot.oldManNearBlaino.reverse
+    dw slot.oldManNearD1.reverse
+    dw slot.oldManWesternCoast.reverse
+    dw slot.oldManHoronVillage.reverse
+    dw slot.oldManTarmRuins.reverse
+    dw slot.oldManWoodsOfWinter.reverse
+    dw slot.oldManGhastlyStump.reverse
+
+  # Replace "oldMan_giveRupees" by a function performing an item lookup inside
+  # "oldManLocationTable" declared right above
+  15/6226/oldMan_giveRupees: |
+    ld e,42
+    ld a,(de)
+    ld hl,oldManLocationTable
+    add a,a
+    rst 10
+    ldi a,(hl)
+    ld b,a
+    ld c,(hl)
+    jp spawnTreasureOnLink
+    
+  # Replace "oldManScript_takeRupees" by a single jump to "oldManScript_giveRupees",
+  # so that the function being called doesn't matter anymore
+  0b/7488/: db 74,72

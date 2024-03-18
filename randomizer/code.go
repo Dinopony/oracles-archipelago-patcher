@@ -324,6 +324,9 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 	if ri.quickFlute {
 		asmPaths = append(asmPaths, "seasons/quick_flute")
 	}
+	if ri.turnOldMenIntoLocations {
+		asmPaths = append(asmPaths, "seasons/old_men_as_locations")
+	}
 
 	exe, err := os.Executable()
 	if err != nil {

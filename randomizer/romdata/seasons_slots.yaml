@@ -1110,6 +1110,48 @@ subrosia western volcanoes ore digging spot:
   collect: dig
   maptile: 0x1e
 
+# Old men as locations
+old man, goron mountain:
+  treasure: Rupees (100)
+  room: 0x0501
+  maptile: 0x28
+  collect: touch
+old man, near blaino:
+  treasure: Rupees (100)
+  room: 0x0502
+  maptile: 0x76
+  collect: touch
+old man, near d1:
+  treasure: Rupees (100)
+  room: 0x0503
+  maptile: 0x97
+  collect: touch
+old man, western coast:
+  treasure: Rupees (100)
+  room: 0x0504
+  maptile: 0xd2
+  collect: touch
+old man, horon village:
+  treasure: Rupees (100)
+  room: 0x0505
+  maptile: 0xf9
+  collect: touch
+old man, tarm ruins:
+  treasure: Rupees (100)
+  room: 0x0506
+  maptile: 0x02
+  collect: touch
+old man, woods of winter:
+  treasure: Rupees (100)
+  room: 0x0507
+  maptile: 0x8f
+  collect: touch
+old man, ghastly stump:
+  treasure: Rupees (100)
+  room: 0x0508
+  maptile: 0xa4
+  collect: touch
+
 # seed trees; semi-fake in that they don't slot real treasures
 horon village tree:
   treasure: Ember Seeds

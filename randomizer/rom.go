@@ -112,7 +112,10 @@ func (rom *romState) initBanks(ri *routeInfo) {
 func (rom *romState) setData(ri *routeInfo) {
 	// Apply location contents on slots
 	for slotName, itemName := range ri.locationContents {
-		slot := rom.itemSlots[slotName]
+		slot, ok := rom.itemSlots[slotName]
+		if !ok {
+			panic("slot " + slotName + " does not exist")
+		}
 		item := rom.treasures[itemName]
 		slot.treasure = item
 	}

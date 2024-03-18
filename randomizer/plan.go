@@ -96,6 +96,7 @@ type routeInfo struct {
 	tarmGateRequiredJewels     int
 	signGuyRequirement         int
 	revealGoldenOreTiles       bool
+	turnOldMenIntoLocations    bool
 
 	characterSprite     string
 	characterPalette    string
@@ -267,6 +268,12 @@ func processSettings(data *inputData, ri *routeInfo) error {
 	ri.openAdvanceShop = false
 	if str, ok := data.settings["open_advance_shop"]; ok {
 		ri.openAdvanceShop = (str == "true")
+	}
+
+	// Turn old men into locations
+	ri.turnOldMenIntoLocations = false
+	if str, ok := data.settings["turn_old_men_into_locations"]; ok {
+		ri.turnOldMenIntoLocations = (str == "true")
 	}
 
 	// Archipelago slot name
