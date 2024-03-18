@@ -1018,11 +1018,10 @@ malon trade:
   addr: {bank: 0x0b, addr: 0x50e3} # 2D0E3
   maptile: 0x88
   collect: touch
-#maple trade:
-#  treasure: ghastly doll
-#  room: 0x0000                                                     # no fixed room for ghastly doll
-#  ids: [{bank: 0x0b, addr: 0x1403}, {bank: 0x06, addr: 0x28E0}]    # 29403 / 168E0
-#  subids: [{bank: 0x0b, addr: 0x1405}, {bank: 0x06, addr: 0x28E7}] # 29405 / 168E7
+maple trade:
+  treasure: Ghastly Doll
+  room: 0x00e8 # no fixed room for Maple, put Horon's fountain as an indication for Treasure Map
+  collect: touch
 mrs. ruul trade:
   treasure: Iron Pot
   room: 0x03b3

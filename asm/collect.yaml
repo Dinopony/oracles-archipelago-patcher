@@ -38,7 +38,7 @@ common:
       ld hl,collectPropertiesTable
       call searchDoubleKey
       ld e,a
-      ret nc
+      jr nc,.notFound
       inc hl
       ldd a,(hl)
       ld e,INTERAC_MULTI_BYTE
@@ -55,6 +55,11 @@ common:
       ld h,(hl)
       ld l,a
       jp (hl)
+
+      .notFound
+      ld a,0
+      ld e,2
+      ret
 
 seasons:
   # Add a special bypass to not show textboxes for Small Keys dropping from ceiling

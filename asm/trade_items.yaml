@@ -59,10 +59,22 @@ seasons:
   15/5285/: /include ghastly_doll_obj
   # Mrs. Ruul requirement
   0b/504a/: db df,TREASURE_GHASTLY_DOLL
-  # Make Maple drop the new Ghastly Doll
-  0b/1402/: |
-    ld a,57
-    ld c,00
+  # Make Maple drop a randomized item which sets a custom flag for client tracking purpose
+  0a/53cc/: |
+    call 239b # interactionIncState
+    ld bc,slot.mapleTrade.full
+    call spawnTreasureOnLink
+    ld a,(c640)
+    or a,08
+    ld (c640),a
+    ret
+  # Remove timer after getting Maple trade item
+  0a/540e/: nop; nop; nop; nop
+  # Remove the map where a Gasha Seed is hidden underwater near Natzu from potential Maple locations,
+  # since collect mode gets messy there (in all 3 animal layouts)
+  10/5f32/: db cf
+  10/5f52/: db cf
+  10/5f72/: db cf
 
   # 35 => Iron Pot
   3f/6f14/: db TREASURE_IRON_POT
