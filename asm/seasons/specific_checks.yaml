@@ -89,6 +89,20 @@ seasons:
   15/62ac/: jr 05
 
 
+  ##### BELL SMITHY ###############################################
+  
+  # Set a unique room flag when smithing bell for client tracking purpose
+  0b/75a8/: |
+    # wait 30 is gone here to make space
+    db showtextlowindex,06
+    db setanimation,01
+    # wait 30 is gone here to make space
+    db showtextlowindex,07
+    db callscript,50,76  # smithyScript_smithItem
+    db orroomflag,80
+    db giveitem,TREASURE_PIRATES_BELL,02
+
+
   ##### TEMPLE OF SEASONS ##############################################
   
   # don't display normal fixed text for temple of seasons item.
