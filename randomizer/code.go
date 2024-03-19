@@ -316,6 +316,7 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"seasons/specific_checks",
 		"seasons/subscreen_1_improvement",
 		"seasons/tarm_gate_requirement",
+		"seasons/combat_difficulty",
 	}
 
 	if ri.warpToStart {

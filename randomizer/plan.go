@@ -108,11 +108,12 @@ type routeInfo struct {
 	shopPrices        map[string]int
 
 	// Seasons-specific
-	seasons            map[string]byte
-	portals            map[string]string
-	foolsOreDamage     int
-	pedestalSequence   [8]byte
-	samasaGateSequence []int
+	seasons                map[string]byte
+	portals                map[string]string
+	foolsOreDamage         int
+	receivedDamageModifier int
+	pedestalSequence       [8]byte
+	samasaGateSequence     []int
 }
 
 func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
@@ -166,6 +167,14 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
 		ri.foolsOreDamage, err = strconv.Atoi(str)
 		if err != nil {
 			return fmt.Errorf("settings.fools_ore_damage is invalid (must be a number)")
+		}
+	}
+
+	ri.receivedDamageModifier = 0
+	if str, ok := data.settings["received_damage_modifier"]; ok {
+		ri.receivedDamageModifier, err = strconv.Atoi(str)
+		if err != nil {
+			return fmt.Errorf("settings.received_damage_modifier is invalid (must be a number)")
 		}
 	}
 

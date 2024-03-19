@@ -1,0 +1,9 @@
+seasons:
+  06/alterDamageReceived: |
+    add a,option.receivedDamageModifier
+    ld b,a
+    ld (de),a
+    ld hl,468d  # @ringDamageModifierTable
+    jp 4683     # @writeDamageToApply
+    # ret
+  06/464d/: call alterDamageReceived
