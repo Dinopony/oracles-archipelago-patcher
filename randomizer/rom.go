@@ -145,7 +145,7 @@ func (rom *romState) setData(ri *routeInfo) {
 	rom.assembler.defineByte("option.goldenBeastsRequirement", byte(ri.goldenBeastsRequirement))
 	rom.assembler.defineByte("option.goldenBeastsRequirementTextDigit", byte(0x30+ri.goldenBeastsRequirement))
 
-	rom.assembler.defineByte("option.openAdvanceShop", byte(ri.treehouseOldManRequirement))
+	rom.assembler.defineByte("option.openAdvanceShop", ternary(ri.openAdvanceShop, byte(1), byte(0)).(byte))
 
 	rom.assembler.defineByte("option.foolsOreDamage", byte(ri.foolsOreDamage*-1))
 	rom.assembler.defineByte("option.receivedDamageModifier", byte(ri.receivedDamageModifier*-1))
