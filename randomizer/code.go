@@ -92,10 +92,9 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 		}
 	}
 
-	// linked hero's cave
 	if game == GAME_SEASONS {
-		// don't play linked multiworld please
-		if _, err := b.Write([]byte{0x05, 0x2c, collectModes["chest"], byte(player)}); err != nil {
+		// D6 fake rupee
+		if _, err := b.Write([]byte{0x04, 0xc5, collectModes["poof"], byte(player)}); err != nil {
 			panic(err)
 		}
 	}
