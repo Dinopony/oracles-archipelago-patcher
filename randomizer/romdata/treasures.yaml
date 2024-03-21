@@ -24,6 +24,7 @@ common:
   Rupees (30): 0x2804
   Rupees (50): 0x2805
   Rupees (100): 0x2806
+  Rupees (200): 0x2808
 
   # hearts
   Heart Container: 0x2a00
@@ -198,9 +199,6 @@ ages:
   switch hook: 0x0a00
   seed shooter: 0x0f00
   harp: 0x2500 # actually tune of echoes, which gives harp as well
-
-  # rupees
-  Rupees (200): 0x2808
 
   # dungeon items
   d6 present small key: 0x3003

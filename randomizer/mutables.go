@@ -69,41 +69,36 @@ func (rom *romState) setOldManRupeeValues(values map[string]int) {
 	valuesArray := rom.codeMutables["oldManRupeeValues"]
 	giveTakeArray := rom.codeMutables["oldManGiveTake"]
 
-	funcGiveAddr := giveTakeArray.new[0:2]
-	funcTakeAddr := giveTakeArray.new[14:16]
-
-	var OLD_MEN_OFFSETS map[string]int
-
-	if rom.game == GAME_SEASONS {
-		OLD_MEN_OFFSETS = map[string]int{
-			"old man in goron mountain":        0,
-			"old man near blaino":              1,
-			"old man near d1":                  2,
-			"old man near western coast house": 3,
-			"old man in horon":                 4,
-			"old man near d6":                  5,
-			"old man near holly's house":       6,
-			"old man near mrs. ruul":           7,
-		}
+	OLD_MEN_OFFSETS := []string{
+		"old man in goron mountain",
+		"old man near blaino",
+		"old man near d1",
+		"old man near western coast house",
+		"old man in horon",
+		"old man near d6",
+		"old man near holly's house",
+		"old man near mrs. ruul",
 	}
 
-	for key, value := range values {
-		offset := OLD_MEN_OFFSETS[key]
+	for i, name := range OLD_MEN_OFFSETS {
+		value, ok := values[name]
+		if !ok {
+			continue
+		}
 
 		absValue := value
 		if value < 0 {
 			absValue *= -1
 		}
-		valuesArray.new[offset] = RUPEE_VALUES[absValue]
+		valuesArray.new[i] = RUPEE_VALUES[absValue]
 
-		offset *= 2
-		if absValue == value { // Give
-			giveTakeArray.new[offset] = funcGiveAddr[0]
-			giveTakeArray.new[offset+1] = funcGiveAddr[1]
-		} else { // Take
-			giveTakeArray.new[offset] = funcTakeAddr[0]
-			giveTakeArray.new[offset+1] = funcTakeAddr[1]
+		i *= 2
+		if absValue == value {
+			giveTakeArray.new[i] = 0x72 // Give
+		} else {
+			giveTakeArray.new[i] = 0x88 // Take
 		}
+		giveTakeArray.new[i+1] = 0x74
 	}
 }
 
