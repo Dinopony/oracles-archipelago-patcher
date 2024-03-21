@@ -44,6 +44,10 @@ seasons:
     ld bc,slot.bombFlower.full
     jp spawnTreasureOnLink
 
+  # Remove the problematic check where Bomb Flower interaction is removed if you own
+  # Bomb Flower (even in vanilla, this seems useless since the "GOT_ITEM" room flag
+  # is checked first...)
+  09/435c/: nop; nop; nop; nop; nop
 
   ##### GOLDEN BEASTS OLD MAN ####################################
 
