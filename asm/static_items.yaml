@@ -29,6 +29,7 @@ seasons:
     # ------- Drops / spawned items -------
     db 04,1b; dw slot.d1StalfosDrop.reverse
     db 04,34; dw slot.d2RopeDrop.reverse
+    db 04,7b; dw slot.d4PotPuzzle.reverse
     db 04,75; dw slot.d4Pool.reverse
     db 04,ab; dw slot.d6MagnetBallDrop.reverse
     db 05,45; dw slot.d7ZolButton.reverse
