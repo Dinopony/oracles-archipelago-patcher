@@ -419,8 +419,6 @@ subrosian smithy ore:
   treasure: Progressive Shield
   room: 0x0397
   maptile: 0x1e
-  ids: [{bank: 0x15, addr: 0x62be}]
-  subids: [{bank: 0x15, addr: 0x62b4}]
   collect: touch
 subrosian smithy bell:
   treasure: Pirate's Bell

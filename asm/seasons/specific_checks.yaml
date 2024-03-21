@@ -77,8 +77,8 @@ seasons:
     db 20,02,35,2e,00
 
 
-  ##### HARD ORE SMITHY ###############################################
-  
+  ##### GREAT FURNACE ###############################################
+
   # hard ore item doesn't normally get a subid
   15/setHardOreIds: |
       inc l
@@ -88,10 +88,23 @@ seasons:
       ret
   15/5b83/: call setHardOreIds
 
-  # skip shield + shield level checks for forging hard ore.
-  0b/75c6/: db jumpifitemobtained,TREASURE_PUNCH
-  15/62ac/: jr 05
 
+  ##### HARD ORE SMITHY ###############################################
+
+  # Skip "has shield" check for forging hard ore
+  0b/75c6/: db jumpifitemobtained,TREASURE_PUNCH
+
+  # Replace "which shield owned" check by setting given item subid 
+  # + setting a trackable room flag
+  15/62a7/: |
+    call getThisRoomFlags
+    set 6,(hl)  # +0x40 on room flag
+    ld c,slot.subrosianSmithyOre.subid
+    jr 6
+    db 00,00,00,00,00,00
+
+  # Change the ID of the item given by Hard Ore reforge
+  15/62bd/: ld (hl),slot.subrosianSmithyOre.id
 
   ##### BELL SMITHY ###############################################
   
