@@ -1,6 +1,6 @@
 package randomizer
 
-const VERSION = "0.9e"
+const VERSION = "0.9f"
 const INPUT_FILE_EXTENSION = ".patcherdata"
 
 const (
