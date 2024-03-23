@@ -103,13 +103,12 @@ common:
 
   # if the item buffer is nonzero, spawn the item at link and reset the buffer.
   # var INTERAC_MULTI_BYTE is used to signal the destination player number, and
-  # var 71 is set to override normal collect/player properties lookup. this
-  # manually upgrades feather to cape based on wFeatherLevel to avoid
-  # softlocking by receiving feather during hide and seek.
+  # var 71 is set to override normal collect/player properties lookup.
   05/checkNetItemBuffer: |
       push bc
       push de
       push hl
+
       ld a,(wMenuDisabled)
       and a
       jr nz,.done
@@ -118,21 +117,19 @@ common:
       jr nz,.done
       ld hl,wNetTreasureIn
       ldi a,(hl)
+      or a
+      jr z,.done
+      cp a,ff
+      jr nz,.notDeathlink
+      
+      # if item in buffer is 0xFF, it's a deathlink signal so make Link die
+      ld a,fe
+      ld (cc34),a
+      jr .done
+
+      .notDeathlink
       ld b,a
       ld c,(hl)
-      and b
-      jr z,.done
-      cp a,TREASURE_FEATHER
-      jr nz,.noUpgradeFeather
-      ld a,(wWhichGame)
-      and a
-      jr nz,.noUpgradeFeather
-      ld a,(wFeatherLevel)
-      and a
-      jr z,.noUpgradeFeather
-      ld c,02
-      
-      .noUpgradeFeather
       call spawnTreasureOnLink
       jr nz,.done
       ld a,(multiPlayerNumber)
@@ -154,6 +151,7 @@ common:
       xor a
       ldi (hl),a
       ld (hl),a
+
       .done
       pop hl
       pop de
