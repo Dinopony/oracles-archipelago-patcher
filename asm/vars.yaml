@@ -2,23 +2,6 @@
 # track the locations of data which will be changed after randomization.
 
 seasons:
-  # horon village is random, natzu and desert are summer only, and goron
-  # mountain is winter only. northern peak doesn't matter (it might become
-  # spring after you beat the game). note that these names don't correspond 1:1
-  # with the names used on the overworld map, which aren't delineated based on
-  # season boundaries.
-  01/7e50/horonVillageSeason: db defaultSeason.horonVillage
-  01/7e60/northHoronSeason: db defaultSeason.northHoron
-  01/7e61/easternSuburbsSeason: db defaultSeason.easternSuburbs
-  01/7e62/woodsOfWinterSeason: db defaultSeason.woodsOfWinter
-  01/7e63/spoolSwampSeason: db defaultSeason.spoolSwamp
-  01/7e64/holodrumPlainSeason: db defaultSeason.holodrumPlain
-  01/7e65/sunkenCitySeason: db defaultSeason.sunkenCity # also mt. cucco
-  01/7e67/lostWoodsSeason: db defaultSeason.lostWoods
-  01/7e68/tarmRuinsSeason: db defaultSeason.tarmRuins # north of lost woods
-  01/7e6b/westernCoastSeason: db defaultSeason.westernCoast
-  01/7e6c/templeRemainsSeason: db defaultSeason.templeRemains
-
   # locations of sparkles on treasure map
   02/6663/jewelCoordsRound: db b5
   02/6664/jewelCoordsPyramid: db 1d

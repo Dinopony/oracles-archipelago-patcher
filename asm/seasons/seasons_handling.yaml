@@ -1,4 +1,20 @@
 seasons:
+  # Natzu and Samasa Desert are summer only, and goron mountain is winter only. 
+  # Northern Peak doesn't matter (it might become spring after you beat the game).
+  # Note that these names don't correspond 1:1 with the names used on the overworld map, 
+  # which aren't delineated based on season boundaries.
+  01/7e50/horonVillageSeason: db defaultSeason.horonVillage
+  01/7e60/northHoronSeason: db defaultSeason.northHoron # eyeglass lake / d1 sector
+  01/7e61/easternSuburbsSeason: db defaultSeason.easternSuburbs
+  01/7e62/woodsOfWinterSeason: db defaultSeason.woodsOfWinter # from d2 to holly's house
+  01/7e63/spoolSwampSeason: db defaultSeason.spoolSwamp
+  01/7e64/holodrumPlainSeason: db defaultSeason.holodrumPlain # from blaino to mrs. ruul
+  01/7e65/sunkenCitySeason: db defaultSeason.sunkenCity # also mt. cucco
+  01/7e67/lostWoodsSeason: db defaultSeason.lostWoods # from jewel gate to lost woods
+  01/7e68/tarmRuinsSeason: db defaultSeason.tarmRuins # d6 sector
+  01/7e6b/westernCoastSeason: db defaultSeason.westernCoast
+  01/7e6c/templeRemainsSeason: db defaultSeason.templeRemains
+
   # [Warp Group, Warp Dest, Arrival Position, Season to apply]
   # An arrival pos of "00" means it isn't checked
   # A season of "FF" means nothing changes
@@ -52,6 +68,3 @@ seasons:
     cp a,ff
     nop
     nop
-
-  # Change checkRoomPackAfterWarp_body to remove the specific case for Horon Village (useful for tree warp & maku exit)
-  02/3e7e/: nop; nop
