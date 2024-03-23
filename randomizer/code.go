@@ -97,6 +97,10 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 		if _, err := b.Write([]byte{0x04, 0xc5, collectModes["poof"], byte(player)}); err != nil {
 			panic(err)
 		}
+		// Maku tree gate opening cutscene
+		if _, err := b.Write([]byte{0x00, 0xd9, collectModes["spinslash"], byte(player)}); err != nil {
+			panic(err)
+		}
 	}
 
 	b.Write([]byte{0xff})

@@ -5,13 +5,14 @@ package randomizer
 // treasure appears; bit 7 is used as the randomizer as a jump table index for
 // special cases (it can't appear in the vanilla table).
 var collectModes = map[string]byte{
-	"touch": 0x0a, // standing and given items
-	"poof":  0x1a, // boss HCs
-	"drop":  0x29, // SK drops, maku tree, graveyard key
-	"chest": 0x38, // most chests, rising animation
-	"dive":  0x49, // SK and BK in seasons D4
-	"dig":   0x5a, // star ore, ricky's gloves (ages)
-	"delay": 0x68, // map and compass chests
+	"touch":     0x0a, // standing and given items
+	"poof":      0x1a, // boss HCs
+	"drop":      0x29, // SK drops, maku tree, graveyard key
+	"chest":     0x38, // most chests, rising animation
+	"dive":      0x49, // SK and BK in seasons D4
+	"dig":       0x5a, // star ore, ricky's gloves (ages)
+	"delay":     0x68, // map and compass chests
+	"spinslash": 0x03, // maku tree gat cutscene
 
 	"diver room":          0x80,
 	"poe skip room":       0x81,
