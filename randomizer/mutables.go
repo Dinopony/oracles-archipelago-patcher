@@ -120,9 +120,20 @@ func (rom *romState) setCharacterSprite(sprite string, palette string) error {
 
 	if palette != "green" {
 		if paletteByte, ok := PALETTE_BYTES[palette]; ok {
+			// Link in-game
 			for addr := 0x141cc; addr <= 0x141de; addr += 0x2 {
-				rom.data[addr] = paletteByte
+				rom.data[addr] |= paletteByte
 			}
+
+			// Link standing still in file select (fileSelectDrawLink:@sprites0)
+			rom.data[0x8d46] |= paletteByte
+			rom.data[0x8d4a] |= paletteByte
+
+			// Link animated in file select (@sprites1 & @sprites2)
+			rom.data[0x8d4f] |= paletteByte
+			rom.data[0x8d53] |= paletteByte
+			rom.data[0x8d58] |= paletteByte
+			rom.data[0x8d5c] |= paletteByte
 		}
 	}
 

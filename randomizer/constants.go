@@ -134,8 +134,8 @@ var SEASON_AREAS = []string{
 }
 
 var PALETTE_BYTES = map[string]byte{
-	"green":  0x08,
-	"blue":   0x09,
-	"red":    0x0a,
-	"orange": 0x0b,
+	"green":  0x00,
+	"blue":   0x01,
+	"red":    0x02,
+	"orange": 0x03,
 }
