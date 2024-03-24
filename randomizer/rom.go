@@ -281,10 +281,16 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 	}
 	for _, k := range orderedKeys(rom.treasures) {
 		treasure := rom.treasures[k]
-		if treasure.id != 0x2d {
-			// Don't mutate rings, as they are handled in asm/rings.yaml
-			rom.treasures[k].mutate(rom.data)
+		if treasure.id >= 0x30 && treasure.id <= 0x33 {
+			// Don't mutate dungeon items, as they are handled in asm/keysanity.yaml
+			continue
 		}
+		if treasure.id == 0x2d {
+			// Don't mutate rings, as they are handled in asm/rings.yaml
+			continue
+		}
+
+		rom.treasures[k].mutate(rom.data)
 	}
 
 	if ri.goal == "beat_ganon" {

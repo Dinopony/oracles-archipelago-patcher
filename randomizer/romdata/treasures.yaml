@@ -107,39 +107,44 @@ common:
 
 seasons:
   # dungeon items
-  Small Key (Hero's Cave): 0x3003
-  Small Key (Gnarled Root Dungeon): 0x3003
-  Small Key (Snake's Remains): 0x3003
+  Small Key (Hero's Cave): 0x3000
+  Small Key (Gnarled Root Dungeon): 0x3001
+  Small Key (Snake's Remains): 0x3002
   Small Key (Poison Moth's Lair): 0x3003
-  Small Key (Dancing Dragon Dungeon): 0x3003
-  Small Key (Unicorn's Cave): 0x3003
-  Small Key (Ancient Ruins): 0x3003
-  Small Key (Explorer's Crypt): 0x3003
-  Small Key (Sword & Shield Dungeon): 0x3003
-  Boss Key (Gnarled Root Dungeon): 0x3103
-  Boss Key (Snake's Remains): 0x3103
-  Boss Key (Poison Moth's Lair): 0x3103
-  Boss Key (Dancing Dragon Dungeon): 0x3103 # technically a different subid for seasons
-  Boss Key (Unicorn's Cave): 0x3103 # ^
-  Boss Key (Ancient Ruins): 0x3103
-  Boss Key (Explorer's Crypt): 0x3103
-  Boss Key (Sword & Shield Dungeon): 0x3103
-  Compass (Gnarled Root Dungeon): 0x3202
+  Small Key (Dancing Dragon Dungeon): 0x3004
+  Small Key (Unicorn's Cave): 0x3005
+  Small Key (Ancient Ruins): 0x3006
+  Small Key (Explorer's Crypt): 0x3007
+  Small Key (Sword & Shield Dungeon): 0x3008
+  
+  Boss Key (Gnarled Root Dungeon): 0x3100
+  Boss Key (Snake's Remains): 0x3101
+  Boss Key (Poison Moth's Lair): 0x3102
+  Boss Key (Dancing Dragon Dungeon): 0x3103
+  Boss Key (Unicorn's Cave): 0x3104
+  Boss Key (Ancient Ruins): 0x3105
+  Boss Key (Explorer's Crypt): 0x3106
+  Boss Key (Sword & Shield Dungeon): 0x3107
+
+  Compass (Hero's Cave): 0x3200
+  Compass (Gnarled Root Dungeon): 0x3201
   Compass (Snake's Remains): 0x3202
-  Compass (Poison Moth's Lair): 0x3202
-  Compass (Dancing Dragon Dungeon): 0x3202
-  Compass (Unicorn's Cave): 0x3202
-  Compass (Ancient Ruins): 0x3202
-  Compass (Explorer's Crypt): 0x3202
-  Compass (Sword & Shield Dungeon): 0x3202
-  Dungeon Map (Gnarled Root Dungeon): 0x3302
+  Compass (Poison Moth's Lair): 0x3203
+  Compass (Dancing Dragon Dungeon): 0x3204
+  Compass (Unicorn's Cave): 0x3205
+  Compass (Ancient Ruins): 0x3206
+  Compass (Explorer's Crypt): 0x3207
+  Compass (Sword & Shield Dungeon): 0x3208
+
+  Dungeon Map (Hero's Cave): 0x3300
+  Dungeon Map (Gnarled Root Dungeon): 0x3301
   Dungeon Map (Snake's Remains): 0x3302
-  Dungeon Map (Poison Moth's Lair): 0x3302
-  Dungeon Map (Dancing Dragon Dungeon): 0x3302
-  Dungeon Map (Unicorn's Cave): 0x3302
-  Dungeon Map (Ancient Ruins): 0x3302
-  Dungeon Map (Explorer's Crypt): 0x3302
-  Dungeon Map (Sword & Shield Dungeon): 0x3302
+  Dungeon Map (Poison Moth's Lair): 0x3303
+  Dungeon Map (Dancing Dragon Dungeon): 0x3304
+  Dungeon Map (Unicorn's Cave): 0x3305
+  Dungeon Map (Ancient Ruins): 0x3306
+  Dungeon Map (Explorer's Crypt): 0x3307
+  Dungeon Map (Sword & Shield Dungeon): 0x3308
 
   Ore Chunks (50): 0x3700
 

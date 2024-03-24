@@ -297,6 +297,7 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"font",
 		"gfx",
 		"itemevents",
+		"keysanity",
 		"layouts",
 		"linked",
 		"misc",
