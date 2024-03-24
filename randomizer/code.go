@@ -94,7 +94,7 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 
 	if game == GAME_SEASONS {
 		// D6 fake rupee
-		if _, err := b.Write([]byte{0x04, 0xc5, collectModes["poof"], byte(player)}); err != nil {
+		if _, err := b.Write([]byte{0x04, 0xc5, collectModes["fakePoof"], byte(player)}); err != nil {
 			panic(err)
 		}
 		// Maku tree gate opening cutscene

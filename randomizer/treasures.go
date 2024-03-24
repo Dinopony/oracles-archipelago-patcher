@@ -13,6 +13,7 @@ var collectModes = map[string]byte{
 	"dig":       0x5a, // star ore, ricky's gloves (ages)
 	"delay":     0x68, // map and compass chests
 	"spinslash": 0x03, // maku tree gat cutscene
+	"fakePoof":  0x18, // d6 fake rupee
 
 	"diver room":          0x80,
 	"poe skip room":       0x81,
