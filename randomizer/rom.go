@@ -232,6 +232,13 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 		rom.codeMutables["newSamasaCombinationLengthMinusOne"].new[0] = byte(len(ri.samasaGateSequence) - 1)
 
 		rom.codeMutables["makuSignText"].new[3] = 0x30 + byte(ri.requiredEssences)
+
+		// If companion is Dimitri, allow calling him using the Flute inside Sunken City
+		if ri.companion == COMPANION_DIMITRI {
+			rom.data[0x24f39] = 0xa7
+			rom.data[0x24f3b] = 0xe7
+		}
+
 	} else {
 		// explicitly set these addresses and IDs after their functions
 		mut := rom.codeMutables["script_soldierGiveItem"]
