@@ -125,6 +125,9 @@ func (rom *romState) setCharacterSprite(sprite string, palette string) error {
 				rom.data[addr] |= paletteByte
 			}
 
+			// Link palette restored after Medusa Head / Ganon stun attacks
+			rom.data[0x1516d] |= paletteByte
+
 			// Link standing still in file select (fileSelectDrawLink:@sprites0)
 			rom.data[0x8d46] |= paletteByte
 			rom.data[0x8d4a] |= paletteByte
