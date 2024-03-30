@@ -254,6 +254,7 @@ seasons:
     define wDisabledObjects,cca4
     define wInsertedJewels,c6e1
     define wLinkDeathTrigger,cc34
+    define wSeedSatchelLevel,c6ae
 
     # rom 00
     define multiplyABy4,01c3

@@ -311,7 +311,7 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"trade_items",
 		"triggers",
 		"warp_to_start",
-		"seasons/bomb_bag_behavior",
+		"seasons/get_item_behavior",
 		"seasons/impa_refill",
 		"seasons/maku_tree",
 		"seasons/samasa_combination",
