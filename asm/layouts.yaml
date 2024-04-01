@@ -183,7 +183,7 @@ seasons:
 
   # remove the snow piles in front of holly's house so that shovel isn't
   # required to leave.
-  24/6474/: db 04
+  24/646f/: db 04
   # remove some snow outside d7 for the same reason - but off the right ledge,
   # not in front of the stairs.
   24/7910/: db 2b,a0,b9,2b
