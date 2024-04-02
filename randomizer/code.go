@@ -81,12 +81,12 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 			mode &= 0xf8
 		}
 
-		if _, err := b.Write([]byte{slot.group, slot.room, mode, slot.player}); err != nil {
+		if _, err := b.Write([]byte{slot.group, slot.room, mode}); err != nil {
 			panic(err)
 		}
 		for _, groupRoom := range slot.moreRooms {
 			group, room := byte(groupRoom>>8), byte(groupRoom)
-			if _, err := b.Write([]byte{group, room, mode, slot.player}); err != nil {
+			if _, err := b.Write([]byte{group, room, mode}); err != nil {
 				panic(err)
 			}
 		}
@@ -94,11 +94,11 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 
 	if game == GAME_SEASONS {
 		// D6 fake rupee
-		if _, err := b.Write([]byte{0x04, 0xc5, collectModes["fakePoof"], byte(player)}); err != nil {
+		if _, err := b.Write([]byte{0x04, 0xc5, collectModes["fakePoof"]}); err != nil {
 			panic(err)
 		}
 		// Maku tree gate opening cutscene
-		if _, err := b.Write([]byte{0x00, 0xd9, collectModes["spinslash"], byte(player)}); err != nil {
+		if _, err := b.Write([]byte{0x00, 0xd9, collectModes["spinslash"]}); err != nil {
 			panic(err)
 		}
 	}
