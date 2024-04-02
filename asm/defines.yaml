@@ -9,7 +9,7 @@ common:
   00/: |
     # constants
     define AREAFLAG_OUTDOORS,01
-    define COLLECT_PICKUP_ALT,02
+    define COLLECT_PICKUP_NOFLAG,02
     define COLLECT_PICKUP,0a
     define COLLECT_POOF,1a
     define COLLECT_FALL_KEY,28
@@ -248,6 +248,7 @@ seasons:
     define wWarpDestPos,cc66
     define wWarpTransition2,cc67
     define wLinkObjectIndex,cc48
+    define wBoughtShopItems2,c640
     define wBoughtSubrosianItems,c642
     define wLinkMaxHealth,c6a3
     define wLinkHealth,c6a2
