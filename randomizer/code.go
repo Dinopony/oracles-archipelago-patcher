@@ -333,6 +333,19 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		asmPaths = append(asmPaths, "seasons/old_men_as_locations")
 	}
 
+	if ri.masterSmallKeys {
+		rom.data[0x18357] = byte(0)
+		// Change obtention text
+		rom.data[0x7546F] = byte(' ')
+		rom.data[0x75470] = byte(0x02)
+		rom.data[0x75471] = byte(0xe5)
+		rom.data[0x75472] = byte(' ')
+	}
+	if ri.masterBossKeys {
+		rom.data[0x1834F] = byte(0)
+		rom.data[0x18350] = byte(0)
+	}
+
 	exe, err := os.Executable()
 	if err != nil {
 		return

@@ -97,6 +97,8 @@ type routeInfo struct {
 	signGuyRequirement         int
 	revealGoldenOreTiles       bool
 	turnOldMenIntoLocations    bool
+	masterSmallKeys            bool
+	masterBossKeys             bool
 
 	characterSprite     string
 	characterPalette    string
@@ -290,6 +292,18 @@ func processSettings(data *inputData, ri *routeInfo) error {
 		ri.archipelagoSlotName = str
 	}
 
+	// Master Keys
+	ri.masterSmallKeys = false
+	ri.masterBossKeys = false
+	if str, ok := data.settings["master_keys"]; ok {
+		if str == "all_dungeon_keys" {
+			ri.masterSmallKeys = true
+			ri.masterBossKeys = true
+		} else if str == "all_small_keys" {
+			ri.masterSmallKeys = true
+		}
+	}
+
 	// Set heart beep interval if specified
 	ri.heartBeepInterval = HEART_BEEP_DEFAULT
 	if str, ok := data.settings["heart_beep_interval"]; ok {
@@ -358,6 +372,11 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 	for slot, item := range data.items {
 		if !itemFitsInSlot(item, slot) {
 			return nil, fmt.Errorf("%s doesn't fit in %s", item, slot)
+		}
+
+		// Master Keys are fake items which are just Small Keys deep in their heart
+		if strings.HasPrefix(item, "Master Key") {
+			item = strings.ReplaceAll(item, "Master Key", "Small Key")
 		}
 
 		ri.locationContents[slot] = item

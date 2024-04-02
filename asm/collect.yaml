@@ -101,7 +101,7 @@ seasons:
       cp a,80
       ld e,COLLECT_CHEST
       ret c
-      ld e,COLLECT_PICKUP_ALT
+      ld e,COLLECT_PICKUP_NOFLAG
       ret
 
   # bombed wall chest in d7 has an item drop on the left side.
@@ -149,7 +149,7 @@ seasons:
     ld e,4d
     ld a,(de) # object x position
     cp a,80
-    ld e,COLLECT_PICKUP_ALT
+    ld e,COLLECT_PICKUP_NOFLAG
     ret c
     ld e,COLLECT_CHEST
     ret
@@ -197,7 +197,7 @@ ages:
       ld e,4d
       ld a,(de) # object x position
       cp a,68
-      ld e,COLLECT_PICKUP_ALT
+      ld e,COLLECT_PICKUP_NOFLAG
       ret c
       ld e,COLLECT_CHEST
       ret
