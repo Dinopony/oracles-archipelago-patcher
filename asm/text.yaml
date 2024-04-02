@@ -2,20 +2,20 @@
 
 common:
   # override addresses for owl statue text.
-  3f/useOwlText: |
-      ld (w7ActiveBank),a
-      ld a,(wTextIndexH)
-      cp a,3d
-      ret nz
-      ld hl,owlTextOffsets
-      ld a,(wTextIndexL)
-      rst 18
-      ldi a,(hl)
-      ld h,(hl)
-      ld l,a
-      ld a,BANK_OWL_TEXT
-      ld (w7ActiveBank),a
-      ret
+# 3f/useOwlText: |
+#     ld (w7ActiveBank),a
+#     ld a,(wTextIndexH)
+#     cp a,3d
+#     ret nz
+#     ld hl,owlTextOffsets
+#     ld a,(wTextIndexL)
+#     rst 18
+#     ldi a,(hl)
+#     ld h,(hl)
+#     ld l,a
+#     ld a,BANK_OWL_TEXT
+#     ld (w7ActiveBank),a
+#     ret
 
 floating:
   # replace text in script command 9a (showtextnonexitable) using

@@ -100,9 +100,10 @@ func (rom *romState) initBanks(ri *routeInfo) {
 	// do this before loading asm files, since the sizes of the tables vary
 	// with the number of checks.
 	rom.replaceRaw(address{0x06, 0}, "collectPropertiesTable", makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
+	rom.replaceRaw(address{0x01, 0}, "compassRoomsTable", makeCompassRoomsTable(rom.itemSlots))
 
-	numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
-	rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets", string(make([]byte, numOwlIds*2)))
+	// numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
+	// rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets", string(make([]byte, numOwlIds*2)))
 
 	rom.replaceRaw(address{0x0a, 0}, "newSamasaCombination", makeSamasaCombinationTable(ri.samasaGateSequence))
 }
@@ -258,6 +259,7 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 
 	// regenerate collect mode table to accommodate changes based on contents.
 	rom.codeMutables["collectPropertiesTable"].new = []byte(makeCollectPropertiesTable(rom.game, rom.player, rom.itemSlots))
+	rom.codeMutables["compassRoomsTable"].new = []byte(makeCompassRoomsTable(rom.itemSlots))
 
 	if rom.game == GAME_SEASONS {
 		// annoying special case to prevent text on key drop
@@ -299,7 +301,6 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 		copy(rom.data[0xd539:], []byte{0x06 + 0x19, 0x5a})
 	}
 
-	rom.setCompassData()
 	//	rom.setLinkedData()
 
 	sum := makeRomChecksum(rom.data)
@@ -403,57 +404,6 @@ func (rom *romState) setTreasureMapData() {
 	}
 }
 
-// set dungeon properties so that the compass beeps in the rooms actually
-// containing small keys and boss keys.
-func (rom *romState) setCompassData() {
-	dungeonCodes := sora(rom.game, DUNGEON_CODES[GAME_SEASONS], DUNGEON_CODES[GAME_AGES]).([]string)
-	dungeonNames := sora(rom.game, DUNGEON_NAMES[GAME_SEASONS], DUNGEON_NAMES[GAME_AGES]).([]string)
-
-	// clear key flags
-	for _, code := range dungeonCodes {
-		for name, slot := range rom.itemSlots {
-			if strings.HasPrefix(name, code+" ") {
-				offset := getDungeonPropertiesAddr(rom.game, slot.group, slot.room).fullOffset()
-				rom.data[offset] = rom.data[offset] & 0xed // reset bit 4
-			}
-		}
-	}
-
-	// set key flags
-	for _, dungeonName := range dungeonNames {
-		slots := rom.lookupAllItemSlots(fmt.Sprintf("Small Key (%s)", dungeonName))
-
-		// boss keys can be absent in plando, so handle the nil case
-		switch dungeonName {
-		case "Hero's Cave", "d6 present":
-			// do nothing
-		case "d6 past":
-			if slot := rom.lookupItemSlot("Boss Key (Ancient Ruins)"); slot != nil {
-				slots = append(slots, slot)
-			}
-		default:
-			keyName := fmt.Sprintf("Boss Key (%s)", dungeonName)
-			if slot := rom.lookupItemSlot(keyName); slot != nil {
-				slots = append(slots, slot)
-			}
-		}
-
-		for _, slot := range slots {
-			offset := getDungeonPropertiesAddr(rom.game, slot.group, slot.room).fullOffset()
-			rom.data[offset] = (rom.data[offset] & 0xbf) | 0x10 // set bit 4, reset bit 6
-		}
-	}
-}
-
-// returns the slot where the named item was placed. this only works for unique
-// items, of course.
-func (rom *romState) lookupItemSlot(itemName string) *itemSlot {
-	if slots := rom.lookupAllItemSlots(itemName); len(slots) > 0 {
-		return slots[0]
-	}
-	return nil
-}
-
 // returns all slots where the named item was placed.
 func (rom *romState) lookupAllItemSlots(itemName string) []*itemSlot {
 	t := rom.treasures[itemName]
@@ -466,16 +416,6 @@ func (rom *romState) lookupAllItemSlots(itemName string) []*itemSlot {
 	return slots
 }
 
-// get the location of the dungeon properties byte for a specific room.
-func getDungeonPropertiesAddr(game int, group, room byte) *address {
-	offset := uint16(room)
-	offset += uint16(sora(game, 0x4d41, 0x4dce).(int))
-	if group%2 != 0 {
-		offset += 0x100
-	}
-	return &address{0x01, offset}
-}
-
 func (rom *romState) setShopPrices(shopPrices map[string]int) {
 	for shopSlotName, price := range shopPrices {
 		priceByte := RUPEE_VALUES[price]
@@ -484,44 +424,6 @@ func (rom *romState) setShopPrices(shopPrices map[string]int) {
 	}
 }
 
-// set data to make linked playthroughs isomorphic to unlinked ones.
-/*
-func (rom *romState) setLinkedData() {
-	if rom.game == GAME_SEASONS {
-		// set linked starting / hero's cave terrace items based on which items
-		// in unlinked hero's cave aren't keys. order matters.
-		var tStart, tCave *treasure
-		if rom.itemSlots["d0 key chest"].treasure.id == 0x30 {
-			tStart = rom.itemSlots["d0 sword chest"].treasure
-			tCave = rom.itemSlots["d0 rupee chest"].treasure
-		} else {
-			tStart = rom.itemSlots["d0 key chest"].treasure
-			tCave = rom.itemSlots["d0 sword chest"].treasure
-		}
-
-		// give this item at start
-		linkedStartItem := &itemSlot{
-			idAddrs:    []address{{0x0a, 0x7ffd}},
-			subidAddrs: []address{{0x0a, 0x7ffe}},
-			treasure:   tStart,
-		}
-		linkedStartItem.mutate(rom.data)
-
-		// create slot for linked hero's cave terrace
-		linkedChest := &itemSlot{
-			treasure:    rom.treasures["Rupees (20)"],
-			idAddrs:     []address{{0x15, 0x50e2}},
-			subidAddrs:  []address{{0x15, 0x50e3}},
-			group:       0x05,
-			room:        0x2c,
-			collectMode: collectModes["chest"],
-			mapTile:     0xd4,
-		}
-		linkedChest.treasure = tCave
-		linkedChest.mutate(rom.data)
-	}
-}
-*/
 // -- dungeon entrance / subrosia portal connections --
 
 type warpData struct {

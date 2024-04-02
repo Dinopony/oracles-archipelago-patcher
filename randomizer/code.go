@@ -107,6 +107,36 @@ func makeCollectPropertiesTable(game, player int, itemSlots map[string]*itemSlot
 	return b.String()
 }
 
+func makeCompassRoomsTable(itemSlots map[string]*itemSlot) string {
+	b := new(strings.Builder)
+	for _, key := range orderedKeys(itemSlots) {
+		slot := itemSlots[key]
+
+		dungeon := byte(0xFF)
+		if slot.treasure.id == 0x30 {
+			dungeon = byte(slot.treasure.subid)
+		} else if slot.treasure.id == 0x31 {
+			dungeon = byte(slot.treasure.subid) + 1
+		}
+
+		if dungeon != 0xFF {
+			if _, err := b.Write([]byte{slot.group, slot.room, dungeon}); err != nil {
+				panic(err)
+			}
+
+			for _, groupRoom := range slot.moreRooms {
+				group, room := byte(groupRoom>>8), byte(groupRoom)
+				if _, err := b.Write([]byte{group, room, dungeon}); err != nil {
+					panic(err)
+				}
+			}
+		}
+	}
+
+	b.Write([]byte{0xff})
+	return b.String()
+}
+
 func makeSamasaCombinationTable(samasaCombination []int) string {
 	b := new(strings.Builder)
 	for _, val := range samasaCombination {
@@ -311,6 +341,7 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"trade_items",
 		"triggers",
 		"warp_to_start",
+		"seasons/compass_chimes",
 		"seasons/get_item_behavior",
 		"seasons/impa_refill",
 		"seasons/maku_tree",

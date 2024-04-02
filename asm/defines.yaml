@@ -257,6 +257,7 @@ seasons:
     define wInsertedJewels,c6e1
     define wLinkDeathTrigger,cc34
     define wSeedSatchelLevel,c6ae
+    define wDungeonCompasses,c67c
 
     # rom 00
     define multiplyABy4,01c3
@@ -301,6 +302,7 @@ seasons:
     define fadeoutToWhite,3144
     define clearStaticObjects,3076
     define saveFile,09b4
+    define checkFlag,0205
 
     # rom 02
     define _closeMenu,4f7b
