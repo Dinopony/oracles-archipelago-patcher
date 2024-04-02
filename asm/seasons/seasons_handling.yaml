@@ -68,3 +68,24 @@ seasons:
     cp a,ff
     nop
     nop
+
+  # Rewrite checkRoomPackAfterWarp_body to process "chaotic" state which is
+  # now represented by 0xFF value.
+  01/7e6e/: |
+    ld a,(wActiveRoomPack)
+    cp a,f0
+    jp nc,7e09  # determineCompanionRegionSeason
+
+    ld hl,7e50  # roomPackSeasonTable
+    rst 10 # addAToHL
+    ld a,(hl)
+
+    # If season is 0xff, pick a random season instead
+    cp a,ff
+    jr nz,.setSeason
+    call getRandomNumber
+    and a,03
+    
+    .setSeason
+    ld (wRoomStateModifier),a
+    ret
