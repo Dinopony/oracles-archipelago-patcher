@@ -4,15 +4,24 @@ seasons:
   # which is the only item which uses mode D)
   3f/: define mode4,4594
   3f/extendedModeD: |
-    bit 7,c
-    jr z,.done
-    res 7,c
-    
-    .increaseMaxQuantity
+    # If max bombs == 0, increase max bombs even if it is a wild bomb drop (like the one in D2)
     ld h,d
     ld l,e
     inc l
     ld a,(hl)
+    or a
+    jr nz,.normalCase
+    ld a,10
+    ldd (hl),a
+    jr .done
+
+    # Otherwise, only increase max bombs if quantity has bit 7 set (only for "treasure" bombs, not drops)
+    .normalCase
+    bit 7,c
+    jr z,.done
+    
+    .increaseMaxQuantity
+    res 7,c
     add a,c
     daa
     jr nc,.writeNewMaxValue
@@ -23,6 +32,8 @@ seasons:
     .done
     jp mode4
   3f/45c2/: call extendedModeD
+  # Set new game max bombs to 0 instead of 10
+  07/418d/: db 00
 
   # Put a fixed limit on @modea to prevent max health to go past the point where
   # HUD starts looking buggy. Heart Containers being the only ones to use that mode,
