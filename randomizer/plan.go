@@ -116,6 +116,8 @@ type routeInfo struct {
 	receivedDamageModifier int
 	pedestalSequence       [8]byte
 	samasaGateSequence     []int
+	removeD0AltEntrance    bool
+	removeD2AltEntrance    bool
 }
 
 func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
@@ -184,6 +186,16 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
 	ri.revealGoldenOreTiles = false
 	if str, ok := data.settings["reveal_golden_ore_tiles"]; ok {
 		ri.revealGoldenOreTiles = (str == "true")
+	}
+
+	ri.removeD0AltEntrance = false
+	if str, ok := data.settings["remove_d0_alt_entrance"]; ok {
+		ri.removeD0AltEntrance = (str == "true")
+	}
+
+	ri.removeD2AltEntrance = false
+	if str, ok := data.settings["remove_d2_alt_entrance"]; ok {
+		ri.removeD2AltEntrance = (str == "true")
 	}
 
 	// Set Lost Woods item sequence
@@ -386,7 +398,7 @@ func makePlannedRoute(data *inputData) (*routeInfo, error) {
 	for entrance, dungeon := range data.dungeons {
 		entrance = strings.Replace(entrance, " entrance", "", 1)
 		for _, s := range []string{entrance, dungeon} {
-			if s == "d0" || getStringIndex(DUNGEON_CODES[ri.game], s) == -1 {
+			if getStringIndex(DUNGEON_CODES[ri.game], s) == -1 {
 				return nil, fmt.Errorf("no such dungeon: %s", s)
 			}
 		}

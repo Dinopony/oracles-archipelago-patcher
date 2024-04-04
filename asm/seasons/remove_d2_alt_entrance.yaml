@@ -1,0 +1,16 @@
+seasons:
+  # Remove stairs on main entrance map
+  22/30e1/: db 04
+  23/2d19/: db 04
+  24/2b27/: db 04
+  25/282d/: db 04
+
+  # Remove stairs on the map to the right
+  22/311f/: db 04
+  23/2d57/: db 04
+  24/2b65/: db 04
+  25/286b/: db 04
+
+  # Since both stairs leading outside in vanilla are now connected together, 
+  # remove D2 alt-entrance introduction textbox.
+  15/6a37/: jp interactionDelete

@@ -363,6 +363,12 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 	if ri.turnOldMenIntoLocations {
 		asmPaths = append(asmPaths, "seasons/old_men_as_locations")
 	}
+	if ri.removeD0AltEntrance {
+		asmPaths = append(asmPaths, "seasons/remove_d0_alt_entrance")
+	}
+	if ri.removeD2AltEntrance {
+		asmPaths = append(asmPaths, "seasons/remove_d2_alt_entrance")
+	}
 
 	if ri.masterSmallKeys {
 		rom.data[0x18357] = byte(0)

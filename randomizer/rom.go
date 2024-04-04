@@ -160,6 +160,9 @@ func (rom *romState) setData(ri *routeInfo) {
 	// If enabled, put real Subrosia map group (0x01), otherwise put a fake map group that will never trigger tile changes (0xfe)
 	rom.assembler.defineByte("option.revealGoldenOreTiles", ternary(ri.revealGoldenOreTiles, uint8(0x01), uint8(0xfe)).(uint8))
 
+	// If enabled, put real Hero's Cave map group (0x04), otherwise put a fake map group that will never trigger tile changes (0xfe)
+	rom.assembler.defineByte("option.removeD0AltEntrance", ternary(ri.removeD0AltEntrance, uint8(0x04), uint8(0xfe)).(uint8))
+
 	// Sign guy requirement being a multi-digit requirement, it requires quite some decomposition work
 	rom.assembler.defineByte("option.signGuyRequirement", byte(ri.signGuyRequirement))
 	rom.defineSignGuyTextConstants(ri)
@@ -220,7 +223,7 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 
 	// need to set this *before* treasure map data
 	if len(warps) != 0 {
-		rom.setWarps(warps, areDungeonsShuffled)
+		rom.setWarps(warps, ri)
 	}
 
 	if rom.game == GAME_SEASONS {
@@ -430,6 +433,9 @@ type warpData struct {
 	// loaded from yaml
 	Entry, Exit uint16
 	MapTile     byte
+	Room        byte
+	Group       byte
+	Position    byte
 
 	// set after loading
 	bank, vanillaMapTile         byte
@@ -438,7 +444,14 @@ type warpData struct {
 	vanillaEntryData, vanillaExitData []byte // read from rom
 }
 
-func (rom *romState) setWarps(warpMap map[string]string, dungeons bool) {
+func printMap(m map[string]string) {
+	// loop over elements of slice
+	for k, v := range m {
+		fmt.Println(k, " => ", v)
+	}
+}
+
+func (rom *romState) setWarps(warpMap map[string]string, ri *routeInfo) {
 	// load yaml data
 	wd := make(map[string](map[string]*warpData))
 	if err := ReadEmbeddedYaml("romdata/warps.yaml", wd); err != nil {
@@ -447,27 +460,21 @@ func (rom *romState) setWarps(warpMap map[string]string, dungeons bool) {
 	warps := sora(rom.game, wd["seasons"], wd["ages"]).(map[string]*warpData)
 
 	// read vanilla data
-	for name, warp := range warps {
-		if strings.HasSuffix(name, "essence") {
-			warp.len = 4
-			warp.bank = byte(sora(rom.game, 0x09, 0x0a).(int))
-		} else {
-			warp.bank, warp.len = 0x04, 2
-		}
+	for _, warp := range warps {
+		warp.bank, warp.len = 0x04, 2
+
 		warp.entryOffset = (&address{warp.bank, warp.Entry}).fullOffset()
 		warp.vanillaEntryData = make([]byte, warp.len)
-		copy(warp.vanillaEntryData,
-			rom.data[warp.entryOffset:warp.entryOffset+warp.len])
+		copy(warp.vanillaEntryData, rom.data[warp.entryOffset:warp.entryOffset+warp.len])
+
 		warp.exitOffset = (&address{warp.bank, warp.Exit}).fullOffset()
 		warp.vanillaExitData = make([]byte, warp.len)
-		copy(warp.vanillaExitData,
-			rom.data[warp.exitOffset:warp.exitOffset+warp.len])
+		copy(warp.vanillaExitData, rom.data[warp.exitOffset:warp.exitOffset+warp.len])
 
 		warp.vanillaMapTile = warp.MapTile
 	}
 
-	// ages needs essence warp data to d6 present entrance, even though it
-	// doesn't exist in vanilla.
+	// ages needs essence warp data to d6 present entrance, even though it doesn't exist in vanilla.
 	if rom.game == GAME_AGES {
 		warps["d6 present essence"] = &warpData{
 			vanillaExitData: []byte{0x81, 0x0e, 0x16, 0x01},
@@ -476,20 +483,35 @@ func (rom *romState) setWarps(warpMap map[string]string, dungeons bool) {
 
 	// set randomized data
 	for srcName, destName := range warpMap {
+		// Write warps in ROM
 		src, dest := warps[srcName], warps[destName]
 		for i := 0; i < src.len; i++ {
 			rom.data[src.entryOffset+i] = dest.vanillaEntryData[i]
 			rom.data[dest.exitOffset+i] = src.vanillaExitData[i]
 		}
 		dest.MapTile = src.vanillaMapTile
+	}
 
-		destEssence := warps[destName+" essence"]
-		if destEssence != nil && destEssence.exitOffset != 0 {
-			srcEssence := warps[srcName+" essence"]
-			for i := 0; i < destEssence.len; i++ {
-				rom.data[destEssence.exitOffset+i] = srcEssence.vanillaExitData[i]
-			}
-		}
+	entranceMap := make(map[string]string)
+	for entranceId := 0; entranceId <= 8; entranceId++ {
+		entranceStr := fmt.Sprintf("d%d", entranceId)
+		dungeonStr := warpMap[entranceStr]
+		entranceMap[dungeonStr] = entranceStr
+	}
+
+	printMap(warpMap)
+	fmt.Println()
+	printMap(entranceMap)
+
+	// D0 Chest Warp (hardcoded warp using a specific format)
+	entrance := warps[entranceMap["d0"]]
+	copy(rom.data[0x2bbe5:], []byte{entrance.Room, entrance.Group, entrance.Position})
+
+	// D1-D8 Essence Warps (all the same format in the same array)
+	for i := 1; i <= 8; i++ {
+		entrance = warps[entranceMap[fmt.Sprintf("d%d", i)]]
+		addr := 0x24b59 + (i * 4) - 4
+		copy(rom.data[addr:], []byte{entrance.Group | 0x80, entrance.Room, entrance.Position})
 	}
 
 	if rom.game == GAME_SEASONS {
@@ -511,18 +533,13 @@ func (rom *romState) setWarps(warpMap map[string]string, dungeons bool) {
 			})
 		}
 
-		if dungeons {
-			// remove alternate d2 entrances and connect d2 stairs exits
-			// directly to each other
+		if ri.removeD2AltEntrance {
+			// if D2 alt-entrance is removed, reconnect both interior stairs to each other
 			src, dest := warps["d2 alt left"], warps["d2 alt right"]
 			rom.data[src.exitOffset] = dest.vanillaEntryData[0]
 			rom.data[src.exitOffset+1] = dest.vanillaEntryData[1]
 			rom.data[dest.exitOffset] = src.vanillaEntryData[0]
 			rom.data[dest.exitOffset+1] = src.vanillaEntryData[1]
-
-			// also enable removal of the stair tiles
-			mut := rom.codeMutables["d2AltEntranceTileSubs"]
-			mut.new[0], mut.new[5] = 0x00, 0x00
 		}
 	}
 }

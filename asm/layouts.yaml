@@ -89,14 +89,12 @@ seasons:
     db option.revealGoldenOreTiles,20,00,68,2f # ^
     db option.revealGoldenOreTiles,42,00,14,2f # ^
 
-  00/3854/: call applyExtraTileSubstitutions
+    # if option is set to 4 when true, put stairs inside D0 to make chest reachable without the alt entrance
+    db option.removeD0AltEntrance,05,00,5a,53
 
-  04/d2AltEntranceTileSubs: |
-    # these are enabled only if entrances are randomized
-    db fe,8d,00,18,04 # remove left stairs
-    db fe,8e,00,12,04 # remove right stairs
-  04/endTileSubTable: |
     db ff
+
+  00/3854/: call applyExtraTileSubstitutions
 
   # Change temple remains door upper-left tree tile per-layout because the generic tile replacement
   # was causing a glitched palette in winter
