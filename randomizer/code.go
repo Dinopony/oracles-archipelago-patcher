@@ -338,7 +338,6 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"rings",
 		"static_items",
 		"text",
-		"trade_items",
 		"triggers",
 		"warp_to_start",
 		"seasons/compass_chimes",
@@ -352,6 +351,8 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"seasons/subscreen_1_improvement",
 		"seasons/tarm_gate_requirement",
 		"seasons/combat_difficulty",
+		"seasons/remove_items_on_use",
+		"seasons/new_treasures",
 	}
 
 	if ri.warpToStart {

@@ -143,7 +143,17 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 		t.addr = address{}
 		t.param = 0x0d
 
-		// prevent changes on trade items
+		m["Archipelago Item"].text = 0x57
+		m["Archipelago Item"].sprite = 0x53
+
+		m["Archipelago Progression Item"].text = 0x57
+		m["Archipelago Progression Item"].sprite = 0x52
+
+		// give bracelet a level for ages multiworld compatibility
+		m["Power Bracelet"].param = 0x01
+
+		// prevent changes on treasures using previously unused IDs since they're
+		// handled in "asm/seasons/new_treasures.yaml"
 		m["Cuccodex"].addr = address{}
 		m["Lon Lon Egg"].addr = address{}
 		m["Ghastly Doll"].addr = address{}
@@ -156,15 +166,7 @@ func loadTreasures(b []byte, game int) map[string]*treasure {
 		m["Wooden Bird"].addr = address{}
 		m["Engine Grease"].addr = address{}
 		m["Phonograph"].addr = address{}
-
-		m["Archipelago Item"].text = 0x57
-		m["Archipelago Item"].sprite = 0x53
-
-		m["Archipelago Progression Item"].text = 0x57
-		m["Archipelago Progression Item"].sprite = 0x52
-
-		// give bracelet a level for ages multiworld compatibility
-		m["Power Bracelet"].param = 0x01
+		m["Pirate's Bell"].addr = address{}
 	} else {
 		// give strange flutes identified flute text and palettes
 		m["Ricky's Flute"].text = 0x38

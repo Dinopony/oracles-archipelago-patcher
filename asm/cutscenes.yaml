@@ -66,6 +66,8 @@ seasons:
       set 6,(hl) # remove ship from desert
       ld a,defaultSeason.westernCoast
       ld (wRoomStateModifier),a
+      ld a,TREASURE_PIRATES_BELL
+      call loseTreasure
       ret
   15/5a0e/: call setPirateCutsceneFlags
 

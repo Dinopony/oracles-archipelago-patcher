@@ -94,30 +94,27 @@ seasons:
   # Skip "has shield" check for forging hard ore
   0b/75c6/: db jumpifitemobtained,TREASURE_PUNCH
 
-  # Replace "which shield owned" check by setting given item subid 
-  # + setting a trackable room flag
+  # Rework of the "subrosianSmith_giveUpgradedShield" function to handle randomized
+  # item and set a proper flag for client tracking
   15/62a7/: |
     call getThisRoomFlags
     set 6,(hl)  # +0x40 on room flag
-    ld c,slot.subrosianSmithyOre.subid
-    jr 6
-    db 00,00,00,00,00,00
+    ld bc,slot.subrosianSmithyOre.full
+    jp spawnTreasureOnLink
 
-  # Change the ID of the item given by Hard Ore reforge
-  15/62bd/: ld (hl),slot.subrosianSmithyOre.id
 
   ##### BELL SMITHY ###############################################
   
-  # Set a unique room flag when smithing bell for client tracking purpose
-  0b/75a8/: |
-    # wait 30 is gone here to make space
-    db showtextlowindex,06
-    db setanimation,01
-    # wait 30 is gone here to make space
-    db showtextlowindex,07
-    db callscript,50,76  # smithyScript_smithItem
+  # Remove the "post-endgame" discussion when no items are reforgeable
+  0b/7596/: dw 7598
+  # The full "post-endgame" script space is free (from 2f5f0 to 2f641 included)
+  0b/75f0/reforgeRustyBell: |
     db orroomflag,80
-    db giveitem,TREASURE_PIRATES_BELL,02
+    db loseitem,TREASURE_RUSTY_BELL
+    db giveitem,slot.subrosianSmithyBell.id,slot.subrosianSmithyBell.subid
+    db 75,b6
+  # (2f635 to 2f641 remains)
+  0b/75b3/: db 75,f0  # jump to reforgeRustyBell
 
 
   ##### TEMPLE OF SEASONS ##############################################
@@ -134,11 +131,13 @@ seasons:
   0b/72f0/: db jumpifroomflagset,80
   # remove master's plaque from inventory to prevent confusion.
   0b/script_diverGiveItem: |
-      db giveitem; db slot.masterDiversReward.id; db slot.masterDiversReward.subid
-      db orroomflag; db 80
+      db giveitem,slot.masterDiversReward.id,slot.masterDiversReward.subid
+      db orroomflag,80
       db loseitem,TREASURE_MASTERS_PLAQUE
       db retscript
-  0b/730d/: db callscript; dw script_diverGiveItem
+  0b/730d/: |
+    db callscript
+    dw script_diverGiveItem
 
 
   ##### MT CUCCO PLATFORM CAVE ########################################
@@ -250,3 +249,41 @@ seasons:
     db 2c,20,6f,72,20,       # ", or"
     db 65,6c,73,65,2e,2e,2e  # "else..."
     db 00
+
+
+  ##### MAPLE TRADE ######################################################
+
+  # Make Maple trade a randomized item which sets a custom flag, both for client tracking purpose
+  # and to prevent from obtaining this item several times (@state3 of INTERACID_GHASTLY_DOLL)
+  0a/53cc/: |
+    call 239b  # interactionIncState
+
+    # Test flag to skip treasure creation if item has already been obtained (from several Lon Lon Eggs in pool)
+    ld a,(wBoughtShopItems2)
+    bit 3,a
+    ret nz
+
+    # Create a treasure with a forced collect mode (using multiworld collect override)
+    ld bc,slot.mapleTrade.full
+    call spawnTreasureOnLink
+    ld l,71
+    ld (hl),COLLECT_PICKUP_NOFLAG
+   
+    # Set a flag to tell it has been collected
+    ld a,(wBoughtShopItems2)
+    or a,08
+    ld (wBoughtShopItems2),a
+    ret
+  # Remove timer after getting Maple trade item
+  0a/540e/: nop; nop; nop; nop
+
+
+  ##### TALON TRADE ######################################################
+
+  # Remove visible mushroom in Talon's cave
+  0c/207d/: db eb,eb,eb,eb,eb
+  # Edit Talon's script to remove the "got item" flag later, since it was being removed too early with the late collection
+  # We basically extract the "OR" and "AND" operations from talon_giveMushroomAfterWaking to reinsert those at the end of 
+  # the script to ensure they are effective.
+  15/9f8/: db f6,8e,7a,01,8b,50,89,08,8c,11,8f,01,89,10,8c,29,e0,d1,5a,b1,40
+  
