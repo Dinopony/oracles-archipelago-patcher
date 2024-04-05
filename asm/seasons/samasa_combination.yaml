@@ -1,14 +1,13 @@
 seasons:
     # Make a new cutscene to make the Piratian show the randomized combination
-    0b/7cc2/newShowSamasaCombination: ''
     0b/5e4c/: |
         db checkabutton
         db setdisabledobjectsto91
         db showtextlowindex,0c
         db writeobjectbyte,7c,01
         db setspeed,50
-        db moveup,15
-        db 7c,c2
+        db loadscript,15
+        dw newShowSamasaCombination
     # Jump to above address (0x7cc2) where the new script is injected
 
     # Change the actual combination required to open the door

@@ -145,13 +145,14 @@ func makeSamasaCombinationTable(samasaCombination []int) string {
 	return b.String()
 }
 
-func makeSamasaGateSequenceScript(samasaSequence []int) ([]byte, error) {
+func makeSamasaGateSequenceScript(samasaSequence []int) string {
 	if len(samasaSequence) == 0 {
-		return []byte{}, nil
+		return ""
 	}
 
 	const DELAY_6 = 0xf6
 	const CALL_SCRIPT = 0xc0
+	const MOVE_UP = 0xec
 	const MOVE_DOWN = 0xee
 	const MOVE_LEFT = 0xef
 	const MOVE_RIGHT = 0xed
@@ -160,6 +161,8 @@ func makeSamasaGateSequenceScript(samasaSequence []int) ([]byte, error) {
 	const ENABLE_ALL_OBJECTS = 0xb9
 
 	bytes := make([]byte, 0, len(samasaSequence)*10)
+	bytes = append(bytes, MOVE_UP, byte(0x15))
+
 	currentPosition := 1
 
 	// Add a fake last press on button 1 to make the pirate go back to its
@@ -198,11 +201,15 @@ func makeSamasaGateSequenceScript(samasaSequence []int) ([]byte, error) {
 	bytes = append(bytes, ENABLE_ALL_OBJECTS)
 	bytes = append(bytes, 0x5e, 0x4b) // jump back to script start
 
-	if len(bytes) >= 0xF6 {
-		return nil, fmt.Errorf("samasa gate sequence is too long")
+	if len(bytes) > 0xFE {
+		panic(fmt.Errorf("samasa gate sequence is too long"))
 	}
 
-	return bytes, nil
+	b := new(strings.Builder)
+	for _, val := range bytes {
+		b.Write([]byte{byte(val)})
+	}
+	return b.String()
 }
 
 // that's correct

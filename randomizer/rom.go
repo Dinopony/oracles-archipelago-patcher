@@ -105,6 +105,7 @@ func (rom *romState) initBanks(ri *routeInfo) {
 	// numOwlIds := sora(rom.game, 0x1e, 0x14).(int)
 	// rom.replaceRaw(address{0x3f, 0}, "owlTextOffsets", string(make([]byte, numOwlIds*2)))
 
+	rom.replaceRaw(address{0x15, 0}, "newShowSamasaCombination", makeSamasaGateSequenceScript(ri.samasaGateSequence))
 	rom.replaceRaw(address{0x0a, 0}, "newSamasaCombination", makeSamasaCombinationTable(ri.samasaGateSequence))
 }
 
@@ -191,8 +192,6 @@ func (rom *romState) defineSignGuyTextConstants(ri *routeInfo) {
 // changes the contents of loaded ROM bytes in place. returns a checksum of the
 // result or an error.
 func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
-	var err error
-
 	rom.setHeartBeepInterval(ri.heartBeepInterval)
 	rom.setRequiredEssences(ri.requiredEssences)
 
@@ -229,10 +228,6 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 	if rom.game == GAME_SEASONS {
 		rom.setTreasureMapData()
 
-		rom.codeMutables["newShowSamasaCombination"].new, err = makeSamasaGateSequenceScript(ri.samasaGateSequence)
-		if err != nil {
-			return nil, err
-		}
 		rom.codeMutables["newSamasaCombinationLengthMinusOne"].new[0] = byte(len(ri.samasaGateSequence) - 1)
 
 		rom.codeMutables["makuSignText"].new[3] = 0x30 + byte(ri.requiredEssences)
