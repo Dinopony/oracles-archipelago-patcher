@@ -444,13 +444,6 @@ type warpData struct {
 	vanillaEntryData, vanillaExitData []byte // read from rom
 }
 
-func printMap(m map[string]string) {
-	// loop over elements of slice
-	for k, v := range m {
-		fmt.Println(k, " => ", v)
-	}
-}
-
 func (rom *romState) setWarps(warpMap map[string]string, ri *routeInfo) {
 	// load yaml data
 	wd := make(map[string](map[string]*warpData))
@@ -492,6 +485,7 @@ func (rom *romState) setWarps(warpMap map[string]string, ri *routeInfo) {
 		dest.MapTile = src.vanillaMapTile
 	}
 
+	// Build a map dungeon => entrance (useful for essence warps)
 	entranceMap := make(map[string]string)
 	for entranceId := 0; entranceId <= 8; entranceId++ {
 		entranceStr := fmt.Sprintf("d%d", entranceId)
@@ -499,22 +493,18 @@ func (rom *romState) setWarps(warpMap map[string]string, ri *routeInfo) {
 		entranceMap[dungeonStr] = entranceStr
 	}
 
-	printMap(warpMap)
-	fmt.Println()
-	printMap(entranceMap)
-
-	// D0 Chest Warp (hardcoded warp using a specific format)
-	entrance := warps[entranceMap["d0"]]
-	copy(rom.data[0x2bbe5:], []byte{entrance.Room, entrance.Group, entrance.Position})
-
-	// D1-D8 Essence Warps (all the same format in the same array)
-	for i := 1; i <= 8; i++ {
-		entrance = warps[entranceMap[fmt.Sprintf("d%d", i)]]
-		addr := 0x24b59 + (i * 4) - 4
-		copy(rom.data[addr:], []byte{entrance.Group | 0x80, entrance.Room, entrance.Position})
-	}
-
 	if rom.game == GAME_SEASONS {
+		// D0 Chest Warp (hardcoded warp using a specific format)
+		entrance := warps[entranceMap["d0"]]
+		copy(rom.data[0x2bbe5:], []byte{entrance.Room, entrance.Group, entrance.Position})
+
+		// D1-D8 Essence Warps (all the same format in the same array)
+		for i := 1; i <= 8; i++ {
+			entrance = warps[entranceMap[fmt.Sprintf("d%d", i)]]
+			addr := 0x24b59 + (i * 4) - 4
+			copy(rom.data[addr:], []byte{entrance.Group | 0x80, entrance.Room, entrance.Position})
+		}
+
 		// set treasure map data. because of d8, portals go first, then dungeon
 		// entrances.
 		dungeonNameRegexp := regexp.MustCompile(`^d[1-8]$`)
