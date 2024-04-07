@@ -232,6 +232,7 @@ seasons:
     define wActiveGroup,cc49
     define wActiveRoom,cc4c
     define wActiveRoomPack,cc4d
+    define wDungeonFloor,cc57
     define wRoomStateModifier,cc4e
     define wAreaFlags,cc50
     define wDungeonIndex,cc55

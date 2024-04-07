@@ -84,6 +84,46 @@ seasons:
   # change destination of initial transition in pirate cutscene.
   15/5a1c/: db 80,e2,00,66 # wWarpDestVariables, in order?
 
+  # remove D8 falling crystal cutscenes
+  09/5894/: |
+    # Set a flag for this room
+    call getThisRoomFlags
+    set 6,(hl)
+
+    # Store current active room
+    ld a,(wActiveRoom)
+    push af
+    
+    # Change dungeon floor
+    ld hl,wDungeonFloor
+    ld a,(hl)
+    dec a
+    ld (hl),a
+    push hl
+    
+    # Set active room to the one of the new dungeon floor
+    call 2d65  # getActiveRoomFromDungeonMapPosition
+    ld (wActiveRoom),a
+    
+    # Set a flag for this room
+    call getThisRoomFlags
+    set 6,(hl)
+    
+    # Reset dungeon floor
+    pop hl
+    ld a,(hl)
+    inc a
+    ld (hl),a
+    
+    # Reset active room
+    pop af
+    ld (wActiveRoom),a
+
+    ld a,SND_SOLVEPUZZLE_2
+    call playSound
+
+    jp interactionDelete
+
 ages:
   # as a side effect of removing the nayru/impa/ralph cutscene outside the
   # black tower. nayru hangs out in lynna village from the start. don't do
