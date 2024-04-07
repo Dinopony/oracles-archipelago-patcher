@@ -173,7 +173,7 @@ seasons:
   # - play the appropriate compass sound to indicate which dungeon it belongs to
   01/49e5/: |
     call getThisRoomFlags
-    bit 6,(hl)
+    bit 5,(hl)
     ret nz
 
     ld a,(wActiveGroup)
