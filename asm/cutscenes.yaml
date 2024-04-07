@@ -70,6 +70,13 @@ seasons:
       call loseTreasure
       ret
   15/5a0e/: call setPirateCutsceneFlags
+  # Remove the pirate captain from western coast map because it triggers an odd cutscene when coming
+  # from the left in cases where D7 is replaced by D0 or D2 and alt entrances are enabled
+  11/6b5a/: db b1,10,18,18,ff
+
+  # Remove floodgate's keeper behavior where he notices the key when it's owned while inside his
+  # house (which could trigger right as you hit the lever in a randomized context)
+  09/6289/: ret
 
   # skip "you got all four seasons" text from season spirts.
   15/57c2/: cp a,05
