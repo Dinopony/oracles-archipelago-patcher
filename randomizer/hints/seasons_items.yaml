@@ -15,9 +15,8 @@ Rare Peach Stone: a Piece of Heart
 Red Ore: Red Ore
 Ribbon: a Ribbon
 Round Jewel: the Round Jewel
-Rupees (1): 1 Rupee # not present in ages
-Rupees (5): 5 Rupees # ^
 Rusty Bell: the Rusty Bell
+Rusty Bell: the Pirate's Bell
 Progressive Slingshot: a Slingshot
 Rod of Seasons (Spring): the Rod of Spring
 Spring Banana: a Spring Banana
@@ -40,3 +39,44 @@ Mushroom: a Mushroom
 Wooden Bird: a Wooden Bird
 Engine Grease: Engine Grease
 Phonograph: a Phonograph
+
+Ore Chunks (50): 50 Ore Chunks
+
+Small Key (Hero's Cave): Small Key (D0)
+Small Key (Gnarled Root Dungeon): Small Key (D1)
+Small Key (Snake's Remains): Small Key (D2)
+Small Key (Poison Moth's Lair): Small Key (D3)
+Small Key (Dancing Dragon Dungeon): Small Key (D4)
+Small Key (Unicorn's Cave): Small Key (D5)
+Small Key (Ancient Ruins): Small Key (D6)
+Small Key (Explorer's Crypt): Small Key (D7)
+Small Key (Sword & Shield Dungeon): Small Key (D8)
+
+Boss Key (Gnarled Root Dungeon): Boss Key (D1)
+Boss Key (Snake's Remains): Boss Key (D2)
+Boss Key (Poison Moth's Lair): Boss Key (D3)
+Boss Key (Dancing Dragon Dungeon): Boss Key (D4)
+Boss Key (Unicorn's Cave): Boss Key (D5)
+Boss Key (Ancient Ruins): Boss Key (D6)
+Boss Key (Explorer's Crypt): Boss Key (D7)
+Boss Key (Sword & Shield Dungeon): Boss Key (D8)
+
+Compass (Hero's Cave): Compass (D0)
+Compass (Gnarled Root Dungeon): Compass (D1)
+Compass (Snake's Remains): Compass (D2)
+Compass (Poison Moth's Lair): Compass (D3)
+Compass (Dancing Dragon Dungeon): Compass (D4)
+Compass (Unicorn's Cave): Compass (D5)
+Compass (Ancient Ruins): Compass (D6)
+Compass (Explorer's Crypt): Compass (D7)
+Compass (Sword & Shield Dungeon): Compass (D8)
+
+Dungeon Map (Hero's Cave): Dungeon Map (D0)
+Dungeon Map (Gnarled Root Dungeon): Dungeon Map (D1)
+Dungeon Map (Snake's Remains): Dungeon Map (D2)
+Dungeon Map (Poison Moth's Lair): Dungeon Map (D3)
+Dungeon Map (Dancing Dragon Dungeon): Dungeon Map (D4)
+Dungeon Map (Unicorn's Cave): Dungeon Map (D5)
+Dungeon Map (Ancient Ruins): Dungeon Map (D6)
+Dungeon Map (Explorer's Crypt): Dungeon Map (D7)
+Dungeon Map (Sword & Shield Dungeon): Dungeon Map (D8)
