@@ -5,6 +5,7 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -499,6 +500,18 @@ func (rom *romState) setWarps(warpMap map[string]string, ri *routeInfo) {
 			addr := 0x24b59 + (i * 4) - 4
 			copy(rom.data[addr:], []byte{entrance.Group | 0x80, entrance.Room, entrance.Position})
 		}
+
+		// Change Minimap popups
+		for i := 0; i < 8; i++ {
+			// Dungeon 0-7
+			dungeon_name := fmt.Sprintf("d%d", i)
+			dungeon_index, _ := strconv.Atoi(warpMap[dungeon_name][1:])
+			map_tile := int(warps[dungeon_name].vanillaMapTile)
+			rom.data[0xAA19+map_tile] = 0x81 | (byte(dungeon_index) << 3)
+		}
+		// Dungeon 8 specific case (since it's in Subrosia)
+		dungeon_index, _ := strconv.Atoi(warpMap["d8"][1:])
+		rom.data[0xAB19] = 0x81 | (byte(dungeon_index) << 3)
 
 		// set treasure map data. because of d8, portals go first, then dungeon
 		// entrances.
