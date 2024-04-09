@@ -360,6 +360,7 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"seasons/combat_difficulty",
 		"seasons/remove_items_on_use",
 		"seasons/new_treasures",
+		"seasons/map_menu",
 	}
 
 	if ri.warpToStart {

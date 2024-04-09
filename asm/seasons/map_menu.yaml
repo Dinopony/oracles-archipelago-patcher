@@ -1,0 +1,196 @@
+seasons:
+  00/: |
+    define wFrameCounter,cc00
+    define wDungeonMapScroll,cbb4
+    define wMapMenuCursorIndex,cbb6
+    define wDungeonMapScrollState,cbce
+    define wMenuLoadState,cbcc
+    define wMenuActiveState,cbcd
+    define wPaletteThread_mode,c4ab
+    define disableLcd,02c1
+    define fastFadeoutToWhite,313b
+    define wMinimapGroup,c63a
+
+    define wMinimapCycleToNextMode,c09f
+    define wOriginalDungeonIndex,c09e
+
+  # Store a few additional variables when checking the SELECT button to open map
+  02/extendedMenuOpenCheck: |
+    ld a,(wDungeonIndex)
+    ld (wOriginalDungeonIndex),a
+    ld a,(wKeysJustPressed)
+    ret
+  # Replace the second `ld a,(wKeysJustPressed)` in b2_updateMenus by an extension
+  02/4fc5/: call extendedMenuOpenCheck
+
+  # Handle a keybinding to change map type (overworld, Subrosia, dungeons)
+  02/worldMapStartButtonSupport: |
+    jp nz,_closeMenu
+    ld a,(wKeysJustPressed)
+    cp a,08  # BTN_START
+    ret nz
+
+    # Put back the menu in "loading" state while cycling to next mode
+    ld a,01
+    ld (wMinimapCycleToNextMode),a
+    xor a
+    ld (wMenuActiveState),a
+    call fastFadeoutToWhite
+    ret
+  # Replace `jp nz,closeMenu` in @noDirectionButtonPressed by an extension (outside maps)
+  02/6089/: call worldMapStartButtonSupport
+  # Replace `jp nz,closeMenu` in @dungeon by an extension (dungeon maps)
+  02/602c/: call worldMapStartButtonSupport
+  
+  # When booting the map, handle a "cycling order" that can be issued using the keybinding defined
+  # by above functions. Pressing that button reopens the map with another map mode,
+  # and the cycling between modes is addressed by this function.
+  02/extendedBootMapMenu: |
+    # Wait for palette change to complete
+    ld a,(wPaletteThread_mode)
+    or a
+    ret nz
+
+    # Change the current map mode in case we are reopening the map after a "cycling order"
+    ld a,(wMinimapCycleToNextMode)
+    or a
+    jr z,.open
+
+    ld a,(wMinimapGroup)
+    cp a,04
+    jr c,.notDungeon
+
+    .dungeon
+    ld a,(wDungeonIndex)
+    inc a
+    cp a,9
+    jr z,.invalidDungeon
+
+    ld (wDungeonIndex),a
+    jr .openDungeon
+
+    .invalidDungeon
+    xor a
+    ld (wMinimapGroup),a
+    jr .open
+
+    .notDungeon
+    ld a,(wMinimapGroup)
+    inc a
+    cp a,2
+    jr z,.swapToDungeon
+
+    ld (wMinimapGroup),a
+    jr .open
+
+    .swapToDungeon
+    ld a,05
+    ld (wMinimapGroup),a
+    xor a
+    ld (wDungeonIndex),a
+
+    .openDungeon
+    xor a
+    ld (wDungeonMapScroll),a
+    ld (wDungeonMapScrollState),a
+
+    .open
+    call disableLcd
+    jp 5ee3  # mapMenu_state0
+  # Change the pointer to state0 inside runMapMenu jump table
+  02/5edf/: dw extendedBootMapMenu
+
+  # Extend the close menu procedure to reset temporarily changed variable with the value
+  # they had when initially opening the map
+  02/extendedMenuClose: |
+    # Reset minimap group to its original value
+    ld a,(wActiveGroup)
+    ld (wMinimapGroup),a
+    ld a,(wOriginalDungeonIndex)
+    ld (wDungeonIndex),a
+    xor a
+    ld (wMinimapCycleToNextMode),a
+
+    ld hl,wMenuLoadState
+    ret
+  # Replace `ld hl,wMenuLoadState` in menuStateFadeOutOfMenu by an extension
+  02/508b/: call extendedMenuClose
+
+  # Tests if player really is in the dungeon that is being looked at through the dungeon
+  # map (sets flag Z if inside)
+  02/checkIfInsideDungeon: |
+    ld a,(wDungeonIndex)
+    ld b,a
+    ld a,(wOriginalDungeonIndex)
+    cp b
+    ret
+
+  # Only draw dungeon map if it's the dungeon we are currently in (because technical reasons)
+  02/dontDrawDungeonIfNotInside: |
+    call checkIfInsideDungeon
+    jr nz,.done
+    call 6743  # dungeonMap_generateScrollableTilemap
+    call 66e1  # dungeonMap_drawFloorList
+    call 6791  # dungeonMap_updateScroll
+    .done
+    ret
+  # replace the unique calls of the 3 functions contained inside dontDrawDungeonIfNotInside by a
+  # call to it
+  02/5f64/: |
+    call dontDrawDungeonIfNotInside
+    jr 04
+
+  # Only draw annex sprites in dungeon map (Link icon, cursors and boss symbols...) if we currently
+  # are in the dungeon
+  02/dontDrawDungeonSpritesIfNotInside: |
+    call checkIfInsideDungeon
+    jr nz,.done
+    call 64A3  # dungeonMap_drawLinkIcons
+    call 64F9  # dungeonMap_drawCursor
+    call 6521  # dungeonMap_drawArrows
+    call 648A  # dungeonMap_drawBossSymbolForFloor
+    call 646E  # dungeonMap_drawFloorCursor
+    .done
+    ret
+  # Replace the only call to dungeonMap_drawLinkIcons by the extension above
+  02/63dc/: jp dontDrawDungeonSpritesIfNotInside
+
+  # Prevent from scrolling floors if not inside dungeon (and therefore map is not displayed)
+  02/onlyAllowScrollingIfInsideDungeon: |
+    call checkIfInsideDungeon
+    jr nz,.done
+    jp 0294  # getInputWithAutofire
+
+    .done
+    pop af  # pop return address from stack
+    ret
+  # Replace first call of dungeonMap_scrollingState0 by this extension
+  02/62fe/: call onlyAllowScrollingIfInsideDungeon
+
+  # On overworld & Subrosia maps, only draw the arrow if we are in the appropriate dimension
+  02/drawWorldArrowOnlyIfInDimension: |
+    ld a,(wMinimapGroup)
+    ld b,a
+    ld a,(wActiveGroup)
+    cp b
+    jr nz,.differentDimension
+    ld a,(wFrameCounter)
+    ret
+    .differentDimension
+    pop af  # pop return address from stack
+    ret
+  # Replace the first instruction of mapMenu_drawArrow by a call to above extension
+  02/657d/: call drawWorldArrowOnlyIfInDimension
+
+  # Override initialization of cursor position to set it to origin position if we have cycled
+  # mode at least once
+  02/initializeCursorPosition: |
+    ld (wMapMenuCursorIndex),a
+    ld a,(wMinimapCycleToNextMode)
+    or a
+    jr z,.done
+    xor a
+    ld (wMapMenuCursorIndex),a
+    .done
+    ret
+  02/5f2d/: call initializeCursorPosition
