@@ -280,10 +280,58 @@ seasons:
 
   ##### TALON TRADE ######################################################
 
-  # Remove visible mushroom in Talon's cave
-  0c/207d/: db eb,eb,eb,eb,eb
-  # Edit Talon's script to remove the "got item" flag later, since it was being removed too early with the late collection
-  # We basically extract the "OR" and "AND" operations from talon_giveMushroomAfterWaking to reinsert those at the end of 
-  # the script to ensure they are effective.
-  15/9f8/: db f6,8e,7a,01,8b,50,89,08,8c,11,8f,01,89,10,8c,29,e0,d1,5a,b1,40
-  
+  # Make Talon spawn a real treasure interaction instead of a fixed trade item
+  15/spawnTalonTreasure: |
+    call getFreeInteractionSlot
+    ret nz
+    ld (hl),INTERACID_TREASURE
+    inc l
+    ld (hl),slot.talonTrade.id
+    inc l
+    ld (hl),slot.talonTrade.subid
+    ld l,4b  # y
+    ld (hl),68
+    ld l,4d  # x
+    ld (hl),48
+    ret
+  # Edit caveTalonScript to call that specific function
+  0b/607d/: |  
+    db e0  # asm15
+    dw spawnTalonTreasure
+    db eb,eb  # do nothing (initcollisions for nothing)
+
+  # Look for an interaction of type treasure in the room, and move the first 
+  # one found on Link for him to collect it.
+  15/moveTreasureOnLink: |
+    push hl
+    push de
+    push bc
+
+    ld hl,d041
+    .loop
+    ld a,(hl)
+    cp a,INTERACID_TREASURE  # 60
+    jr nz,.next
+
+    .found
+    ld de,d00b  # wLink.yh
+    call objectCopyPosition_rawAddress
+    jr .end
+
+    .next
+    ld a,h
+    cp a,df
+    jr z,.end
+    inc h
+    jr .loop
+
+    .end
+    pop bc
+    pop de
+    pop hl
+    ret
+  # Edit talon_giveMushroomAfterWaking to move the treasure behind him on Link
+  # instead of giving an item spawned on the fly
+  14/49f5/: |
+    db e0  # asm15
+    dw moveTreasureOnLink
