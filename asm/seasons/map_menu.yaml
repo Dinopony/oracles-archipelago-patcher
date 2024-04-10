@@ -58,10 +58,35 @@ seasons:
       jp 5029  # @openMenu
   02/501f/: call checkWarpToStart
 
+  # Compute which minimap group we are currently in (0 = overworld, 1 = subrosia, 2 = maku tree, 5 = dungeon)
+  # Returns the value in register `a`
+  02/computeMinimapGroup: |
+    ld b,5  # dungeon
+    ld a,(wDungeonIndex)
+    cp a,09
+    jr c,.done
+
+    ld a,(wActiveGroup)
+    cp a,03
+    jr nc,.forceOverworld
+    ld b,a
+    jr .done
+
+    .forceOverworld
+    ld b,0
+    
+    .done
+    ld a,b
+    ret
+
   # Store a few additional variables when checking the SELECT button to open map
   02/extendedMenuOpenCheck: |
     ld a,(wDungeonIndex)
     ld (wOriginalDungeonIndex),a
+
+    # Compute minimap group
+    call computeMinimapGroup
+    ld (wMinimapGroup),a
     ld a,(wKeysJustPressed)
     ret
   # Replace the second `ld a,(wKeysJustPressed)` in b2_updateMenus by an extension
@@ -148,8 +173,6 @@ seasons:
   # they had when initially opening the map
   02/extendedMenuClose: |
     # Reset minimap group to its original value
-    ld a,(wActiveGroup)
-    ld (wMinimapGroup),a
     ld a,(wOriginalDungeonIndex)
     ld (wDungeonIndex),a
     xor a
@@ -164,9 +187,17 @@ seasons:
   # map (sets flag Z if inside)
   02/checkIfInsideDungeon: |
     ld a,(wDungeonIndex)
+    cp a,ff
+    jr z,.invalid
+    
+    .valid
     ld b,a
     ld a,(wOriginalDungeonIndex)
     cp b
+    ret
+    
+    .invalid
+    or a
     ret
 
   # Only draw dungeon map if it's the dungeon we are currently in (because technical reasons)
@@ -211,11 +242,11 @@ seasons:
   # Replace first call of dungeonMap_scrollingState0 by this extension
   02/62fe/: call onlyAllowScrollingIfInsideDungeon
 
-  # On overworld & Subrosia maps, only draw the arrow if we are in the appropriate dimension
+  # On overworld & Subrosia maps, don't draw the arrow if we aren't in that dimension
   02/drawWorldArrowOnlyIfInDimension: |
-    ld a,(wMinimapGroup)
+    call computeMinimapGroup
     ld b,a
-    ld a,(wActiveGroup)
+    ld a,(wMinimapGroup)
     cp b
     jr nz,.differentDimension
     ld a,(wFrameCounter)
