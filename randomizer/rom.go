@@ -168,6 +168,8 @@ func (rom *romState) setData(ri *routeInfo) {
 	// Sign guy requirement being a multi-digit requirement, it requires quite some decomposition work
 	rom.assembler.defineByte("option.signGuyRequirement", byte(ri.signGuyRequirement))
 	rom.defineSignGuyTextConstants(ri)
+
+	rom.assembler.defineByte("option.warpToStart", ternary(ri.warpToStart, uint8(0x01), uint8(0x00)).(uint8))
 }
 
 func (rom *romState) defineSignGuyTextConstants(ri *routeInfo) {
