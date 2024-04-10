@@ -10,6 +10,7 @@ seasons:
     define disableLcd,02c1
     define fastFadeoutToWhite,313b
     define wMinimapGroup,c63a
+    define wDungeonMaps,c67e
 
     define wMinimapCycleToNextMode,c09f
     define wOriginalDungeonIndex,c09e
@@ -63,25 +64,6 @@ seasons:
   # Replace the second `ld a,(wKeysJustPressed)` in b2_updateMenus by an extension
   02/4fc5/: call extendedMenuOpenCheck
 
-  # Handle a keybinding to change map type (overworld, Subrosia, dungeons)
-  02/worldMapStartButtonSupport: |
-    jp nz,_closeMenu
-    ld a,(wKeysJustPressed)
-    cp a,08  # BTN_START
-    ret nz
-
-    # Put back the menu in "loading" state while cycling to next mode
-    ld a,01
-    ld (wMinimapCycleToNextMode),a
-    xor a
-    ld (wMenuActiveState),a
-    call fastFadeoutToWhite
-    ret
-  # Replace `jp nz,closeMenu` in @noDirectionButtonPressed by an extension (outside maps)
-  02/6089/: call worldMapStartButtonSupport
-  # Replace `jp nz,closeMenu` in @dungeon by an extension (dungeon maps)
-  02/602c/: call worldMapStartButtonSupport
-  
   # When booting the map, handle a "cycling order" that can be issued using the keybinding defined
   # by above functions. Pressing that button reopens the map with another map mode,
   # and the cycling between modes is addressed by this function.
@@ -139,6 +121,25 @@ seasons:
     jp 5ee3  # mapMenu_state0
   # Change the pointer to state0 inside runMapMenu jump table
   02/5edf/: dw extendedBootMapMenu
+
+  # Handle a keybinding to change map type (overworld, Subrosia, dungeons)
+  02/worldMapStartButtonSupport: |
+    jp nz,_closeMenu
+    ld a,(wKeysJustPressed)
+    cp a,08  # BTN_START
+    ret nz
+
+    # Put back the menu in "loading" state while cycling to next mode
+    ld a,01
+    ld (wMinimapCycleToNextMode),a
+    xor a
+    ld (wMenuActiveState),a
+    call fastFadeoutToWhite
+    ret
+  # Replace `jp nz,closeMenu` in @noDirectionButtonPressed by an extension (outside maps)
+  02/6089/: call worldMapStartButtonSupport
+  # Replace `jp nz,closeMenu` in @dungeon by an extension (dungeon maps)
+  02/602c/: call worldMapStartButtonSupport
 
   # Extend the close menu procedure to reset temporarily changed variable with the value
   # they had when initially opening the map
@@ -233,4 +234,17 @@ seasons:
     ld (wMapMenuCursorIndex),a
     .done
     ret
+  # Replace the instruction `ld (wMapMenu.cursorIndex),a` inside mapMenu_state0 by a call to above function
   02/5f2d/: call initializeCursorPosition
+
+  # If dungeon map is owned, return with flag Z unset to indicate dungeon has 
+  # been visited and needs to be displayed on map. Otherwise, perform the usual 
+  # @checkDungeonEntered which tests if dungeon has REALLY been visited
+  02/extendedCheckForDungeonDisplay: |
+    ld hl,wDungeonMaps
+    call checkFlag
+    ld a,c
+    ret nz
+    jp 611a  # @checkDungeonEntered
+  # Replace the unique call to @checkDungeonEntered by a call to above extension
+  02/60f3/:	call extendedCheckForDungeonDisplay
