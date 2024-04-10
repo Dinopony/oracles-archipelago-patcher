@@ -22,6 +22,7 @@ common:
     define SND_CLINK,50
     define SND_ERROR,5a
     define SND_SOLVEPUZZLE_2,5b
+    define SND_TELEPORT,8d
     define TREASURE_SHIELD,01
     define TREASURE_PUNCH,02
     define TREASURE_BOMBS,03

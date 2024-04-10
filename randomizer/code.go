@@ -363,9 +363,6 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 		"seasons/map_menu",
 	}
 
-	if ri.warpToStart {
-		asmPaths = append(asmPaths, "seasons/warp_to_start")
-	}
 	if ri.quickFlute {
 		asmPaths = append(asmPaths, "seasons/quick_flute")
 	}

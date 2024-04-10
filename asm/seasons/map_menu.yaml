@@ -39,6 +39,9 @@ seasons:
       ld a,ff
       ld (wDisabledObjects),a
       
+      ld a,SND_TELEPORT
+      call playSound
+
       ld a,03
       call setMusicVolume
       call clearStaticObjects
