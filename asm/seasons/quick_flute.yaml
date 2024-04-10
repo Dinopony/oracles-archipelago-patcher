@@ -10,7 +10,7 @@ seasons:
 
     .frameReactivateEnemies
     xor a
-    ld (wDisabledObjects),a # cca4
+    ld (wDisabledObjects),a
     ret
 
   

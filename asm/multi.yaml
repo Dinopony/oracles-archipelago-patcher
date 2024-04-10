@@ -132,9 +132,9 @@ common:
       ld c,(hl)
       call spawnTreasureOnLink
       jr nz,.done
-      ld a,(multiPlayerNumber)
-      ld l,INTERAC_MULTI_BYTE
-      ld (hl),a
+            ; ld a,(multiPlayerNumber)
+            ; ld l,INTERAC_MULTI_BYTE
+            ; ld (hl),a
       ld l,71
       ld (hl),02
 

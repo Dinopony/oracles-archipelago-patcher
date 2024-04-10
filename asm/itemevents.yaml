@@ -5,26 +5,26 @@
 floating:
   # if item is multiworld, send it and replace the id and param in bc with a
   # dummy value. returns nz if the item is outgoing.
-  handleGetMultiworldItem: |
-      ld e,INTERAC_MULTI_BYTE
-      ld a,(de)
-      and a
-      ret z
-      ld e,a
-      ld a,(multiPlayerNumber)
-      cp e
-      ret z
-      ld e,INTERAC_MULTI_BYTE
-      ld a,(de)
-      ld (wNetPlayerOut),a
-      ld hl,wNetTreasureOut
-      ld (hl),b
-      inc hl
-      ld (hl),c
-      ld b,TREASURE_RUPEES
-      ld c,00
-      or b
-      ret
+#  handleGetMultiworldItem: |
+#      ld e,INTERAC_MULTI_BYTE
+#      ld a,(de)
+#      and a
+#      ret z
+#      ld e,a
+#      ld a,(multiPlayerNumber)
+#      cp e
+#      ret z
+#      ld e,INTERAC_MULTI_BYTE
+#      ld a,(de)
+#      ld (wNetPlayerOut),a
+#      ld hl,wNetTreasureOut
+#      ld (hl),b
+#      inc hl
+#      ld (hl),c
+#      ld b,TREASURE_RUPEES
+#      ld c,00
+#      or b
+#      ret
 
 seasons:
 #  02/handleGetMultiworldItem: /include handleGetMultiworldItem

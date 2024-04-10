@@ -84,7 +84,7 @@ seasons:
   # change destination of initial transition in pirate cutscene.
   15/5a1c/: db 80,e2,00,66 # wWarpDestVariables, in order?
 
-  # remove D8 falling crystal cutscenes
+  # remove D8 falling crystal cutscenes (INTERACID_D8_GRABBABLE_ICE @state3)
   09/5894/: |
     # Set a flag for this room
     call getThisRoomFlags
