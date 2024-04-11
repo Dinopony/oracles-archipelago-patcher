@@ -375,6 +375,9 @@ func (rom *romState) applyAsmFiles(ri *routeInfo) {
 	if ri.removeD2AltEntrance {
 		asmPaths = append(asmPaths, "seasons/remove_d2_alt_entrance")
 	}
+	if ri.goal == "beat_ganon" {
+		asmPaths = append(asmPaths, "seasons/ganon_goal")
+	}
 
 	if ri.masterSmallKeys {
 		rom.data[0x18357] = byte(0)

@@ -302,12 +302,6 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 		rom.treasures[k].mutate(rom.data)
 	}
 
-	if ri.goal == "beat_ganon" {
-		// Re-cable state 0 of DIN_DESCENDING_CRYSTAL to middle of state27
-		// to directly get warped to the Room of Rites
-		copy(rom.data[0xd539:], []byte{0x06 + 0x19, 0x5a})
-	}
-
 	//	rom.setLinkedData()
 
 	sum := makeRomChecksum(rom.data)

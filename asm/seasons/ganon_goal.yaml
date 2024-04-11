@@ -1,0 +1,8 @@
+seasons:
+  # Re-cable state 0 of DIN_DESCENDING_CRYSTAL to middle of state27
+  # to directly get warped to the Room of Rites
+  03/5589/:
+    # Fully heal the player
+    ld a,(wMaxHealth)
+    ld (wCurrentHealth),a
+    jp 5a1f  # jump to middle of state27
