@@ -14,36 +14,14 @@ seasons:
 
     define wMinimapCycleToNextMode,c09f
     define wOriginalDungeonIndex,c09e
-
-  # Compute which minimap group we are currently in (0 = overworld, 1 = subrosia, 2 = maku tree, 5 = dungeon)
-  # Returns the value in register `a`
-  02/computeMinimapGroup: |
-    ld b,5  # dungeon
-    ld a,(wDungeonIndex)
-    cp a,09
-    jr c,.done
-
-    ld a,(wActiveGroup)
-    cp a,03
-    jr nc,.forceOverworld
-    ld b,a
-    jr .done
-
-    .forceOverworld
-    ld b,0
-    
-    .done
-    ld a,b
-    ret
+    define wOriginalMinimapGroup,c09d
 
   # Store a few additional variables when checking the SELECT button to open map
   02/extendedMenuOpenCheck: |
     ld a,(wDungeonIndex)
     ld (wOriginalDungeonIndex),a
-
-    # Compute minimap group
-    call computeMinimapGroup
-    ld (wMinimapGroup),a
+    ld a,(wMinimapGroup)
+    ld (wOriginalMinimapGroup),a
     ld a,(wKeysJustPressed)
     ret
   # Replace the second `ld a,(wKeysJustPressed)` in b2_updateMenus by an extension
@@ -129,9 +107,11 @@ seasons:
   # Extend the close menu procedure to reset temporarily changed variable with the value
   # they had when initially opening the map
   02/extendedMenuClose: |
-    # Reset minimap group to its original value
+    # Reset minimap group & dungeon index to their original value
     ld a,(wOriginalDungeonIndex)
     ld (wDungeonIndex),a
+    ld a,(wOriginalMinimapGroup)
+    ld (wMinimapGroup),a
     xor a
     ld (wMinimapCycleToNextMode),a
 
@@ -201,10 +181,8 @@ seasons:
 
   # On overworld & Subrosia maps, don't draw the arrow if we aren't in that dimension
   02/drawWorldArrowOnlyIfInDimension: |
-    call computeMinimapGroup
-    ld b,a
-    ld a,(wMinimapGroup)
-    cp b
+    ld a,(wMinimapCycleToNextMode)
+    or a
     jr nz,.differentDimension
     ld a,(wFrameCounter)
     ret
