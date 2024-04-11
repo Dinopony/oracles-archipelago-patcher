@@ -15,49 +15,6 @@ seasons:
     define wMinimapCycleToNextMode,c09f
     define wOriginalDungeonIndex,c09e
 
-  # warp to horon village tree if holding start when closing the map screen.
-  02/checkWarpToStart: |
-      ld a,option.warpToStart
-      or a
-      jr z,.done
-
-      ld a,(wKeysPressed)
-      and a,03  # BTN_B | BTN_A
-      cp a,03
-      jr nz,.done
-
-      ld a,80
-      ld (wWarpDestGroup),a
-      ld a,a7 # Starting room ID
-      ld (wWarpDestRoom),a
-      ld a,54 # Starting room position
-      ld (wWarpDestPos),a
-      ld a,5 # TRANSITION_DEST_FALL
-      ld (wWarpTransition),a
-      ld a,03
-      ld (wWarpTransition2),a
-      ld a,ff
-      ld (wDisabledObjects),a
-      
-      ld a,SND_TELEPORT
-      call playSound
-
-      ld a,03
-      call setMusicVolume
-      call clearStaticObjects
-
-      ld a,d0
-      ld (wLinkObjectIndex),a
-
-      ld a,03
-      ld (wMenuLoadState),a
-      pop af  # pop return addr from stack
-      ret
-
-      .done
-      jp 5029  # @openMenu
-  02/501f/: call checkWarpToStart
-
   # Compute which minimap group we are currently in (0 = overworld, 1 = subrosia, 2 = maku tree, 5 = dungeon)
   # Returns the value in register `a`
   02/computeMinimapGroup: |

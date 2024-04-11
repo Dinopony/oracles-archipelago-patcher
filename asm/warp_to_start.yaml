@@ -13,6 +13,51 @@ seasons:
   02/609b/: call checkCursorVisited
   02/65e1/: call checkTreeVisited
 
+  # warp to horon village tree if holding start when opening the map screen.
+  02/checkWarpToStart: |
+      ld a,option.warpToStart
+      or a
+      jr z,.done
+
+      ld a,(wKeysPressed)
+      and a,03  # BTN_B | BTN_A
+      cp a,03
+      jr nz,.done
+
+      ld a,option.startingGroup
+      set 7,a
+      ld (wWarpDestGroup),a
+      ld a,option.startingRoom # Starting room ID
+      ld (wWarpDestRoom),a
+      ld a,option.startingPos # Starting room position
+      ld (wWarpDestPos),a
+      ld a,5 # TRANSITION_DEST_FALL
+      ld (wWarpTransition),a
+      ld a,03
+      ld (wWarpTransition2),a
+      ld a,ff
+      ld (wDisabledObjects),a
+      
+      ld a,SND_TELEPORT
+      call playSound
+
+      ld a,03
+      call setMusicVolume
+      call clearStaticObjects
+
+      ld a,d0
+      ld (wLinkObjectIndex),a
+
+      ld a,03
+      ld (wMenuLoadState),a
+      pop af  # pop return addr from stack
+      ret
+
+      .done
+      jp 5029  # @openMenu
+  # Replace the unique call to @openMenu by the above extension checking for warp to start
+  02/501f/: call checkWarpToStart
+
 ages:
   # warp to south lynna present tree if holding start when closing the map
   # screen.

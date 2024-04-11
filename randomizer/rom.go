@@ -142,6 +142,12 @@ func (rom *romState) setData(ri *routeInfo) {
 	}
 
 	// Create ASM defines for various options
+	rom.assembler.defineByte("option.startingGroup", byte(0x00))
+	rom.assembler.defineByte("option.startingRoom", byte(0xb6))
+	rom.assembler.defineByte("option.startingPos", byte(0x55))
+	rom.assembler.defineByte("option.startingPosY", byte(0x58))
+	rom.assembler.defineByte("option.startingPosX", byte(0x58))
+
 	rom.assembler.defineByte("option.treehouseOldManRequirement", byte(ri.treehouseOldManRequirement))
 	rom.assembler.defineByte("option.treehouseOldManRequirementTextDigit", byte(0x30+ri.treehouseOldManRequirement))
 
