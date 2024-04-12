@@ -302,6 +302,12 @@ func (rom *romState) mutate(ri *routeInfo) ([]byte, error) {
 		rom.treasures[k].mutate(rom.data)
 	}
 
+	// If horon shop 3 should be renewable, manually edit the shop flag for that slot to
+	// zero to make it renewable
+	if ri.renewableHoronShop3 {
+		rom.data[0x20cfa] = 0x00
+	}
+
 	//	rom.setLinkedData()
 
 	sum := makeRomChecksum(rom.data)

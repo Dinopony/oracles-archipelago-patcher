@@ -1,23 +1,23 @@
 seasons:
   # Change shopItemReplacementTable so that each item can only be bought once
   08/4cf6/shopItemReplacementTable: |
-    db 3f,01,ff,00
-    db 40,80,ff,00
-    db 3f,02,ff,00
-    db 40,40,ff,00
-    db 40,20,ff,00
-    db 3f,08,ff,00
+    db 3f,01,ff,00   # Member shop 1
+    db 40,80,ff,00   # Horon shop 3
+    db 3f,02,ff,00   # Member shop 2
+    db 40,40,ff,00   # Horon shop 2
+    db 40,20,ff,00   # Horon shop 1
+    db 3f,08,ff,00   # Member shop 3
     db 00,00,00,00
-    db 92,04,09,18
-    db 92,04,0a,10
-    db 3f,20,ff,00
-    db 3f,40,ff,00
-    db 3f,80,ff,00
+    db 92,04,09,18   # Test TREASURE_PUNCH obtained (always) to redirect to entry 0x9
+    db 92,04,0a,10   # Test TREASURE_PUNCH obtained (always) to redirect to entry 0xa
+    db 3f,20,ff,00   # Syrup 2
+    db 3f,40,ff,00   # Syrup 3
+    db 3f,80,ff,00   # Syrup 1
     db 00,00,00,00
     db 00,00,00,00
-    db 40,01,ff,00
-    db 40,02,ff,00
-    db 40,04,ff,00
+    db 40,01,ff,00   # Advance 1
+    db 40,02,ff,00   # Advance 2
+    db 40,04,ff,00   # Advance 3
     db 00,00,00,00
     db 00,00,00,00
     db 00,00,00,00
@@ -64,16 +64,19 @@ seasons:
     add a,a
     ld hl,shopItemReplacementTable
     rst 10 # addAToHL
-    ld b,(hl) # flag_addr -> b
+    ld a,(hl) # flag_addr -> a
+    or a
+    jr z,.done
+
     inc hl
     ld c,(hl) # bitmask -> c
-
     ld h,c6
-    ld l,b
+    ld l,a
     ld a,(hl) # flag_value -> a
     or c
     ld (hl),a
 
+    .done
     pop hl
     pop bc
 

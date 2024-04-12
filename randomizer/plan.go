@@ -118,6 +118,7 @@ type routeInfo struct {
 	samasaGateSequence     []int
 	removeD0AltEntrance    bool
 	removeD2AltEntrance    bool
+	renewableHoronShop3    bool
 }
 
 func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
@@ -196,6 +197,11 @@ func processSeasonsSpecificSettings(data *inputData, ri *routeInfo) error {
 	ri.removeD2AltEntrance = false
 	if str, ok := data.settings["remove_d2_alt_entrance"]; ok {
 		ri.removeD2AltEntrance = (str == "true")
+	}
+
+	ri.renewableHoronShop3 = false
+	if str, ok := data.settings["renewable_horon_shop_3"]; ok {
+		ri.renewableHoronShop3 = (str == "true")
 	}
 
 	// Set Lost Woods item sequence
