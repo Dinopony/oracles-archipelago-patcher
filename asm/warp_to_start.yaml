@@ -37,6 +37,8 @@ seasons:
       ld (wWarpTransition2),a
       ld a,ff
       ld (wDisabledObjects),a
+      ld a,option.startingSeason
+      ld (wRoomStateModifier),a
       
       ld a,SND_TELEPORT
       call playSound

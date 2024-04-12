@@ -139,6 +139,10 @@ func (rom *romState) setData(ri *routeInfo) {
 			season = 0xff
 		}
 		rom.assembler.defineByte("defaultSeason."+inflictCamelCase(region), season)
+
+		if region == "north horon" {
+			rom.assembler.defineByte("option.startingSeason", season)
+		}
 	}
 
 	// Create ASM defines for various options

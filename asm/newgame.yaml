@@ -7,6 +7,7 @@ seasons:
   07/4195/: db option.startingRoom  # Room
   07/4197/: db option.startingPosY  # Y
   07/4199/: db option.startingPosX  # X
+  07/41a6/: db option.animalCompanion  # Natzu layout
 
   # On file creation, set additional flags to skip a few events/cutscenes/tutorials
   # from the vanilla game which are cumbersome in a rando context.
@@ -18,12 +19,16 @@ seasons:
     # Mark intro as seen
     ld a,0a
     call setGlobalFlag
+    ld a,1c
+    call setGlobalFlag
 
-    # animal vars
-    ld a,option.animalCompanion
-    ld (wAnimalRegion),a
+    # Animal vars
     ld a,ff
     ld (wAnimalTutorialFlags),a
+
+    # Remove the requirement to go in the screen under Sunken City tree to make Dimitri bullies appear
+    ld a,20
+    ld (wDimitriState),a
 
     # room flag 6
     ld a,40
@@ -41,7 +46,7 @@ seasons:
     ld (c7e9),a  # Sokra in town
 
     # room flags 4 | 6
-    ld a,50
+    ld a,40
     ld (c7a7),a  # Vanilla start room
 
     # room flags 3 | 5 | 6 | 7
@@ -63,6 +68,14 @@ seasons:
     ld a,03
     ld (wRingBoxLevel),a
 
+    # automatically open tarm gate if requirement is 0 jewels
+    ld a,option.tarmGateRequiredJewels
+    or a
+    jr nz,.done
+    ld a,80
+    ld (c763),a
+
+    .done
     ld hl,4182  # initialFileVariables
     ret
   07/400a/: call setInitialFlags
