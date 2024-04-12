@@ -27,11 +27,9 @@ seasons:
     ld a,TREASURE_BOMBS
     call checkTreasureObtained
     jr nc,.refillShield
-    ld hl,wCurrentBombs
-    ld a,(hl)
-    cp a,10
-    jr nc,.refillShield
-    ld (hl),10
+    ld hl,wMaxBombs
+    ldd a,(hl)
+    ld (hl),a
 
     .refillShield
     ld a,TREASURE_SHIELD
