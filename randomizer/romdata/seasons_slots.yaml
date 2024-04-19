@@ -1023,7 +1023,7 @@ malon trade:
   collect: touch
 maple trade:
   treasure: Ghastly Doll
-  room: 0x00e8 # no fixed room for Maple, put Horon's fountain as an indication for Treasure Map
+  room: 0x00e7 # no fixed room for Maple, put Horon's fountain as an indication for Treasure Map
   collect: touch
 mrs. ruul trade:
   treasure: Iron Pot
