@@ -504,7 +504,7 @@ func (rom *romState) setWarps(warpMap map[string]string, ri *routeInfo) {
 	if rom.game == GAME_SEASONS {
 		// D0 Chest Warp (hardcoded warp using a specific format)
 		entrance := warps[entranceMap["d0"]]
-		copy(rom.data[0x2bbe5:], []byte{entrance.Room, entrance.Group, entrance.Position})
+		copy(rom.data[0x2bbe4:], []byte{entrance.Group | 0x80, entrance.Room, 0x00, entrance.Position})
 
 		// D1-D8 Essence Warps (all the same format in the same array)
 		for i := 1; i <= 8; i++ {
